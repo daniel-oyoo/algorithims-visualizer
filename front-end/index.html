@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm Visualizer Suite - Complete Documentation</title>
+    <style>
+        /* ============================================
+           CSS VARIABLES & GLOBAL STYLES
+           ============================================ */
+        
+         :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --cell-bg: #0f172a;
+            --border-color: #334155;
+            --scanner-color: #38bdf8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        /* ============================================
+           HEADER SECTION
+           ============================================ */
+        
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 20px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+        /* ============================================
+           ALGORITHM SELECTOR TABS
+           ============================================ */
+        
+        .algorithm-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: var(--card-bg);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .algorithm-tabs button {
+            padding: 8px 18px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .algorithm-tabs button:hover {
+            color: #fff;
+            background: #334155;
+        }
+        
+        .algorithm-tabs button.active {
+            color: #fff;
+            border-color: var(--info);
+            background: rgba(59, 130, 246, 0.15);
+        }
+        
+        .algorithm-tabs button .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: var(--info);
+            color: #fff;
+            padding: 0 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+        /* ============================================
+           CONTENT PANELS
+           ============================================ */
+        
+        .algorithm-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .algorithm-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .panel-header h2 {
+            font-size: 1.3rem;
+            color: #e2e8f0;
+        }
+        
+        .panel-header .description {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        /* ============================================
+           CONTROLS
+           ============================================ */
+        
+        .controls-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 0;
+            margin-bottom: 12px;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        .control-group label {
+            white-space: nowrap;
+        }
+        
+        select,
+        button,
+        input[type="number"] {
+            background: #334155;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        select:hover,
+        button:hover {
+            border-color: #64748b;
+        }
+        
+        button.btn-primary {
+            background: var(--info);
+            border-color: var(--info);
+            font-weight: bold;
+        }
+        
+        button.btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        button.btn-success {
+            background: var(--success);
+            border-color: var(--success);
+            font-weight: bold;
+        }
+        
+        button.btn-success:hover {
+            background: #059669;
+        }
+        
+        button.btn-danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            font-weight: bold;
+        }
+        
+        button.btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        button.btn-warning {
+            background: var(--warning);
+            border-color: var(--warning);
+            font-weight: bold;
+            color: #0f172a;
+        }
+        
+        button.btn-warning:hover {
+            background: #d97706;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        input[type="range"] {
+            width: 100px;
+            padding: 0;
+            background: transparent;
+            accent-color: var(--info);
+        }
+        
+        input[type="number"] {
+            width: 55px;
+        }
+        /* ============================================
+           GRID DISPLAY
+           ============================================ */
+        
+        .display-zone {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .display-zone {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .matrix-card,
+        .zones-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .card-header {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        
+        .grid-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            padding: 5px;
+        }
+        
+        table.grid-table {
+            border-collapse: collapse;
+            user-select: none;
+        }
+        
+        table.grid-table td {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background-color: var(--cell-bg);
+            transition: background-color 0.15s ease, transform 0.1s ease;
+            cursor: pointer;
+            color: #e2e8f0;
+        }
+        
+        table.grid-table td:hover {
+            filter: brightness(1.3);
+        }
+        /* Grid state styles */
+        
+        td.filled {
+            background-color: #1e3a5f !important;
+        }
+        
+        td.empty {
+            background-color: #0f172a !important;
+        }
+        
+        td.rotten {
+            background-color: #7f1d1d !important;
+            animation: pulse 1s infinite;
+        }
+        
+        td.fresh {
+            background-color: #78350f !important;
+        }
+        
+        td.scanning {
+            outline: 2px solid var(--scanner-color);
+            box-shadow: 0 0 15px var(--scanner-color);
+            z-index: 5;
+        }
+        
+        td.infecting {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+        }
+        
+        td.visited {
+            outline: 2px solid var(--success);
+        }
+        
+        td.path {
+            background-color: #065f46 !important;
+            color: #fff;
+        }
+        
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        /* ============================================
+           ZONES TABLE
+           ============================================ */
+        
+        .zones-table-wrapper {
+            max-height: 320px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        
+        .zones-table-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .zones-table-wrapper::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        
+        .zones-table-wrapper::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        
+        table.zones-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+        
+        table.zones-table th,
+        table.zones-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        table.zones-table th {
+            background: #0f172a;
+            position: sticky;
+            top: 0;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        
+        table.zones-table tr:hover {
+            background: #1a2332;
+        }
+        
+        .color-badge {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        /* ============================================
+           RESULTS & METRICS
+           ============================================ */
+        
+        .results-zone {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        @media (max-width: 600px) {
+            .results-zone {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .log-box {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            background: #090d16;
+            padding: 10px;
+            border-radius: 6px;
+            height: 80px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            line-height: 1.6;
+        }
+        
+        .log-box .log-entry {
+            padding: 1px 0;
+        }
+        
+        .log-box .log-entry.success {
+            color: var(--success);
+        }
+        
+        .log-box .log-entry.error {
+            color: var(--danger);
+        }
+        
+        .log-box .log-entry.warning {
+            color: var(--warning);
+        }
+        
+        .log-box .log-entry.info {
+            color: var(--info);
+        }
+        
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .metric-card {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .metric-card .val {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--info);
+        }
+        
+        .metric-card .val.green {
+            color: var(--success);
+        }
+        
+        .metric-card .val.orange {
+            color: var(--warning);
+        }
+        
+        .metric-card .val.red {
+            color: var(--danger);
+        }
+        
+        .metric-card .lbl {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        /* ============================================
+           DOCUMENTATION SECTION
+           ============================================ */
+        
+        .documentation {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 10px;
+        }
+        
+        .documentation summary {
+            cursor: pointer;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 5px 0;
+        }
+        
+        .documentation summary:hover {
+            color: #e2e8f0;
+        }
+        
+        .documentation .doc-content {
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 10px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+        
+        .documentation .doc-content code {
+            background: #1a2332;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #38bdf8;
+        }
+        
+        .documentation .doc-content .algorithm-doc {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #1a2332;
+            border-radius: 6px;
+            border-left: 3px solid var(--info);
+        }
+        
+        .documentation .doc-content .algorithm-doc h4 {
+            color: #e2e8f0;
+            margin-bottom: 4px;
+        }
+        
+        .documentation .doc-content .algorithm-doc p {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- ============================================
+        HEADER
+        ============================================ -->
+        <div class="header">
+            <h1>🧮 Algorithm Visualizer Suite</h1>
+            <div class="subtitle">Connected Components · Rotten Oranges · Spiral Matrix · Move Token · Nearest Distance · Sudoku</div>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM TABS
+        ============================================ -->
+        <div class="algorithm-tabs">
+            <button class="active" data-algo="components">🔍 Components <span class="badge">8-dir</span></button>
+            <button data-algo="rotten">🍊 Rotten Oranges <span class="badge">BFS</span></button>
+            <button data-algo="spiral">🌀 Spiral Matrix <span class="badge">O(n²)</span></button>
+            <button data-algo="move">🎯 Move Token <span class="badge">DFS</span></button>
+            <button data-algo="nearest">📏 Nearest Distance <span class="badge">BFS</span></button>
+            <button data-algo="sudoku">🧩 Sudoku Solver <span class="badge">Backtrack</span></button>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM PANEL: CONNECTED COMPONENTS
+        ============================================ -->
+        <div id="panel-components" class="algorithm-panel active">
+            <div class="panel-header">
+                <h2>🔍 Connected Components</h2>
+                <span class="description">Flood Fill with 8-direction connectivity</span>
+            </div>
+
+            <div class="controls-zone">
+                <div class="control-group">
+                    <label for="compDensity">Coverage:</label>
+                    <select id="compDensity">
+                        <option value="0.3">30%</option>
+                        <option value="0.5" selected>50%</option>
+                        <option value="0.7">70%</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="compSize">Grid:</label>
+                    <input type="number" id="compSize" value="8" min="4" max="12">
+                </div>
+                <div class="control-group">
+                    <label for="compSpeed">Speed:</label>
+                    <input type="range" id="compSpeed" min="20" max="500" value="150">
+                </div>
+                <button onclick="compStart()" id="compBtnStart" class="btn-primary">▶ Start</button>
+                <button onclick="compPause()" id="compBtnPause" disabled>⏸ Pause</button>
+                <button onclick="compReset()" class="btn-danger">↺ Reset</button>
+            </div>
+
+            <div class="display-zone">
+                <div class="matrix-card">
+                    <div class="card-header">Matrix Board</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="compGrid"></table>
+                    </div>
+                </div>
+                <div class="zones-card">
+                    <div class="card-header">Discovered Zones</div>
+                    <div class="zones-table-wrapper">
+                        <table class="zones-table">
+                            <thead>
+                                <tr>
+                                    <th>Zone</th>
+                                    <th>Start</th>
+                                    <th>Cells</th>
+                                </tr>
+                            </thead>
+                            <tbody id="compZonesBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-zone">
+                <div>
+                    <div class="card-header">Status Log</div>
+                    <div class="log-box" id="compLog">Ready...</div>
+                </div>
+                <div>
+                    <div class="card-header">Metrics</div>
+                    <div class="metrics-container">
+                        <div class="metric-card">
+                            <div class="val" id="compTotalZones">0</div>
+                            <div class="lbl">Zones</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val green" id="compMaxSize">0</div>
+                            <div class="lbl">Max Size</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val orange" id="compVisited">0</div>
+                            <div class="lbl">Infected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM PANEL: ROTTEN ORANGES
+        ============================================ -->
+        <div id="panel-rotten" class="algorithm-panel">
+            <div class="panel-header">
+                <h2>🍊 Rotten Oranges</h2>
+                <span class="description">BFS infection spread simulation</span>
+            </div>
+
+            <div class="controls-zone">
+                <div class="control-group">
+                    <label for="rotSize">Grid:</label>
+                    <input type="number" id="rotSize" value="8" min="4" max="10">
+                </div>
+                <div class="control-group">
+                    <label for="rotSpeed">Speed:</label>
+                    <input type="range" id="rotSpeed" min="50" max="500" value="200">
+                </div>
+                <button onclick="rotStart()" id="rotBtnStart" class="btn-primary">🦠 Infect</button>
+                <button onclick="rotReset()" class="btn-danger">↺ Reset</button>
+            </div>
+
+            <div class="display-zone">
+                <div class="matrix-card">
+                    <div class="card-header">Orange Grid</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="rotGrid"></table>
+                    </div>
+                </div>
+                <div class="zones-card">
+                    <div class="card-header">Infection Status</div>
+                    <div style="padding: 10px; text-align: center;">
+                        <div style="font-size: 2rem; margin: 10px 0;" id="rotTimeDisplay">⏱️ 0 min</div>
+                        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                            <span>🧟 Rotten: <strong id="rotRottenCount">0</strong></span>
+                            <span>🍊 Fresh: <strong id="rotFreshCount">0</strong></span>
+                            <span>⬜ Empty: <strong id="rotEmptyCount">0</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-zone">
+                <div>
+                    <div class="card-header">Status Log</div>
+                    <div class="log-box" id="rotLog">Ready...</div>
+                </div>
+                <div>
+                    <div class="card-header">Legend</div>
+                    <div style="display: flex; gap: 15px; justify-content: center; align-items: center; height: 100%; flex-wrap: wrap;">
+                        <span><span style="display:inline-block;width:20px;height:20px;background:#7f1d1d;border-radius:4px;vertical-align:middle;"></span> Rotten</span>
+                        <span><span style="display:inline-block;width:20px;height:20px;background:#78350f;border-radius:4px;vertical-align:middle;"></span> Fresh</span>
+                        <span><span style="display:inline-block;width:20px;height:20px;background:#0f172a;border-radius:4px;vertical-align:middle;"></span> Empty</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM PANEL: SPIRAL MATRIX
+        ============================================ -->
+        <div id="panel-spiral" class="algorithm-panel">
+            <div class="panel-header">
+                <h2>🌀 Spiral Matrix</h2>
+                <span class="description">Print matrix in spiral order</span>
+            </div>
+
+            <div class="controls-zone">
+                <div class="control-group">
+                    <label for="spiralSize">Size:</label>
+                    <input type="number" id="spiralSize" value="6" min="3" max="10">
+                </div>
+                <button onclick="spiralGenerate()" class="btn-success">🎲 Generate</button>
+                <button onclick="spiralPrint()" class="btn-primary">🖨️ Print Spiral</button>
+                <button onclick="spiralReset()" class="btn-danger">↺ Reset</button>
+            </div>
+
+            <div class="display-zone" style="grid-template-columns: 1fr 1fr;">
+                <div class="matrix-card">
+                    <div class="card-header">Matrix</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="spiralGrid"></table>
+                    </div>
+                </div>
+                <div class="matrix-card">
+                    <div class="card-header">Spiral Order</div>
+                    <div class="log-box" id="spiralResult" style="height:200px; font-size:0.9rem; white-space:pre-wrap;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM PANEL: MOVE TOKEN
+        ============================================ -->
+        <div id="panel-move" class="algorithm-panel">
+            <div class="panel-header">
+                <h2>🎯 Move Token</h2>
+                <span class="description">DFS path finding with custom rules</span>
+            </div>
+
+            <div class="controls-zone">
+                <div class="control-group">
+                    <label for="moveSize">Size:</label>
+                    <input type="number" id="moveSize" value="6" min="4" max="8">
+                </div>
+                <button onclick="moveGenerate()" class="btn-success">🎲 Generate</button>
+                <button onclick="moveStart()" id="moveBtnStart" class="btn-primary">▶ Move</button>
+                <button onclick="moveReset()" class="btn-danger">↺ Reset</button>
+            </div>
+
+            <div class="display-zone" style="grid-template-columns: 1fr 1fr;">
+                <div class="matrix-card">
+                    <div class="card-header">Board</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="moveGrid"></table>
+                    </div>
+                </div>
+                <div class="matrix-card">
+                    <div class="card-header">Token Status</div>
+                    <div style="padding: 10px; text-align: center;">
+                        <div style="font-size: 2rem; margin: 10px 0;" id="moveStatus">🎯</div>
+                        <div>Steps: <strong id="moveSteps">0</strong></div>
+                        <div class="log-box" id="moveLog" style="height:100px; margin-top:10px;">Ready...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM PANEL: NEAREST DISTANCE
+        ============================================ -->
+        <div id="panel-nearest" class="algorithm-panel">
+            <div class="panel-header">
+                <h2>📏 Nearest Distance to Zero</h2>
+                <span class="description">8-direction BFS distance calculation</span>
+            </div>
+
+            <div class="controls-zone">
+                <div class="control-group">
+                    <label for="nearSize">Size:</label>
+                    <input type="number" id="nearSize" value="6" min="4" max="8">
+                </div>
+                <button onclick="nearGenerate()" class="btn-success">🎲 Generate</button>
+                <button onclick="nearFind()" class="btn-primary">🔍 Find</button>
+                <button onclick="nearReset()" class="btn-danger">↺ Reset</button>
+            </div>
+
+            <div class="display-zone" style="grid-template-columns: 1fr 1fr;">
+                <div class="matrix-card">
+                    <div class="card-header">Original Matrix</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="nearGrid"></table>
+                    </div>
+                </div>
+                <div class="matrix-card">
+                    <div class="card-header">Distance Map</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="nearResultGrid"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-zone">
+                <div>
+                    <div class="card-header">Status Log</div>
+                    <div class="log-box" id="nearLog">Ready...</div>
+                </div>
+                <div>
+                    <div class="card-header">Metrics</div>
+                    <div class="metrics-container">
+                        <div class="metric-card">
+                            <div class="val" id="nearMaxDist">0</div>
+                            <div class="lbl">Max Distance</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val green" id="nearZeros">0</div>
+                            <div class="lbl">Zeros Found</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        ALGORITHM PANEL: SUDOKU
+        ============================================ -->
+        <div id="panel-sudoku" class="algorithm-panel">
+            <div class="panel-header">
+                <h2>🧩 Sudoku Solver</h2>
+                <span class="description">Backtracking with constraint propagation</span>
+            </div>
+
+            <div class="controls-zone">
+                <button onclick="sudokuGenerate()" class="btn-success">🎲 Generate</button>
+                <button onclick="sudokuSolve()" id="sudokuBtnSolve" class="btn-primary">🧠 Solve</button>
+                <button onclick="sudokuReset()" class="btn-danger">↺ Reset</button>
+            </div>
+
+            <div class="display-zone" style="grid-template-columns: 1fr 1fr;">
+                <div class="matrix-card">
+                    <div class="card-header">Puzzle</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="sudokuGrid"></table>
+                    </div>
+                </div>
+                <div class="matrix-card">
+                    <div class="card-header">Solution</div>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="sudokuSolution"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-zone">
+                <div>
+                    <div class="card-header">Status Log</div>
+                    <div class="log-box" id="sudokuLog">Ready...</div>
+                </div>
+                <div>
+                    <div class="card-header">Stats</div>
+                    <div class="metrics-container">
+                        <div class="metric-card">
+                            <div class="val" id="sudokuFilled">0</div>
+                            <div class="lbl">Filled</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val orange" id="sudokuEmpty">0</div>
+                            <div class="lbl">Empty</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val green" id="sudokuSolved">0</div>
+                            <div class="lbl">Solved</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+        DOCUMENTATION
+        ============================================ -->
+        <details class="documentation">
+            <summary>📖 Algorithm Documentation & Implementation Details</summary>
+            <div class="doc-content">
+                <div class="algorithm-doc">
+                    <h4>🔍 Connected Components (Flood Fill)</h4>
+                    <p><strong>Implementation:</strong> Recursive DFS with 8-direction connectivity (including diagonals).</p>
+                    <p><strong>Algorithm:</strong> Scanning wave finds unvisited cells, then infection wave performs flood fill using <code>findMaxConnnected()</code>.</p>
+                    <p><strong>Time Complexity:</strong> O(rows × cols) | <strong>Space:</strong> O(rows × cols)</p>
+                </div>
+
+                <div class="algorithm-doc">
+                    <h4>🍊 Rotten Oranges</h4>
+                    <p><strong>Implementation:</strong> BFS from all rotten oranges simultaneously.</p>
+                    <p><strong>Algorithm:</strong> Queue-based level-order traversal. Each level represents 1 minute of infection spread.</p>
+                    <p><strong>Time Complexity:</strong> O(rows × cols) | <strong>Space:</strong> O(rows × cols)</p>
+                </div>
+
+                <div class="algorithm-doc">
+                    <h4>🌀 Spiral Matrix</h4>
+                    <p><strong>Implementation:</strong> Four boundary pointers (top, bottom, left, right).</p>
+                    <p><strong>Algorithm:</strong> Traverse right → down → left → up, shrinking boundaries after each pass.</p>
+                    <p><strong>Time Complexity:</strong> O(n²) | <strong>Space:</strong> O(1)</p>
+                </div>
+
+                <div class="algorithm-doc">
+                    <h4>🎯 Move Token</h4>
+                    <p><strong>Implementation:</strong> DFS with cycle detection and custom movement rules.</p>
+                    <p><strong>Algorithm:</strong> Token moves by value of current cell (up/down/left/right). Marks visited cells to avoid cycles.</p>
+                    <p><strong>Time Complexity:</strong> O(rows × cols) | <strong>Space:</strong> O(rows × cols)</p>
+                </div>
+
+                <div class="algorithm-doc">
+                    <h4>📏 Nearest Distance to Zero</h4>
+                    <p><strong>Implementation:</strong> BFS from all zero cells (multi-source BFS).</p>
+                    <p><strong>Algorithm:</strong> Queue all zero positions, then expand outward layer by layer.</p>
+                    <p><strong>Time Complexity:</strong> O(rows × cols) | <strong>Space:</strong> O(rows × cols)</p>
+                </div>
+
+                <div class="algorithm-doc">
+                    <h4>🧩 Sudoku Solver</h4>
+                    <p><strong>Implementation:</strong> Backtracking with row/column/box validation.</p>
+                    <p><strong>Algorithm:</strong> Find empty cell, try numbers 1-9, validate, recurse, backtrack if invalid.</p>
+                    <p><strong>Time Complexity:</strong> O(9^(n²)) worst-case | <strong>Space:</strong> O(n²)</p>
+                </div>
+            </div>
+        </details>
+    </div>
+
+    <!-- ============================================
+    JAVASCRIPT - ALL ALGORITHMS
+    ============================================ -->
+    <script>
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        /** Log a message to a specific log element */
+        function logTo(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = message;
+            el.appendChild(entry);
+            el.scrollTop = el.scrollHeight;
+        }
+
+        /** Clear a log element */
+        function clearLog(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) el.innerHTML = '';
+        }
+
+        /** Sleep/delay function for animations */
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /** Generate a random matrix with given coverage */
+        function generateRandomMatrix(rows, cols, coverage) {
+            const grid = [];
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    row.push(Math.random() < coverage ? 1 : 0);
+                }
+                grid.push(row);
+            }
+            return grid;
+        }
+
+        /** Render a grid to a table element */
+        function renderGridToTable(tableId, grid, options = {}) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+            const rows = grid.length;
+            const cols = grid[0] ? grid[0].length : 0;
+            table.innerHTML = '';
+            for (let i = 0; i < rows; i++) {
+                const tr = document.createElement('tr');
+                for (let j = 0; j < cols; j++) {
+                    const td = document.createElement('td');
+                    td.id = `${tableId}-cell-${i}-${j}`;
+                    const val = grid[i][j];
+                    td.textContent = val !== undefined && val !== null ? val : '';
+
+                    // Apply custom styling
+                    if (options.cellStyler) {
+                        options.cellStyler(td, val, i, j);
+                    }
+
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+        }
+
+        /** Get a cell element from a table */
+        function getCell(tableId, r, c) {
+            return document.getElementById(`${tableId}-cell-${r}-${c}`);
+        }
+
+        /** Check if a cell is valid and has a value > 0 */
+        function find(grid, r, c) {
+            return r >= 0 && r < grid.length && c >= 0 && c < grid[0].length && grid[r][c] > 0;
+        }
+
+        // ============================================
+        // TAB SWITCHING
+        // ============================================
+
+        document.querySelectorAll('.algorithm-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.algorithm-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.algorithm-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + this.dataset.algo).classList.add('active');
+            });
+        });
+
+        // ============================================
+        // ALGORITHM 1: CONNECTED COMPONENTS
+        // ============================================
+
+        let compGrid = [];
+        let compRunning = false;
+        let compPaused = false;
+        let compDelay = 150;
+        let compZoneList = [];
+        let compVisitedCount = 0;
+        let compMaxSize = 0;
+
+        /** Initialize/reset Components algorithm */
+        function compReset() {
+            compRunning = false;
+            compPaused = false;
+            const size = parseInt(document.getElementById('compSize').value) || 8;
+            const density = parseFloat(document.getElementById('compDensity').value);
+            compGrid = generateRandomMatrix(size, size, density);
+            compZoneList = [];
+            compVisitedCount = 0;
+            compMaxSize = 0;
+
+            renderGridToTable('compGrid', compGrid);
+            document.getElementById('compZonesBody').innerHTML = '';
+            document.getElementById('compTotalZones').textContent = '0';
+            document.getElementById('compMaxSize').textContent = '0';
+            document.getElementById('compVisited').textContent = '0';
+            document.getElementById('compBtnStart').disabled = false;
+            document.getElementById('compBtnPause').disabled = true;
+            clearLog('compLog');
+            logTo('compLog', 'Ready. Click "Start" to find connected components.', 'info');
+        }
+
+        /** Start Components algorithm */
+        async function compStart() {
+            if (compRunning) return;
+            compRunning = true;
+            compPaused = false;
+            document.getElementById('compBtnStart').disabled = true;
+            document.getElementById('compBtnPause').disabled = false;
+            document.getElementById('compBtnPause').textContent = '⏸ Pause';
+            clearLog('compLog');
+            logTo('compLog', '🔍 Starting scanning wave...', 'info');
+
+            const directions = [
+                [-1, 0],
+                [1, 0],
+                [0, -1],
+                [0, 1], // 4 orthogonal
+                [-1, -1],
+                [-1, 1],
+                [1, -1],
+                [1, 1] // 4 diagonals
+            ];
+            let zoneId = 0;
+            compZoneList = [];
+
+            for (let i = 0; i < compGrid.length; i++) {
+                for (let j = 0; j < compGrid[0].length; j++) {
+                    if (!compRunning) return;
+
+                    // Check pause state
+                    while (compPaused) {
+                        await sleep(100);
+                        if (!compRunning) return;
+                    }
+
+                    // Highlight scanning cell
+                    const cell = getCell('compGrid', i, j);
+                    if (cell) cell.classList.add('scanning');
+                    await sleep(compDelay / 2);
+                    if (cell) cell.classList.remove('scanning');
+
+                    // If unvisited component found
+                    if (find(compGrid, i, j)) {
+                        zoneId++;
+                        const color = `hsl(${(zoneId * 37) % 360}, 70%, 50%)`;
+                        logTo('compLog', `🎯 Found component at [${i},${j}]`, 'success');
+
+                        const zone = {
+                            id: zoneId,
+                            startR: i,
+                            startC: j,
+                            count: 0,
+                            color: color
+                        };
+                        compZoneList.push(zone);
+
+                        // Add to zones table
+                        const tbody = document.getElementById('compZonesBody');
+                        const tr = document.createElement('tr');
+                        tr.id = `comp-zone-${zoneId}`;
+                        tr.innerHTML = `
+                            <td><span class="color-badge" style="background:${color}"></span>#${zoneId}</td>
+                            <td>[${i},${j}]</td>
+                            <td id="comp-zone-count-${zoneId}">0</td>
+                        `;
+                        tbody.appendChild(tr);
+                        document.getElementById('compTotalZones').textContent = zoneId;
+
+                        // Flood fill infection wave
+                        await compFloodFill(i, j, zone, directions);
+
+                        logTo('compLog', `✅ Zone #${zoneId} complete (${zone.count} cells)`, 'success');
+                    }
+                }
+            }
+
+            compRunning = false;
+            document.getElementById('compBtnStart').disabled = false;
+            document.getElementById('compBtnPause').disabled = true;
+            logTo('compLog', `🏁 Complete! Found ${zoneId} components.`, 'success');
+        }
+
+        /** Flood fill recursive infection wave */
+        async function compFloodFill(r, c, zone, directions) {
+            if (!compRunning) return;
+            if (!find(compGrid, r, c)) return;
+
+            // Check pause
+            while (compPaused) {
+                await sleep(100);
+                if (!compRunning) return;
+            }
+
+            // Mark visited
+            compGrid[r][c] = -1;
+            zone.count++;
+            compVisitedCount++;
+            compMaxSize = Math.max(compMaxSize, zone.count);
+
+            // Update UI
+            const countEl = document.getElementById(`comp-zone-count-${zone.id}`);
+            if (countEl) countEl.textContent = zone.count;
+            document.getElementById('compVisited').textContent = compVisitedCount;
+            document.getElementById('compMaxSize').textContent = compMaxSize;
+
+            // Animate cell
+            const cell = getCell('compGrid', r, c);
+            if (cell) {
+                cell.style.backgroundColor = zone.color;
+                cell.style.color = '#fff';
+                cell.classList.add('infecting');
+                await sleep(compDelay);
+                cell.classList.remove('infecting');
+            }
+
+            // Recurse into all 8 directions
+            for (const [dr, dc] of directions) {
+                await compFloodFill(r + dr, c + dc, zone, directions);
+            }
+        }
+
+        /** Pause/resume Components */
+        function compPause() {
+            compPaused = !compPaused;
+            document.getElementById('compBtnPause').textContent = compPaused ? '▶ Resume' : '⏸ Pause';
+            logTo('compLog', compPaused ? '⏸ Paused' : '▶ Resumed', 'warning');
+        }
+
+        // Speed control for Components
+        document.getElementById('compSpeed').addEventListener('input', function() {
+            compDelay = parseInt(this.value);
+        });
+
+        // ============================================
+        // ALGORITHM 2: ROTTEN ORANGES
+        // ============================================
+
+        let rotGrid = [];
+        let rotRunning = false;
+
+        /** Initialize Rotten Oranges */
+        function rotReset() {
+            rotRunning = false;
+            const size = parseInt(document.getElementById('rotSize').value) || 8;
+            rotGrid = [];
+            for (let i = 0; i < size; i++) {
+                const row = [];
+                for (let j = 0; j < size; j++) {
+                    const val = Math.random();
+                    if (val < 0.3) row.push(0); // empty
+                    else if (val < 0.7) row.push(1); // fresh
+                    else row.push(2); // rotten
+                }
+                rotGrid.push(row);
+            }
+            renderRotGrid();
+            updateRotStats();
+            document.getElementById('rotTimeDisplay').textContent = '⏱️ 0 min';
+            clearLog('rotLog');
+            logTo('rotLog', 'Ready. Click "Infect" to start.', 'info');
+        }
+
+        /** Render Rotten Oranges grid */
+        function renderRotGrid() {
+            renderGridToTable('rotGrid', rotGrid, {
+                cellStyler: (td, val) => {
+                    if (val === 0) {
+                        td.className = 'empty';
+                        td.textContent = '·';
+                    } else if (val === 1) {
+                        td.className = 'fresh';
+                        td.textContent = '🍊';
+                    } else if (val === 2) {
+                        td.className = 'rotten';
+                        td.textContent = '🧟';
+                    }
+                }
+            });
+        }
+
+        /** Update Rotten Oranges stats */
+        function updateRotStats() {
+            let rotten = 0,
+                fresh = 0,
+                empty = 0;
+            for (let i = 0; i < rotGrid.length; i++) {
+                for (let j = 0; j < rotGrid[0].length; j++) {
+                    if (rotGrid[i][j] === 0) empty++;
+                    else if (rotGrid[i][j] === 1) fresh++;
+                    else if (rotGrid[i][j] === 2) rotten++;
+                }
+            }
+            document.getElementById('rotRottenCount').textContent = rotten;
+            document.getElementById('rotFreshCount').textContent = fresh;
+            document.getElementById('rotEmptyCount').textContent = empty;
+        }
+
+        /** Start Rotten Oranges infection */
+        async function rotStart() {
+            if (rotRunning) return;
+            rotRunning = true;
+            document.getElementById('rotBtnStart').disabled = true;
+            clearLog('rotLog');
+            logTo('rotLog', '🦠 Starting infection...', 'info');
+
+            const dirs = [
+                [1, 0],
+                [-1, 0],
+                [0, 1],
+                [0, -1]
+            ];
+            const queue = [];
+            const rows = rotGrid.length;
+            const cols = rotGrid[0].length;
+
+            // Find all initial rotten oranges
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (rotGrid[i][j] === 2) {
+                        queue.push([i, j, 0]);
+                    }
+                }
+            }
+
+            let time = 0;
+            let head = 0;
+            const speed = parseInt(document.getElementById('rotSpeed').value);
+
+            while (head < queue.length) {
+                const [r, c, t] = queue[head++];
+                time = t;
+
+                // Animate current cell
+                const cell = getCell('rotGrid', r, c);
+                if (cell) {
+                    cell.classList.add('infecting');
+                    await sleep(speed / 2);
+                    cell.classList.remove('infecting');
+                }
+
+                // Infect neighbors
+                for (const [dr, dc] of dirs) {
+                    const nr = r + dr,
+                        nc = c + dc;
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && rotGrid[nr][nc] === 1) {
+                        rotGrid[nr][nc] = 2;
+                        queue.push([nr, nc, t + 1]);
+
+                        // Update UI immediately
+                        const ncell = getCell('rotGrid', nr, nc);
+                        if (ncell) {
+                            ncell.className = 'rotten';
+                            ncell.textContent = '🧟';
+                        }
+                        await sleep(speed / 3);
+                    }
+                }
+
+                document.getElementById('rotTimeDisplay').textContent = `⏱️ ${time} min`;
+                updateRotStats();
+            }
+
+            // Check if any fresh oranges remain
+            let hasFresh = false;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (rotGrid[i][j] === 1) hasFresh = true;
+                }
+            }
+
+            rotRunning = false;
+            document.getElementById('rotBtnStart').disabled = false;
+
+            if (hasFresh) {
+                logTo('rotLog', '❌ Some oranges could not be infected!', 'error');
+            } else {
+                logTo('rotLog', `✅ All oranges infected in ${time} minutes!`, 'success');
+            }
+        }
+
+        // ============================================
+        // ALGORITHM 3: SPIRAL MATRIX
+        // ============================================
+
+        let spiralData = [];
+
+        function spiralGenerate() {
+            const size = parseInt(document.getElementById('spiralSize').value) || 6;
+            spiralData = [];
+            for (let i = 0; i < size; i++) {
+                const row = [];
+                for (let j = 0; j < size; j++) {
+                    row.push(Math.floor(Math.random() * 90) + 10);
+                }
+                spiralData.push(row);
+            }
+            renderGridToTable('spiralGrid', spiralData);
+            document.getElementById('spiralResult').innerHTML = 'Click "Print Spiral" to see the order.';
+        }
+
+        function spiralPrint() {
+            if (!spiralData.length) {
+                spiralGenerate();
+                return;
+            }
+
+            const result = [];
+            let top = 0,
+                bottom = spiralData.length - 1;
+            let left = 0,
+                right = spiralData[0].length - 1;
+
+            while (top <= bottom && left <= right) {
+                // Right
+                for (let j = left; j <= right; j++) result.push(spiralData[top][j]);
+                top++;
+                // Down
+                for (let i = top; i <= bottom; i++) result.push(spiralData[i][right]);
+                right--;
+                // Left
+                if (top <= bottom) {
+                    for (let j = right; j >= left; j--) result.push(spiralData[bottom][j]);
+                    bottom--;
+                }
+                // Up
+                if (left <= right) {
+                    for (let i = bottom; i >= top; i--) result.push(spiralData[i][left]);
+                    left++;
+                }
+            }
+
+            // Display with arrows
+            const display = result.map((v, i) => `${v}${i < result.length - 1 ? ' → ' : ''}`).join('');
+            document.getElementById('spiralResult').innerHTML = display;
+        }
+
+        function spiralReset() {
+            spiralData = [];
+            document.getElementById('spiralGrid').innerHTML = '';
+            document.getElementById('spiralResult').innerHTML = 'Reset. Generate a new matrix.';
+        }
+
+        // ============================================
+        // ALGORITHM 4: MOVE TOKEN
+        // ============================================
+
+        let moveGrid = [];
+        let moveSteps = 0;
+
+        function moveGenerate() {
+            const size = parseInt(document.getElementById('moveSize').value) || 6;
+            moveGrid = [];
+            for (let i = 0; i < size; i++) {
+                const row = [];
+                for (let j = 0; j < size; j++) {
+                    row.push(Math.floor(Math.random() * 4) + 1);
+                }
+                moveGrid.push(row);
+            }
+            moveGrid[0][0] = 1; // Start
+            moveGrid[size - 1][size - 1] = 1; // Goal
+            moveSteps = 0;
+            renderMoveGrid();
+            document.getElementById('moveSteps').textContent = '0';
+            document.getElementById('moveStatus').textContent = '🎯';
+            clearLog('moveLog');
+            logTo('moveLog', 'Ready. Click "Move" to start.', 'info');
+        }
+
+        function renderMoveGrid(path = []) {
+            renderGridToTable('moveGrid', moveGrid, {
+                cellStyler: (td, val, i, j) => {
+                    const isPath = path.some(([r, c]) => r === i && c === j);
+                    if (isPath) {
+                        td.className = 'path';
+                        td.textContent = '●';
+                    } else if (val === 0) {
+                        td.className = 'empty';
+                        td.textContent = '✗';
+                    } else {
+                        td.textContent = val;
+                        td.className = 'filled';
+                    }
+                }
+            });
+        }
+
+        async function moveStart() {
+            if (!moveGrid.length) {
+                moveGenerate();
+                return;
+            }
+            clearLog('moveLog');
+            logTo('moveLog', '🎯 Moving token...', 'info');
+
+            const path = [];
+            let r = 0,
+                c = 0;
+            moveSteps = 0;
+            const visited = new Set();
+            const size = moveGrid.length;
+            const goal = [size - 1, size - 1];
+
+            while (true) {
+                const key = `${r},${c}`;
+                if (visited.has(key)) {
+                    logTo('moveLog', '❌ Cycle detected!', 'error');
+                    break;
+                }
+                visited.add(key);
+                path.push([r, c]);
+                moveSteps++;
+                document.getElementById('moveSteps').textContent = moveSteps;
+
+                // Highlight current cell
+                const cell = getCell('moveGrid', r, c);
+                if (cell) {
+                    cell.classList.add('infecting');
+                    await sleep(200);
+                    cell.classList.remove('infecting');
+                }
+
+                if (r === goal[0] && c === goal[1]) {
+                    logTo('moveLog', `✅ Reached destination in ${moveSteps} steps!`, 'success');
+                    document.getElementById('moveStatus').textContent = '🏆';
+                    break;
+                }
+
+                const val = moveGrid[r][c];
+                if (val === 0) {
+                    logTo('moveLog', '❌ Stuck at zero!', 'error');
+                    break;
+                }
+
+                // Try moves: right, down, left, up
+                const moves = [
+                    [0, val],
+                    [val, 0],
+                    [0, -val],
+                    [-val, 0]
+                ];
+                let moved = false;
+                for (const [dr, dc] of moves) {
+                    const nr = r + dr,
+                        nc = c + dc;
+                    if (nr >= 0 && nr < size && nc >= 0 && nc < size && moveGrid[nr][nc] !== 0) {
+                        r = nr;
+                        c = nc;
+                        moved = true;
+                        break;
+                    }
+                }
+                if (!moved) {
+                    logTo('moveLog', '❌ No valid moves!', 'error');
+                    break;
+                }
+
+                renderMoveGrid(path);
+            }
+
+            renderMoveGrid(path);
+        }
+
+        function moveReset() {
+            moveGrid = [];
+            moveSteps = 0;
+            document.getElementById('moveGrid').innerHTML = '';
+            document.getElementById('moveSteps').textContent = '0';
+            document.getElementById('moveStatus').textContent = '🎯';
+            clearLog('moveLog');
+            logTo('moveLog', 'Reset. Generate a new board.', 'info');
+        }
+
+        // ============================================
+        // ALGORITHM 5: NEAREST DISTANCE
+        // ============================================
+
+        let nearGrid = [];
+        let nearResult = [];
+
+        function nearGenerate() {
+            const size = parseInt(document.getElementById('nearSize').value) || 6;
+            nearGrid = [];
+            for (let i = 0; i < size; i++) {
+                const row = [];
+                for (let j = 0; j < size; j++) {
+                    row.push(Math.floor(Math.random() * 5));
+                }
+                nearGrid.push(row);
+            }
+            nearResult = [];
+            renderGridToTable('nearGrid', nearGrid);
+            document.getElementById('nearResultGrid').innerHTML = '';
+            document.getElementById('nearMaxDist').textContent = '0';
+            document.getElementById('nearZeros').textContent = '0';
+            clearLog('nearLog');
+            logTo('nearLog', 'Ready. Click "Find" to calculate distances.', 'info');
+        }
+
+        function nearFind() {
+            if (!nearGrid.length) {
+                nearGenerate();
+                return;
+            }
+
+            const rows = nearGrid.length;
+            const cols = nearGrid[0].length;
+            nearResult = Array(rows).fill().map(() => Array(cols).fill(0));
+            const dirs = [
+                [1, 0],
+                [-1, 0],
+                [0, 1],
+                [0, -1],
+                [1, 1],
+                [-1, -1],
+                [1, -1],
+                [-1, 1]
+            ];
+            let maxDist = 0;
+            let zeroCount = 0;
+
+            // Find all zeros first
+            const zeros = [];
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (nearGrid[i][j] === 0) {
+                        zeros.push([i, j]);
+                        zeroCount++;
+                    }
+                }
+            }
+
+            // BFS from all zeros
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (nearGrid[i][j] === 0) {
+                        nearResult[i][j] = 0;
+                        continue;
+                    }
+
+                    let minDist = Infinity;
+                    for (const [zr, zc] of zeros) {
+                        const dist = Math.max(Math.abs(i - zr), Math.abs(j - zc));
+                        minDist = Math.min(minDist, dist);
+                    }
+                    nearResult[i][j] = minDist;
+                    maxDist = Math.max(maxDist, minDist);
+                }
+            }
+
+            // Render results
+            renderGridToTable('nearResultGrid', nearResult, {
+                cellStyler: (td, val) => {
+                    if (val === 0) td.style.background = '#065f46';
+                    else if (val <= 1) td.style.background = '#1e3a5f';
+                    else if (val <= 2) td.style.background = '#78350f';
+                    else if (val <= 3) td.style.background = '#7f1d1d';
+                    else td.style.background = '#4c1d95';
+                }
+            });
+
+            document.getElementById('nearMaxDist').textContent = maxDist;
+            document.getElementById('nearZeros').textContent = zeroCount;
+            logTo('nearLog', `✅ Found ${zeroCount} zeros. Max distance: ${maxDist}`, 'success');
+        }
+
+        function nearReset() {
+            nearGrid = [];
+            nearResult = [];
+            document.getElementById('nearGrid').innerHTML = '';
+            document.getElementById('nearResultGrid').innerHTML = '';
+            document.getElementById('nearMaxDist').textContent = '0';
+            document.getElementById('nearZeros').textContent = '0';
+            clearLog('nearLog');
+            logTo('nearLog', 'Reset. Generate a new matrix.', 'info');
+        }
+
+        // ============================================
+        // ALGORITHM 6: SUDOKU
+        // ============================================
+
+        let sudokuPuzzle = [];
+        let sudokuSolution = [];
+
+        function sudokuGenerate() {
+            // Pre-seeded puzzle for demonstration
+            sudokuPuzzle = [
+                [0, 0, 0, 6, 0, 0, 4, 0, 0],
+                [7, 0, 0, 0, 0, 3, 6, 0, 0],
+                [0, 4, 0, 9, 0, 0, 0, 1, 2],
+                [0, 0, 9, 0, 4, 0, 0, 0, 6],
+                [0, 0, 1, 0, 0, 0, 9, 0, 0],
+                [6, 0, 0, 0, 3, 0, 5, 0, 0],
+                [4, 0, 0, 0, 0, 6, 0, 7, 0],
+                [0, 0, 6, 3, 0, 0, 0, 0, 5],
+                [0, 0, 7, 0, 0, 8, 0, 0, 0]
+            ];
+            sudokuSolution = [];
+            renderSudokuGrid('sudokuGrid', sudokuPuzzle);
+            document.getElementById('sudokuSolution').innerHTML = '';
+            updateSudokuStats(sudokuPuzzle);
+            document.getElementById('sudokuSolved').textContent = '0';
+            document.getElementById('sudokuBtnSolve').disabled = false;
+            clearLog('sudokuLog');
+            logTo('sudokuLog', 'Generated puzzle. Click "Solve" to find solution.', 'info');
+        }
+
+        function renderSudokuGrid(tableId, grid) {
+            renderGridToTable(tableId, grid, {
+                cellStyler: (td, val, i, j) => {
+                    td.textContent = val || '·';
+                    if (val === 0) {
+                        td.style.background = '#1a2332';
+                        td.style.color = '#64748b';
+                    } else {
+                        td.style.background = '#1e3a5f';
+                        td.style.color = '#e2e8f0';
+                    }
+                    // Add 3x3 box borders
+                    if (i % 3 === 0) td.style.borderTop = '2px solid #64748b';
+                    if (j % 3 === 0) td.style.borderLeft = '2px solid #64748b';
+                    if (i === 8) td.style.borderBottom = '2px solid #64748b';
+                    if (j === 8) td.style.borderRight = '2px solid #64748b';
+                }
+            });
+        }
+
+        function updateSudokuStats(grid) {
+            let filled = 0,
+                empty = 0;
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (grid[i][j] === 0) empty++;
+                    else filled++;
+                }
+            }
+            document.getElementById('sudokuFilled').textContent = filled;
+            document.getElementById('sudokuEmpty').textContent = empty;
+        }
+
+        function sudokuSolve() {
+            const board = sudokuPuzzle.map(row => [...row]);
+
+            function isValid(board, row, col, num) {
+                for (let i = 0; i < 9; i++) {
+                    if (board[row][i] === num || board[i][col] === num) return false;
+                }
+                const sr = Math.floor(row / 3) * 3;
+                const sc = Math.floor(col / 3) * 3;
+                for (let i = sr; i < sr + 3; i++) {
+                    for (let j = sc; j < sc + 3; j++) {
+                        if (board[i][j] === num) return false;
+                    }
+                }
+                return true;
+            }
+
+            function solve(board) {
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        if (board[i][j] === 0) {
+                            for (let num = 1; num <= 9; num++) {
+                                if (isValid(board, i, j, num)) {
+                                    board[i][j] = num;
+                                    if (solve(board)) return true;
+                                    board[i][j] = 0;
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            const startTime = performance.now();
+            if (solve(board)) {
+                const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+                sudokuSolution = board;
+                renderSudokuGrid('sudokuSolution', board);
+                document.getElementById('sudokuSolved').textContent = '✓';
+                updateSudokuStats(board);
+                logTo('sudokuLog', `✅ Solved in ${elapsed}s!`, 'success');
+            } else {
+                logTo('sudokuLog', '❌ No solution exists!', 'error');
+            }
+        }
+
+        function sudokuReset() {
+            sudokuPuzzle = Array(9).fill().map(() => Array(9).fill(0));
+            sudokuSolution = [];
+            document.getElementById('sudokuGrid').innerHTML = '';
+            document.getElementById('sudokuSolution').innerHTML = '';
+            document.getElementById('sudokuFilled').textContent = '0';
+            document.getElementById('sudokuEmpty').textContent = '81';
+            document.getElementById('sudokuSolved').textContent = '0';
+            clearLog('sudokuLog');
+            logTo('sudokuLog', 'Reset. Generate a new puzzle.', 'info');
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        // Initialize all algorithms on load
+        compReset();
+        rotReset();
+        spiralGenerate();
+        moveGenerate();
+        nearGenerate();
+        sudokuGenerate();
+
+        // Fix: Ensure Rotten Oranges "Start" button is properly labeled
+        document.getElementById('rotBtnStart').textContent = '🦠 Infect';
+    </script>
+</body>
+
+</html>

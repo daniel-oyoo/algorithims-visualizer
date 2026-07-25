@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Traversal Visualizer</title>
+    <style>
+         :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --cell-bg: #334155;
+            --cell-active: #3b82f6;
+            --cell-visited: #64748b;
+            --cell-neighbor: #eab308;
+            --cell-target: #22c55e;
+            --border-color: #475569;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+        /* App Container Layout */
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+        /* Controls Area */
+        
+        .controls-zone {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        select,
+        button,
+        input {
+            background: var(--cell-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        button {
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        button:hover:not(:disabled) {
+            background: #475569;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        button.btn-primary {
+            background: var(--cell-active);
+            border-color: var(--cell-active);
+        }
+        
+        button.btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+        }
+        /* Zone 1: Matrix / Table Area */
+        
+        .matrix-zone {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            overflow-x: auto;
+        }
+        
+        table.grid-table {
+            border-collapse: collapse;
+            user-select: none;
+        }
+        
+        table.grid-table td {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            font-weight: bold;
+            background-color: var(--cell-bg);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        /* Animation & Cell States */
+        
+        td.active {
+            background-color: var(--cell-active) !important;
+            color: #fff;
+            box-shadow: 0 0 12px var(--cell-active);
+            z-index: 2;
+            animation: pulse 1s infinite alternate;
+        }
+        
+        td.evaluating {
+            background-color: var(--cell-neighbor) !important;
+            color: #000;
+        }
+        
+        td.visited {
+            background-color: var(--cell-visited) !important;
+            color: #cbd5e1;
+            opacity: 0.8;
+        }
+        
+        td.chosen {
+            background-color: var(--cell-target) !important;
+            color: #000;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.08);
+            }
+        }
+        /* Zone 2 & 3: Status & Results Area */
+        
+        .bottom-zones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .status-zone,
+        .results-zone {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        
+        .zone-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        
+        .log-box {
+            font-family: monospace;
+            font-size: 0.85rem;
+            background: #090d16;
+            padding: 10px;
+            border-radius: 4px;
+            height: 100px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .metric-card {
+            background: var(--cell-bg);
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .metric-card .val {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--cell-active);
+        }
+        
+        .metric-card .lbl {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Controls & Options Zone -->
+        <div class="controls-zone">
+            <div class="control-group">
+                <label for="strategy">Strategy:</label>
+                <select id="strategy">
+                    <option value="greedy">Greedy (Max Neighbor)</option>
+                    <option value="astar">A* Search (To Highest Cell)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="directions">Move Set:</label>
+                <select id="directions">
+                    <option value="4">4-Way</option>
+                    <option value="8">8-Way</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="gridSize">Size:</label>
+                <input type="number" id="gridSize" value="7" min="3" max="15" style="width: 50px;">
+            </div>
+
+            <div class="control-group">
+                <label for="speed">Delay:</label>
+                <input type="range" id="speed" min="50" max="1000" value="300" step="50" style="width: 80px;">
+            </div>
+
+            <div class="control-group">
+                <button id="btnStart" class="btn-primary">Walk</button>
+                <button id="btnPause" disabled>Pause</button>
+                <button id="btnReset">Reset</button>
+            </div>
+        </div>
+
+        <!-- Zone 1: Matrix Area -->
+        <div class="matrix-zone">
+            <table class="grid-table" id="gridTable"></table>
+        </div>
+
+        <!-- Zones 2 & 3: Status and Results Area -->
+        <div class="bottom-zones">
+            <div class="status-zone">
+                <div class="zone-title">Live Comparison & Status</div>
+                <div class="log-box" id="statusLog">Ready to start...</div>
+            </div>
+
+            <div class="results-zone">
+                <div class="zone-title">Progress Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="val" id="metricSteps">0</div>
+                        <div class="lbl">Steps Walked</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="val" id="metricScore">0</div>
+                        <div class="lbl">Current Cell Value</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Traversal state variables
+        let grid = [];
+        let rows = 7;
+        let cols = 7;
+        let isRunning = false;
+        let isPaused = false;
+        let delayMs = 300;
+        let stepsCount = 0;
+
+        const FOURDIR = [
+            [-1, 0],
+            [0, 1],
+            [1, 0],
+            [0, -1]
+        ];
+        const EIGHTDIR = [
+            [-1, 0],
+            [-1, 1],
+            [0, 1],
+            [1, 1],
+            [1, 0],
+            [1, -1],
+            [0, -1],
+            [-1, -1]
+        ];
+
+        // DOM elements
+        const gridTable = document.getElementById('gridTable');
+        const statusLog = document.getElementById('statusLog');
+        const metricSteps = document.getElementById('metricSteps');
+        const metricScore = document.getElementById('metricScore');
+
+        const btnStart = document.getElementById('btnStart');
+        const btnPause = document.getElementById('btnPause');
+        const btnReset = document.getElementById('btnReset');
+        const inputSpeed = document.getElementById('speed');
+
+        function log(msg) {
+            statusLog.innerHTML += `> ${msg}<br>`;
+            statusLog.scrollTop = statusLog.scrollHeight;
+        }
+
+        function clearLog() {
+            statusLog.innerHTML = '';
+        }
+
+        // Helper delay function for smooth animations
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function checkPause() {
+            while (isPaused) {
+                await sleep(100);
+            }
+        }
+
+        // Build internal board representation
+        function generateGridData(r, c) {
+            grid = [];
+            for (let i = 0; i < r; i++) {
+                let row = [];
+                for (let j = 0; j < c; j++) {
+                    row.push(Math.floor(Math.random() * 90) + 10); // Values 10-99
+                }
+                grid.push(row);
+            }
+        }
+
+        // Render HTML Table
+        function renderBoard() {
+            gridTable.innerHTML = '';
+            for (let i = 0; i < rows; i++) {
+                let tr = document.createElement('tr');
+                for (let j = 0; j < cols; j++) {
+                    let td = document.createElement('td');
+                    td.id = `cell-${i}-${j}`;
+                    td.innerText = grid[i][j];
+                    tr.appendChild(td);
+                }
+                gridTable.appendChild(tr);
+            }
+        }
+
+        function getCellEl(r, c) {
+            return document.getElementById(`cell-${r}-${c}`);
+        }
+
+        function clearCellStyles() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const el = getCellEl(i, j);
+                    if (el) el.className = '';
+                }
+            }
+        }
+
+        function init() {
+            rows = parseInt(document.getElementById('gridSize').value) || 7;
+            cols = rows;
+            isRunning = false;
+            isPaused = false;
+            stepsCount = 0;
+            btnStart.disabled = false;
+            btnPause.disabled = true;
+            btnPause.innerText = 'Pause';
+            metricSteps.innerText = '0';
+            metricScore.innerText = '0';
+
+            generateGridData(rows, cols);
+            renderBoard();
+            clearLog();
+            log(`Generated ${rows}x${cols} board.`);
+        }
+
+        // Greedy strategy execution step
+        async function runGreedyWalk(startR, startC, directions) {
+            let currR = startR;
+            let currC = startC;
+            let visited = Array.from({
+                length: rows
+            }, () => Array(cols).fill(false));
+
+            while (isRunning) {
+                await checkPause();
+
+                visited[currR][currC] = true;
+                stepsCount++;
+                metricSteps.innerText = stepsCount;
+                metricScore.innerText = grid[currR][currC];
+
+                const currentEl = getCellEl(currR, currC);
+                currentEl.className = 'active';
+                log(`At [${currR}, ${currC}] (Val: ${grid[currR][currC]})`);
+
+                await sleep(delayMs);
+
+                // Stop if we hit any outer border
+                if (currR === 0 || currR === rows - 1 || currC === 0 || currC === cols - 1) {
+                    log(`Reached edge at [${currR}, ${currC}]! Stopping.`);
+                    break;
+                }
+
+                // Check neighboring cells
+                let bestVal = -1;
+                let nextCell = null;
+
+                for (let [dr, dc] of directions) {
+                    let nr = currR + dr;
+                    let nc = currC + dc;
+
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                        const nEl = getCellEl(nr, nc);
+                        if (!visited[nr][nc]) {
+                            nEl.classList.add('evaluating');
+                            log(` Comparing neighbor [${nr},${nc}] = ${grid[nr][nc]}`);
+                            await sleep(delayMs / 2);
+
+                            if (grid[nr][nc] > bestVal) {
+                                bestVal = grid[nr][nc];
+                                nextCell = [nr, nc];
+                            }
+                            nEl.classList.remove('evaluating');
+                        }
+                    }
+                }
+
+                currentEl.className = 'visited';
+
+                if (!nextCell) {
+                    log(`No unvisited neighbors available. Local peak/stuck.`);
+                    break;
+                }
+
+                // Move to highest neighbor found
+                currR = nextCell[0];
+                currC = nextCell[1];
+                getCellEl(currR, currC).className = 'chosen';
+                await sleep(delayMs / 2);
+            }
+        }
+
+        // A* Search strategy (Targeting the maximum value cell on the board)
+        async function runAStarWalk(startR, startC, directions) {
+            // Find global target (highest value cell)
+            let maxVal = -1,
+                targetR = 0,
+                targetC = 0;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (grid[r][c] > maxVal) {
+                        maxVal = grid[r][c];
+                        targetR = r;
+                        targetC = c;
+                    }
+                }
+            }
+
+            log(`A* Target selected: Max cell [${targetR},${targetC}] = ${maxVal}`);
+
+            const heuristic = (r, c) => Math.hypot(r - targetR, c - targetC);
+
+            let openSet = [{
+                r: startR,
+                c: startC,
+                g: 0,
+                f: heuristic(startR, startC),
+                path: [
+                    [startR, startC]
+                ]
+            }];
+            let visited = Array.from({
+                length: rows
+            }, () => Array(cols).fill(false));
+
+            while (openSet.length > 0 && isRunning) {
+                await checkPause();
+
+                openSet.sort((a, b) => a.f - b.f);
+                let current = openSet.shift();
+
+                let currR = current.r;
+                let currC = current.c;
+
+                if (visited[currR][currC]) continue;
+                visited[currR][currC] = true;
+
+                stepsCount++;
+                metricSteps.innerText = stepsCount;
+                metricScore.innerText = grid[currR][currC];
+
+                const currentEl = getCellEl(currR, currC);
+                currentEl.className = 'active';
+                log(`Visited [${currR}, ${currC}] (f-score: ${current.f.toFixed(1)})`);
+
+                await sleep(delayMs);
+
+                // Stop at edge or target cell
+                if (currR === targetR && currC === targetC) {
+                    log(`Reached highest cell target at [${currR}, ${currC}]!`);
+                    break;
+                }
+                if (currR === 0 || currR === rows - 1 || currC === 0 || currC === cols - 1) {
+                    log(`Reached edge boundary at [${currR}, ${currC}]. Stopping.`);
+                    break;
+                }
+
+                currentEl.className = 'visited';
+
+                for (let [dr, dc] of directions) {
+                    let nr = currR + dr;
+                    let nc = currC + dc;
+
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !visited[nr][nc]) {
+                        const nEl = getCellEl(nr, nc);
+                        nEl.classList.add('evaluating');
+
+                        let g = current.g + 1;
+                        let h = heuristic(nr, nc);
+                        let f = g + h;
+
+                        openSet.push({
+                            r: nr,
+                            c: nc,
+                            g: g,
+                            f: f
+                        });
+                        await sleep(delayMs / 3);
+                        nEl.classList.remove('evaluating');
+                    }
+                }
+            }
+        }
+
+        // Event handlers & UI Bindings
+        btnStart.addEventListener('click', async() => {
+            if (isRunning) return;
+
+            clearCellStyles();
+            clearLog();
+            isRunning = true;
+            isPaused = false;
+            btnStart.disabled = true;
+            btnPause.disabled = false;
+
+            const strategy = document.getElementById('strategy').value;
+            const dirType = document.getElementById('directions').value;
+            const directions = dirType === '8' ? EIGHTDIR : FOURDIR;
+
+            let startR = Math.floor(rows / 2);
+            let startC = Math.floor(cols / 2);
+
+            log(`Starting ${strategy.toUpperCase()} walk from center [${startR}, ${startC}]...`);
+
+            if (strategy === 'greedy') {
+                await runGreedyWalk(startR, startC, directions);
+            } else if (strategy === 'astar') {
+                await runAStarWalk(startR, startC, directions);
+            }
+
+            isRunning = false;
+            btnStart.disabled = false;
+            btnPause.disabled = true;
+            log('Simulation complete.');
+        });
+
+        btnPause.addEventListener('click', () => {
+            isPaused = !isPaused;
+            btnPause.innerText = isPaused ? 'Resume' : 'Pause';
+            log(isPaused ? 'Animation paused.' : 'Animation resumed.');
+        });
+
+        btnReset.addEventListener('click', () => {
+            init();
+        });
+
+        inputSpeed.addEventListener('input', (e) => {
+            delayMs = parseInt(e.target.value);
+        });
+
+        document.getElementById('gridSize').addEventListener('change', () => {
+            init();
+        });
+
+        // Initialize on launch
+        init();
+    </script>
+</body>
+
+</html>
