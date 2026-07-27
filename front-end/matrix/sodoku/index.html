@@ -148,8 +148,8 @@
 
     <script type="text/javascript ">
         /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
 
 
 
@@ -173,6 +173,9 @@
         let solved = document.querySelector('.result-container .results #solved');
         let pboards = document.querySelector('.result-container .results #p-boards');
         let currentCell = document.querySelector('.result-container .results #current-cell');
+
+
+        let progressTable = document.getElementById("status ");
         // */
         //delay controls
         let isPaused = false;
@@ -383,8 +386,7 @@
 
 
             //anaime
-            let progressTable = document.getElementById("status ");
-            let emptycells = 0;
+            let emptycells = 67;
             let solvedcells = 0;
             let pboard = 0;
             outer:
@@ -393,10 +395,12 @@
                     // System.out.println("Working ");
                     for (let j = 0; j < cols;) {
 
+                        LOG(`Scanning cell (${i},${j})`);
+
                         currentCell.innerText = `${i},${j}`;
-                        pboards.innerText = pboard;
-                        empty.innerText = emptycells;
-                        solved.innerText = solvedcells;
+                        pboards.innerText = `${pboard}`;
+                        empty.innerText = `${emptycells}`;
+                        solved.innerText = `${solvedcells}`;
                         //delay works
                         //pause/resume
                         while (isPaused) {
@@ -420,8 +424,12 @@
                         if (cell) {
                             cell.classList.add('scan');
                             //await sleep here to avoid insta magic
-                            await sleep(30);
+                            await sleep(80);
                         }
+
+
+                        //aniamtions
+                        // let num = 1;
 
 
 
@@ -440,6 +448,7 @@
                             }
 
                             //create table and all for displaying data as we move across
+                            let statusRow = null;
 
                             //System.out.println("Processing cell ( "+ i + ", " + j + ") " + " with list " + cellList);
                             if (compute) {
@@ -450,14 +459,18 @@
 
 
                                 //animations
-                                let currentRow = document.createElement('tr');
-                                currentRow.id = 'list-${currenCellListIndex}';
+                                //let currentRow = document.createElement('tr');
+                                //currentRow.id = 'list-${currenCellListIndex}';
                                 //currentRow.className='list-${currenCellListIndex}'
-                                let colOne = document.createElement('td');
-                                let colTwo = document.createElement('td');
-                                colOne.innerText = `(${i},${j})`;
-                                currenRow.appendChild(colOne);
-                                currentRow.appendChild(colTwo);
+                                //let colOne = document.createElement('td');
+                                //let colTwo = document.createElement('td');
+                                //colOne.innerText = `(${i},${j})`;
+                                //currenRow.appendChild(colOne);
+                                //currentRow.appendChild(colTwo);
+
+                                statusRow = createRow(currenCellListIndex, i, j);
+
+
 
 
                                 //fill with nums/valid
@@ -470,9 +483,16 @@
 
 
                                         //anime
-                                        colTwo.innerText += `${num}`;
+                                        //colTwo.innerText += `${num}`;
+                                        statusRow.children[1].innerHTML += `<div id=
+                                        $ {
+                                            num
+                                        } ><b>
+                                        $ {
+                                            num
+                                        } <b>< /div>`;
                                         //progressTable.appendChild(currenRow);
-                                        await sleep(50);
+                                        //await sleep(50);
 
 
 
@@ -480,7 +500,10 @@
                                 } //end for - nums
 
                                 //anime
+                                //currentRow.appendChild(colTwo);
                                 //progressTable.appendChild(currenRow);
+
+                                //console.log(progressTable);
 
 
 
@@ -488,8 +511,16 @@
                             } //end if compute/recompute
 
                             //here we have a list
-                            let currentList = validCellList[currentCellListIndex];
-                            //console.log("List empty : " + (currentList.isEmpty()));
+                            //let currentList = validCellList[currentCellListIndex]
+                            //let idx = `$ {
+                            //  currenCellListIndex
+                            //}
+                            //`;
+                            //  statusRow = document.getElementById(`
+                            //$ {
+                            //  list - idx
+                            //}
+                            //`);
 
                             //empty or not
                             if (currentList.length !== 0) {
@@ -509,8 +540,16 @@
 
                                 //animations
                                 //remove from table  add to matrix--await sleep in between
-                                empty--;
-                                solved++;
+                                //cell.innerText = map[i][j];
+                                //document.querySelector('#${i}-${j}').innerText = map[i][j];
+                                let removedNum = document.getElementById(`
+                            $ {
+                                map[i][j];
+                            }
+                            `);
+                                removedNum = null;
+                                emptycells--;
+                                solvedcells++;
 
 
 
@@ -536,8 +575,8 @@
 
                                 //assign results divs to these varialbes
                                 pboard++;
-                                empty++;
-                                solved--;
+                                emptycells++;
+                                solvedcells--;
 
                             } //check if list valid or not
 
@@ -605,9 +644,31 @@
 
         /*Animations rlated quiclks*/
 
+        function createRow(index, i, j) {
+            //returns a collection of children
+            //animations
+            let currentRow = document.createElement('tr');
+            currentRow.id = 'list-${index}';
+            //currentRow.className='list-${currenCellListIndex}'
+            let colOne = document.createElement('td');
+            let colTwo = document.createElement('td');
+            colOne.innerText = ` ($ {
+                                i
+                            }, $ {
+                                j
+                            })
+                            `;
+            currenRow.appendChild(colOne);
+            currenRow.appendChild(colTwo);
+            progressTable.appendChild(currentRow);
+
+            return currenRow;
+        }
+
         function LOG(info) {
             let log = document.querySelector('.result-container .results #logs');
-            log.innerText = info;
+            log.innerText = info; //overflows but can be wrapped around its conatainer
+            //for now remove plus
         }
 
         async function sleep(ms) {
@@ -650,7 +711,13 @@
                     //class
                     c.className = "cell ";
                     //id
-                    c.id = `${i}-${j}`;
+                    c.id = `
+                            $ {
+                                i
+                            } - $ {
+                                j
+                            }
+                            `;
                     //text maybe
                     c.innerText = map[i][j];
 
