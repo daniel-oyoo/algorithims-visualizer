@@ -19,7 +19,6 @@
         .description {
             width: 800px;
             height: 150px;
-            border: 2px solid grey;
         }
         
         .controls-options {}
@@ -33,7 +32,6 @@
         .controls-card {
             width: 800px;
             height: 80px;
-            border: 2px solid grey;
         }
         
         .main-content {}
@@ -41,7 +39,6 @@
         .content-card {
             width: 500px;
             height: 500px;
-            border: 2px solid grey;
         }
         
         .results {
@@ -63,6 +60,14 @@
             text-align: center;
             border: 2px solid grey;
             border-radius: 5px;
+        }
+        
+        .scan {
+            box-shadow: blue 3px 3px 6px 2px, blue -3px -3px 6px 2px;
+        }
+        
+        .empty-cell {
+            background-color: yellow;
         }
     </style>
 </head>
@@ -88,9 +93,9 @@
             <!-- controls-->
             <div class="controls-card" id="controls">
                 <button onclick="renderMatrix()">Generate</button>
-                <button>Solve</button>
-                <button>pause/resume</button>
-                <button>reset</button>
+                <button onclick="sodoku()">Solve</button>
+                <button onclick="pause()">pause/resume</button>
+                <button onclick="reset()">reset</button>
             </div>
         </div>
 
@@ -128,10 +133,10 @@
                 <div class="results-card" id="solved"></div>
                 <!-- current cell cells-->
                 <p>Current<br>Cell</p>
-                <div class="results-card" id=current-cell "></div>
+                <div class="results-card" id="current-cell"></div>
                 <!-- Partial boards solved-->
                 <p>Partial boards</p>
-                <div class="results-card " id="p-boards "></div>
+                <div class="results-card " id="p-boards"></div>
             </div>
         </div>
 
@@ -143,8 +148,8 @@
 
     <script type="text/javascript ">
         /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
 
 
 
@@ -161,6 +166,17 @@
         const PROB = 0.75;
         //hold valid cells
         const validCellList = []; //store usbale for each cell
+        // /*
+        //anaimatiosna and all 
+        let empty = document.querySelector('.result-container .results #empty');
+        let logs = document.querySelector('.result-container .results #logs');
+        let solved = document.querySelector('.result-container .results #solved');
+        let pboards = document.querySelector('.result-container .results #p-boards');
+        let currentCell = document.querySelector('.result-container .results #current-cell');
+        // */
+        //delay controls
+        let isPaused = false;
+        let stop = false;
 
 
 
@@ -343,31 +359,107 @@
 
 
         //now scanning
-        function sodoku() {
-            //hold valids for each cell
-            //we we progress this list reduces in number
-            //if the first list is empty and its not placed in that cell we sya there is no solution
+        async function sodoku() {
+            console.log("Working ")
+                //hold valids for each cell
+                //we we progress this list reduces in number
+                //if the first list is empty and its not placed in that cell we sya there is no solution
 
             let currentCellListIndex = 0;
+
 
             //we use existing
             let compute = true;
             //for emergecncy exit incase there is no slution
+
+
+
+            //anaimatiosna and all 
+            // let empty = document.querySelector('.result-container .results #empty');
+            //let logs = document.querySelector('.result-container .results #logs');
+            //let solved = document.querySelector('.result-container .results #solved');
+            //let pboards = document.querySelector('.result-container .results #p-boards');
+            //let currentCell = document.querySelector('.result-container .results #current-cell');
+
+
+            //anaime
+            let progressTable = document.getElementById("status ");
+            let emptycells = 0;
+            let solvedcells = 0;
+            let pboard = 0;
             outer:
                 //scan for empty
                 for (let i = 0; i < rows && i >= 0; i++) {
                     // System.out.println("Working ");
-                    for (let j = 0; j < cols;
-                        //j++//does this always force forward processing
-                    ) {
+                    for (let j = 0; j < cols;) {
+
+                        currentCell.innerText = `${i},${j}`;
+                        pboards.innerText = pboard;
+                        empty.innerText = emptycells;
+                        solved.innerText = solvedcells;
+                        //delay works
+                        //pause/resume
+                        while (isPaused) {
+                            await sleep(100);
+                        }
+                        //reset
+                        if (stop) {
+                            return;
+                        }
+
+                        //get cell
+                        let cell = document.getElementById(`${i}-${j}`);
+
+                        //clear previous scans
+                        let list = Array.from(document.querySelectorAll('.cell'));
+
+                        for (let c = 0; c < list.length; c++) {
+                            list[c].classList.remove('scan');
+                        }
+                        //scan
+                        if (cell) {
+                            cell.classList.add('scan');
+                            //await sleep here to avoid insta magic
+                            await sleep(30);
+                        }
+
+
+
+
+
                         //check if empty//cells that are 0 
                         if (workable[i][j]) {
+                            for (let c = 0; c < list.length; c++) {
+                                list[c].classList.remove('empty-cell');
+                            }
+                            //damn here working found so we remove the scan colour it yellow and solve it 
+                            if (cell) {
+                                cell.classList.remove('scan');
+                                cell.classList.add('empty-cell');
+                                await sleep(30);
+                            }
+
+                            //create table and all for displaying data as we move across
+
                             //System.out.println("Processing cell ( "+ i + ", " + j + ") " + " with list " + cellList);
                             if (compute) {
-                                console.log("Computing list ");
+                                //console.log("Computing list ");
                                 //this cell valid lets fill its valid nums
                                 //add a list without refrence to avoid working with the same list through out
                                 validCellList.push([]);
+
+
+                                //animations
+                                let currentRow = document.createElement('tr');
+                                currentRow.id = 'list-${currenCellListIndex}';
+                                //currentRow.className='list-${currenCellListIndex}'
+                                let colOne = document.createElement('td');
+                                let colTwo = document.createElement('td');
+                                colOne.innerText = `(${i},${j})`;
+                                currenRow.appendChild(colOne);
+                                currentRow.appendChild(colTwo);
+
+
                                 //fill with nums/valid
                                 for (let num = 1; num <= 9; num++) {
                                     //System.out.println("Num " + num + " Valid : " + cellValid(i,j,num));
@@ -375,8 +467,23 @@
                                     if (isValid(i, j, num)) {
                                         //System.out.println("Number " + num + " valid for cell ( " + i + ", " + j + ") ");
                                         validCellList[currentCellListIndex].push(num);
+
+
+                                        //anime
+                                        colTwo.innerText += `${num}`;
+                                        //progressTable.appendChild(currenRow);
+                                        await sleep(50);
+
+
+
                                     }
                                 } //end for - nums
+
+                                //anime
+                                //progressTable.appendChild(currenRow);
+
+
+
                                 //console.log(validCellList.get(cellList));
                             } //end if compute/recompute
 
@@ -396,6 +503,17 @@
                                 currentCellListIndex++;
                                 //set compute
                                 compute = true;
+
+
+
+
+                                //animations
+                                //remove from table  add to matrix--await sleep in between
+                                empty--;
+                                solved++;
+
+
+
                             } else {
 
                                 //remove this list from our global list
@@ -408,7 +526,18 @@
                                 //map[i][j]=0;//bug or maybe has no effect
                                 //dont build new list ,use existing
                                 compute = false;
-                                //console.log("Going back to cell ( " + i + ", " + j + ") " + " with list " + cellList);
+                                //console.log("Going back to cell ( " + i + ", " + j + ") " + " with li // st " + cellList);
+
+
+                                //aniamtions
+                                //remove current list 
+                                //glow box-shadow the nextOne;
+                                //here
+
+                                //assign results divs to these varialbes
+                                pboard++;
+                                empty++;
+                                solved--;
 
                             } //check if list valid or not
 
@@ -476,7 +605,28 @@
 
         /*Animations rlated quiclks*/
 
-        function renderMatrix(){
+        function LOG(info) {
+            let log = document.querySelector('.result-container .results #logs');
+            log.innerText = info;
+        }
+
+        async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function pause() {
+            isPaused = true;
+        }
+
+        function resume() {
+            isPaused = false;
+        }
+
+        function reset() {
+            stop = true
+        }
+
+        function renderMatrix() {
             //build mirror
             zerofy();
             mapify();
@@ -487,25 +637,25 @@
 
             console.log(container);
             //clear
-            container.innerHTML=" ";
+            container.innerHTML = " ";
             //1.get table
-            let table=document.createElement('table');
-            table.id="table-matrix ";
-            table.border="1 ";
-            for(let i=0;i<rows;i++){
+            let table = document.createElement('table');
+            table.id = "table-matrix ";
+            table.border = "1 ";
+            for (let i = 0; i < rows; i++) {
                 //create rows
-                let r=document.createElement('tr');
-                for(let j=0;j<cols;j++){
-                 let c=document.createElement('td');
-                 //class
-                 c.className="cell ";
-                 //id
-                 c.id=`${i}-${j}`;
-                 //text maybe
-                 c.innerText=map[i][j];
+                let r = document.createElement('tr');
+                for (let j = 0; j < cols; j++) {
+                    let c = document.createElement('td');
+                    //class
+                    c.className = "cell ";
+                    //id
+                    c.id = `${i}-${j}`;
+                    //text maybe
+                    c.innerText = map[i][j];
 
-                 //append
-                 r.appendChild(c);
+                    //append
+                    r.appendChild(c);
                 }
                 table.appendChild(r);
             }
@@ -517,7 +667,7 @@
 
 
         /*Working flow*/
-        renderMatrix();//currently this matrix is static lets keep it that way
+        renderMatrix(); //currently this matrix is static lets keep it that way
         //this worked
 
         /*
