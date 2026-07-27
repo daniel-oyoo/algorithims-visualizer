@@ -41,6 +41,8 @@
             height: 500px;
         }
         
+        #matrix {}
+        
         .results {
             /*display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -148,8 +150,8 @@
 
     <script type="text/javascript ">
         /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 
 
@@ -363,6 +365,7 @@
 
         //now scanning
         async function sodoku() {
+            //renderMatrix();
             console.log("Working ")
                 //hold valids for each cell
                 //we we progress this list reduces in number
@@ -413,7 +416,7 @@
                             return;
                         }
 
-                        //get cell
+                        //get cell--any cell
                         let cell = document.getElementById(`${i}-${j}`);
 
                         //clear previous scans
@@ -486,7 +489,7 @@
 
                                         //anime
                                         //colTwo.innerText += `${num}`;
-                                        statusRow.children[1].innerHTML += `<div id=${num}> < b >${num}< b > < /div>`;
+                                        statusRow.children[1].innerHTML += `<div id=${num}> <b>${num}</b></div>`;
                                         //progressTable.appendChild(currenRow);
                                         //await sleep(50);
 
@@ -529,6 +532,9 @@
                                 //console.log("Processing cell ( " + i + ", " + j + ") " + " with list " + cellList);
                                 //place
                                 map[i][j] = currentList[0]; //take the first in list
+
+                                //anime 
+                                document.getElementById(`${i}-${j}`).innerText = map[i][j];
                                 //remove the first from list
                                 currentList.shift();
                                 //move to next list
@@ -712,13 +718,7 @@
                     //class
                     c.className = "cell ";
                     //id
-                    c.id = `
-                            $ {
-                                i
-                            } - $ {
-                                j
-                            }
-                            `;
+                    c.id = `${i}-${j}`;
                     //text maybe
                     c.innerText = map[i][j];
 
