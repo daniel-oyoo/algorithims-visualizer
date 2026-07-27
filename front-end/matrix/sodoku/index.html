@@ -4,7 +4,18 @@
 <head>
     <!--
     <a rel="text/css" href="style.css">
-        <a rel="text/javascript" href="script.js">-->
+        <a rel="text/javascript" href="script.js">
+            
+            
+            
+            prodedure
+            scan to look for emprty
+            if found change colour to yeloow and beggin ciomputing list
+            when done take first from list 
+            place in yellow cel 
+            remove yellow and canagian 
+            do this back and forth till no sol or board solved 
+            -->
     <style>
         body {
             alink: blue;
@@ -40,7 +51,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
             display: flex;
-            flex-direction: column;
+            /*flex-direction: column;*/
         }
         
         .content-card {
@@ -169,8 +180,8 @@
 
     <script type="text/javascript ">
         /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
 
 
 
@@ -449,7 +460,7 @@
                         if (cell) {
                             cell.classList.add('scan');
                             //await sleep here to avoid insta magic
-                            await sleep(80);
+                            await sleep(500);
                         }
 
 
@@ -469,7 +480,7 @@
                             if (cell) {
                                 cell.classList.remove('scan');
                                 cell.classList.add('empty-cell');
-                                await sleep(80);
+                                await sleep(500);
                             }
 
                             //create table and all for displaying data as we move across
@@ -493,7 +504,7 @@
                                 //currenRow.appendChild(colOne);
                                 //currentRow.appendChild(colTwo);
 
-                                statusRow = createRow(currentCellListIndex, i, j);
+                                let statusRow = createRow(currentCellListIndex, i, j);
 
 
 
@@ -512,7 +523,7 @@
                                         //labels pile side by sie with unique id,beats just adding content to td
                                         statusRow.children[1].innerHTML += `<label id=${num}> <b>${num}</b></label>`;
                                         //progressTable.appendChild(currenRow);
-                                        //await sleep(50);
+                                        await sleep(500);
 
 
 
@@ -571,7 +582,10 @@
                                 //cell.innerText = map[i][j];
                                 //document.querySelector('#${i}-${j}').innerText = map[i][j];
                                 let removedNum = document.getElementById(`${map[i][j]}`);
+                                //currrnetlyit doesnt reflect removed
                                 removedNum = null;
+                                //lets try this
+                                //statusRow.children[1].innerText = currentList;//freezes treversal
                                 empty.innerText = `${emptycells--}`;
                                 solved.innerText = `${solvedcells++}`;
 
