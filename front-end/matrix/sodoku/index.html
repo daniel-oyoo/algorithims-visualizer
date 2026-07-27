@@ -43,6 +43,13 @@
         
         #matrix {}
         
+        #progress {}
+        /*table*/
+        
+        #status {
+            text-overflow: clip;
+        }
+        
         .results {
             /*display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -150,8 +157,8 @@
 
     <script type="text/javascript ">
         /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 
 
@@ -365,6 +372,7 @@
 
         //now scanning
         async function sodoku() {
+            //refresh table progress and matrix
             //renderMatrix();
             console.log("Working ")
                 //hold valids for each cell
@@ -473,7 +481,7 @@
                                 //currenRow.appendChild(colOne);
                                 //currentRow.appendChild(colTwo);
 
-                                // statusRow = createRow(currentCellListIndex, i, j);
+                                statusRow = createRow(currentCellListIndex, i, j);
 
 
 
@@ -489,7 +497,7 @@
 
                                         //anime
                                         //colTwo.innerText += `${num}`;
-                                        //statusRow.children[1].innerHTML += `<div id=${num}> <b>${num}</b></div>`;
+                                        statusRow.children[1].innerHTML += `<div id=${num}> <b>${num}</b></div>`;
                                         //progressTable.appendChild(currenRow);
                                         //await sleep(50);
 
@@ -549,11 +557,7 @@
                                 //remove from table  add to matrix--await sleep in between
                                 //cell.innerText = map[i][j];
                                 //document.querySelector('#${i}-${j}').innerText = map[i][j];
-                                let removedNum = document.getElementById(`
-                            $ {
-                                map[i][j];
-                            }
-                            `);
+                                let removedNum = document.getElementById(`${map[i][j]}`);
                                 removedNum = null;
                                 empty.innerText = `${emptycells--}`;
                                 solved.innerText = `${solvedcells++}`;
