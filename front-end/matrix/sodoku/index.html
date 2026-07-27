@@ -5,26 +5,89 @@
     <!--
     <a rel="text/css" href="style.css">
         <a rel="text/javascript" href="script.js">-->
+    <style>
+        body {
+            alink: blue;
+            vlink: red;
+            padding: 15px;
+        }
+        
+        .app-container {
+            padding: 10px
+        }
+        
+        .description {
+            width: 800px;
+            height: 150px;
+            border: 2px solid grey;
+        }
+        
+        .controls-options {}
+        
+        .options-card {
+            width: 800px;
+            height: 80px;
+            background-color: whitesmoke;
+        }
+        
+        .controls-card {
+            width: 800px;
+            height: 80px;
+            border: 2px solid grey;
+        }
+        
+        .main-content {}
+        
+        .content-card {
+            width: 500px;
+            height: 500px;
+            border: 2px solid grey;
+        }
+        
+        .results {
+            /*display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;*/
+        }
+        
+        .results-card {
+            width: 100px;
+            height: 100px;
+            border: 2px solid grey;
+        }
+        /*traversal and animations related quicks*/
+        
+        .cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            border: 2px solid grey;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body>
 
     <div class="app-conatiner">
         <!-- description of algo-->
-        <div class="description"></div>
+        <div class="description">
+            <h1>Sodoku visualizer</h1>
+            <p>This shows a simple non-mrv visualization of sodoku solver<br/>it may take time on evil sodoku</p>
+        </div>
 
         <!--controls and options cards as class ,uniwue as id-->
         <div class="controls-options">
             <!-- options-->
-            <div class="card" id="options">
+            <div class="options-card" id="options">
                 <label>Algorithim/Startegy <input type="text" value="NON-MRV" disabled="true"></input></label>
                 <label>Size <input type="text" value="9 x 9" disabled="true"></input></label>
                 <label>Desnsity/Probability <input type="text" value="50 %" disabled="true"></input></label>
                 <label>Speed <input type="range" min="10" max="80" value="50"></input></label>
             </div>
             <!-- controls-->
-            <div class="card" id="controls">
-                <button>Generate</button>
+            <div class="controls-card" id="controls">
+                <button onclick="renderMatrix()">Generate</button>
                 <button>Solve</button>
                 <button>pause/resume</button>
                 <button>reset</button>
@@ -33,14 +96,13 @@
 
         <!--main content cards as class ,uniwue as id-->
         <div class="main-content">
-            <!-- options-->
-            <div class="card" id="matrix">
-                <p>Matrix</p>
-            </div>
-            <!-- controls-->
-            <div class="card" id="progress">
+            <!-- matrix-->
+            <p>Matrix</p>
+            <div class="content-card" id="matrix"></div>
+            <!-- progress/status-->
+            <p>List status</p>
+            <div class="content-card" id="progress">
                 <!-- table headers and table structure<p>Progress</p>-->
-
                 <table id="status" border="0">
                     <caption>Progress</caption>
                     <tr class="headerRow">
@@ -55,20 +117,21 @@
             <!--results cards as class ,uniwue as id-->
             <div class="results">
                 <!-- logs-->
-                <p>Logs</p>
-                <div class="card" id="logs"></div>
+                <p>logs</p>
+                <div class="results-card" id="logs">
+                </div>
                 <!-- empty cells-->
                 <p>Empty</p>
-                <div class="card" id="empty"></div>
+                <div class="results-card" id="empty"></div>
                 <!-- solved cells-->
                 <p>Solved</p>
-                <div class="card" id="solved"></div>
+                <div class="results-card" id="solved"></div>
                 <!-- current cell cells-->
                 <p>Current<br>Cell</p>
-                <div class="card" id=current-cell "></div>
+                <div class="results-card" id=current-cell "></div>
                 <!-- Partial boards solved-->
                 <p>Partial boards</p>
-                <div class="card " id="p-boards "></div>
+                <div class="results-card " id="p-boards "></div>
             </div>
         </div>
 
@@ -411,9 +474,53 @@
             return null;
         }
 
+        /*Animations rlated quiclks*/
+
+        function renderMatrix(){
+            //build mirror
+            zerofy();
+            mapify();
+            //render this 
+
+            let container = document.querySelector('.main-content #matrix');
+            //document.getElementById('matrix');
+
+            console.log(container);
+            //clear
+            container.innerHTML=" ";
+            //1.get table
+            let table=document.createElement('table');
+            table.id="table-matrix ";
+            table.border="1 ";
+            for(let i=0;i<rows;i++){
+                //create rows
+                let r=document.createElement('tr');
+                for(let j=0;j<cols;j++){
+                 let c=document.createElement('td');
+                 //class
+                 c.className="cell ";
+                 //id
+                 c.id=`${i}-${j}`;
+                 //text maybe
+                 c.innerText=map[i][j];
+
+                 //append
+                 r.appendChild(c);
+                }
+                table.appendChild(r);
+            }
+
+            container.appendChild(table);
+        }
 
 
+
+
+        /*Working flow*/
+        renderMatrix();//currently this matrix is static lets keep it that way
         //this worked
+
+        /*
         //let sodoku = new SolveSodoku();
         //sodoku.sodoku();
         zerofy();
@@ -432,6 +539,7 @@
         //let p = document.createElement("p ");
         //p.textContent = "Test ";
         //document.body.appendChild(p);
+        */
     </script>
 
     <!-- <script scr="./script.js ">
