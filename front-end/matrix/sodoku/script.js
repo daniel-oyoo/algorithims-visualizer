@@ -18,37 +18,50 @@ class SolveSodoku {
     constructor(rows = 9, cols = 9) {
         console.log("initialization worked");
         this.map = [
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
+            // [],
+            // [],
+            //[],
+            //[],
+            // [],
+            // [],
+            //  [],
+            // [],
+            // [],
         ]; //board
         this.workable = [
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
+            // [],
+            // [],
+            // [],
+            // [],
+            // [],
+            // [],
+            // [],
+            // [],
+            // [],
         ]; //visited/workable/empty
         this.PROB = 0.75;
         //hold valid cells
         this.validCellList = []; //store usable for each cell
+        // this.zerofy(); //trun map into empty board
         this.mapify(); //empty map
-        this.marWorkable();
+        //this.markFillEmpty();
+        this.markWorkable();
+    }
+
+    zerofy() {
+        for (let i = 0; i < this.map.length; i++) {
+            this.map.push([]);
+            this.workable.push([]);
+            for (let j = 0; j < this.map[i].length; j++) {
+                this.map[i].push(0);
+                this.workable[i].push(false);
+            }
+        }
     }
 
     display() {
-        for (let i = 0; i < map.length; i++) {
-            console.log(map);
+        for (let i = 0; i < this.map.length; i++) {
+            console.log(this.map);
         }
     }
 
@@ -62,6 +75,7 @@ class SolveSodoku {
     mapify1() {}
         //mapify
     mapify() {
+        this.zerofy();
         //most evil
         this.map[1][2] = 3;
         this.map[0][0] = 8;
@@ -97,7 +111,8 @@ class SolveSodoku {
     }
 
 
-    marWorkable() {
+    markWorkable() {
+        this.zerofy();
         for (let i = 0; i < this.workable.length; i++) {
             //workable.push([]);
             for (let j = 0; j < this.workable[i].length; j++) {
@@ -118,7 +133,7 @@ class SolveSodoku {
     rowValid(row, col, number) {
         let rowValid = true;
         //row
-        for (col = 0; col < map.length; col++) {
+        for (col = 0; col < this.map.length; col++) {
             if (map[row][col] === number) {
                 rowValid = false;
                 break;
@@ -131,7 +146,7 @@ class SolveSodoku {
     colValid(row, col, number) {
         let colValid = true;
         //column
-        for (row = 0; row < map.length; row++) {
+        for (row = 0; row < this.map.length; row++) {
             if (map[row][col] == number) {
                 colValid = false;
                 break;
@@ -224,33 +239,33 @@ class SolveSodoku {
         //for emergecncy exit incase there is no slution
         outer:
             //scan for empty
-            for (let i = 0; i < map.length && i >= 0; i++) {
+            for (let i = 0; i < this.map.length && i >= 0; i++) {
                 // System.out.println("Working");
-                for (let j = 0; j < map[i].length;
+                for (let j = 0; j < this.map[i].length;
                     //j++//does this always force forward processing
                 ) {
                     //check if empty//cells that are 0 
-                    if (workable[i][j]) {
+                    if (this.workable[i][j]) {
                         //System.out.println("Processing  cell ("+ i + "," + j + ")" + " with list " + cellList);
                         if (compute) {
                             console.log("Computing list");
                             //this cell valid lets fill its valid nums
                             //add a list without refrence to avoid working with the same list through out
-                            validCellList.push([]);
+                            this.validCellList.push([]);
                             //fill with nums/valid
-                            for (let num = 1; num <= map.length; num++) {
+                            for (let num = 1; num <= 9; num++) {
                                 //System.out.println("Num " + num + " Valid : " + cellValid(i,j,num));
                                 //if this num valid()
                                 if (isValid(i, j, num)) {
                                     //System.out.println("Number " + num + " valid for cell (" + i + "," + j + ")");
-                                    validCellList[currentCellListIndex].push(num);
+                                    this.validCellList[currentCellListIndex].push(num);
                                 }
                             } //end for - nums
-                            console.log(validCellList.get(cellList));
+                            //console.log(validCellList.get(cellList));
                         } //end if compute/recompute
 
                         //here we have a list
-                        let currentList = validCellList[currentCellListIndex];
+                        let currentList = this.validCellList[currentCellListIndex];
                         console.log("List empty : " + (current.isEmpty()));
 
                         //empty or not
@@ -258,7 +273,7 @@ class SolveSodoku {
                             //we have a non empty list
                             console.log("Processing  cell (" + i + "," + j + ")" + " with list " + cellList);
                             //place
-                            map[i][j] = currentList[0]; //take the first in list
+                            this.map[i][j] = currentList[0]; //take the first in list
                             //remove the first from list
                             currentList.shift();
                             //move to next list
@@ -282,16 +297,16 @@ class SolveSodoku {
 
                         //System.out.println(validCellList.size());
                         //our parent list is not empty
-                        if (!validCellList.isEmpty()) {
+                        if (!this.validCellList.isEmpty()) {
                             //find (i,j) for first empty/workable cell
                             let r = getFirstCellValid()[0];
                             let c = getFirstCellValid()[1];
                             //test and exit condition
                             //first cell empty and not placed 
                             //there is no solution
-                            if (validCellList[0].isEmpty() &&
+                            if (this.validCellList[0].isEmpty() &&
                                 //should be for the first ever encounter cell;
-                                map[r][c] === 0
+                                this.map[r][c] === 0
                             ) {
                                 console.log("No solution");
                                 //exit the whole program-three loops
@@ -309,7 +324,7 @@ class SolveSodoku {
                         j--;
                         //go up               
                         if (j < 0) {
-                            j = map.length - 1;
+                            j = this.map.length - 1;
                             //dont overflow
                             if (i > 0)
                                 i--;
@@ -318,8 +333,8 @@ class SolveSodoku {
                         //this enables us to exit 
                         //since ths is in place we can comfortable check the foirst workable am list 
                         //and we are guranteed our placed/not placed check will work
-                        if (workable[i][j]) {
-                            map[i][j] = 0;
+                        if (this.workable[i][j]) {
+                            this.map[i][j] = 0;
                         }
 
                     }
@@ -330,9 +345,9 @@ class SolveSodoku {
     }
 
     getFirstCellValid() {
-        for (let i = 0; i < map.length; i++) {
-            for (let j = 0; j < map.length; j++) {
-                if (workable[i][j] == true) {
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map.length; j++) {
+                if (this.workable[i][j] == true) {
                     return [i, j];
                 }
             }
@@ -347,3 +362,7 @@ class SolveSodoku {
 let sodoku = new SolveSodoku();
 //sodoku.sodoku();
 //sodoku.display();
+//sodoku.displayWork();
+//sodoku.zerofy();
+console.log(sodoku.map);
+console.log(sodoku.workable);
