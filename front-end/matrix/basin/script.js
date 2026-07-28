@@ -71,19 +71,19 @@ function getValidNeighbour(row, col) {
 }
 
 function isBasin(row, col) {
-    //let isBasin = false;
-    let validNeighbours = getValidNeighbour(row, col); //returns a 2d array of valid neighbours
-    console.log(validNeighbours);
-    let min = 100000000;
-    for (let m = 0; m < validNeighbours.length; m++) { //whole
-        for (let n = 0; n < validNeighbours[m].length; n++) {
-            if (validNeighbours[m][n][0][0] < min) {
-                min = validNeighbours[m][n][0][1];
-                console.log(min);
+    let basin = true;
+    //lets only operate within bounds
+    if ((row > 1 && row < map.length - 1) && (col > 1 && col < map.length - 1)) {
+        //just find one mismatch and call it quits
+        //left and right
+        if (map[row][col] > map[row][col - 1] || map[row][col] > map[row][col + 1]) {
+            //up an down
+            if (map[row][col] > map[row - 1][col] || map[row][col] > map[row + 1][col]) {
+                basin = false;
             }
         }
     }
-    return map[row][col] < min ? true : false; //strictly smaller than
+    return basin;
 }
 
 function findBasin() {
