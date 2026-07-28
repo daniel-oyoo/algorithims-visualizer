@@ -81,20 +81,40 @@ function isBasin(row, col) {
     return basin;
 }
 
-function findBasin() {
+async function findBasin() {
+    //console.log("working");
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
+
+            let cell = document.getElementById(`${i}-${j}`);
+
+            //clear previous scans
+            // let list = Array.from(document.querySelectorAll('.cell'));
+
+            //for (let c = 0; c < list.length; c++) {
+            //  list[c].classList.remove('scan');
+            //}
+            //scan
+            //if (cell) {
+            cell.classList.add('not-basin');
+            //await sleep here to avoid insta magic
+            await sleep(10);
+            //}
             if (
                 map[i][j] !== -1 &&
                 isBasin(i, j)
                 //avoid false basins
             ) {
-                let temp = map[i][j];
-                //mark
-                //map[i][j] = -1;
-
-                console.log(map);
-
+                // for (let m = 0; m < list.length; m++) {
+                //   list[m].classList.remove('empty-cell');
+                //}
+                //damn here working found so we remove the scan colour it yellow and solve it 
+                //if (cell) {
+                cell.classList.remove('not-basin');
+                cell.classList.add('basin');
+                await sleep(10);
+                //}
+                //await sleep(100);
                 //if along the border
                 //if(){}
                 j += 1;
@@ -153,8 +173,6 @@ function renderMatrix() {
 
     let container = document.querySelector('.main-content #matrix');
     //document.getElementById('matrix');
-
-    console.log(container);
     //clear
     container.innerHTML = " ";
     //1.get table
@@ -185,14 +203,26 @@ function renderMatrix() {
 }
 
 
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function pause() {
+    isPaused = true;
+}
+
+function resume() {
+    isPaused = false;
+}
+
+function reset() {
+    stop = true
+}
+
+
 //console.log(map);
 
 //loadMatrix();
 
 renderMatrix();
-
-console.log(map);
-
-findBasin();
-
-console.log(map);

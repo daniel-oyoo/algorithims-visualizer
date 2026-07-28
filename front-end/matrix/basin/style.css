@@ -1,0 +1,9 @@
+.cell {}
+
+.basin {
+    background-color: green;
+}
+
+.not-basin {
+    background-color: yellow;
+}

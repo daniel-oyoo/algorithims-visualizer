@@ -2,7 +2,24 @@
 <html>
 
 <head>
-    <link rel="text/css" href="style.css">
+    <style>
+        .cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            border: 2px solid grey;
+            border-radius: 5px;
+        }
+        
+        .basin {
+            background-color: green;
+        }
+        
+        .not-basin {
+            background-color: yellow;
+        }
+    </style>
+    <!--<link rel="text/css" href="style.css">-->
 </head>
 
 <body>
@@ -23,55 +40,61 @@
                 <label>Desnsity/Probability <input type="text" value="50 %" disabled="true"></input></label>
                 <label>Speed <input type="range" min="10" max="80" value="50"></input></label>
             </div>
-            <!-- controls-->
-            <div class="controls-card" id="controls">
-                <button onclick="renderMatrix()">Generate</button>
-                <button onclick="sodoku()">Solve</button>
-                <button onclick="pause()">pause/resume</button>
-                <button onclick="reset()">reset</button>
-            </div>
         </div>
 
-        <!--main content cards as class ,uniwue as id-->
-        <div class="main-content">
-            <!-- matrix-->
-            <p>Matrix</p>
-            <div class="content-card" id="matrix"></div>
-            <!-- progress/status-->
-            <p>List status</p>
-            <div class="content-card" id="progress" scroll="true">
-                <!-- table headers and table structure<p>Progress</p>-->
-                <table id="status" border="0">
-                    <caption>Progress</caption>
-                    <tr class="headerRow">
-                        <th class="thead">Cell co-ordinate(x,y)</th>
-                        <th class="thead">List of usable numbers</th>
-                    </tr>
-                </table>
-            </div>
-        </div>
 
-        <div class="result-container">
-            <!--results cards as class ,uniwue as id-->
-            <div class="results">
-                <!-- logs-->
-                <p>logs</p>
-                <div class="results-card" id="logs">
-                </div>
-                <!-- empty cells-->
-                <p>Empty</p>
-                <div class="results-card" id="empty"></div>
-                <!-- solved cells-->
-                <p>Solved</p>
-                <div class="results-card" id="solved"></div>
-                <!-- current cell cells-->
-                <p>Current<br>Cell</p>
-                <div class="results-card" id="current-cell"></div>
-                <!-- Partial boards solved-->
-                <p>Partial boards</p>
-                <div class="results-card " id="p-boards"></div>
-            </div>
+    </div>
+    <br> </br>
+    <!-- controls-->
+    <div class="controls-card" id="controls">
+        <button onclick="renderMatrix()">Generate</button>
+        <button onclick="findBasin()">Solve</button>
+        <button onclick="pause()">pause/resume</button>
+        <button onclick="reset()">reset</button>
+
+        <br> </br>
+        <label>Yellow : Not a basin</label><br> </br>
+        <label>Green : A basin</label><br> </br>
+    </div>
+    </div>
+
+    <br> </br>
+    <!--main content cards as class ,uniwue as id-->
+    <div class="main-content">
+        <!-- matrix-->
+        <p>Matrix</p>
+        <div class="content-card" id="matrix"></div>
+        <!-- progress/status-->
+        <p>Compare Zone</p>
+        <div class="content-card" id="progress" scroll="true">
+            <!-- table headers and table structure<p>Progress</p>-->
+            <table id="status" border="0">
+                <div id="comparison-space"></div>
+            </table>
         </div>
+    </div>
+
+    <div class="result-container">
+        <!--results cards as class ,uniwue as id-->
+        <div class="results">
+            <!-- logs-->
+            <p>logs</p>
+            <div class="results-card" id="logs">
+            </div>
+            <!-- empty cells-->
+            <p>Empty</p>
+            <div class="results-card" id="empty"></div>
+            <!-- solved cells-->
+            <p>Solved</p>
+            <div class="results-card" id="solved"></div>
+            <!-- current cell cells-->
+            <p>Current<br>Cell</p>
+            <div class="results-card" id="current-cell"></div>
+            <!-- Partial boards solved-->
+            <p>Partial boards</p>
+            <div class="results-card " id="p-boards"></div>
+        </div>
+    </div>
 
 
 
@@ -79,17 +102,17 @@
 
     <script type="text/javascript" src="script.js">
         /*
-                                                                                                                   compare only to valid neighbours
+                                                                                                                                                                                                                                                                                                   compare only to valid neighbours
 
-                                                                                                                   1. inefficient ---scan everything even afte rfinding basin
+                                                                                                                                                                                                                                                                                                   1. inefficient ---scan everything even afte rfinding basin
 
-                                                                                                                   2. efficient ---if we find basin we know the next  four cells surely cant be basins so we just skip over them
+                                                                                                                                                                                                                                                                                                   2. efficient ---if we find basin we know the next  four cells surely cant be basins so we just skip over them
 
-                                                                                                                   we hava a scan light and a line that marks basins 
-                                                ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin
-                                                                                                                   both versions are under startegy
-                                                                                                                                                
-                                                                                                                */
+                                                                                                                                                                                                                                                                                                   we hava a scan light and a line that marks basins 
+                                                                                                                                                                                                                                ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin
+                                                                                                                                                                                                                                                                                                   both versions are under startegy
+                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                */
     </script>
 </body>
 
