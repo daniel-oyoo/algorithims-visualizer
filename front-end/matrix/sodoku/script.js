@@ -1,13 +1,23 @@
  /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 
-
-
- //let map = []; //board
- //let workable = []; //visited/workable/empty
-
+                //let map = []; //board
+                //let workable = []; //visited/workable/empty
+               */
  let map = []; //board
+ //pre-seeded to avoid re render overhead
+ let seededMap = [
+     [8, 1, 2, 3, 7, 4, 5, 6, 9],
+     [9, 4, 3, 6, 2, 5, 1, 7, 8],
+     [5, 7, 6, 8, 9, 1, 2, 4, 3],
+     [1, 5, 4, 2, 3, 7, 8, 9, 6],
+     [3, 6, 8, 4, 5, 9, 7, 1, 2],
+     [7, 2, 9, 1, 6, 8, 4, 3, 5],
+     [2, 3, 1, 7, 8, 6, 9, 5, 4],
+     [4, 8, 5, 9, 1, 3, 6, 2, 7],
+     [6, 9, 7, 5, 4, 2, 3, 8, 1]
+ ];
  let workable = []; //visited/workable/empty
 
  const rows = 9;
@@ -17,7 +27,7 @@
  const PROB = 0.75;
  //hold valid cells
  const validCellList = []; //store usbale for each cell
- // /*
+ // 
  //anaimatiosna and all 
  let empty = document.querySelector('.result-container .results #empty');
  let logs = document.querySelector('.result-container .results #logs');
@@ -27,7 +37,7 @@
 
 
  let progressTable = document.querySelector('#progress #status');
- // */
+ // 
  //delay controls
  let isPaused = false;
  let stop = false;
@@ -37,10 +47,10 @@
  function zerofy() {
      console.log("Working ");
      for (let i = 0; i < rows; i++) {
-         map.push([]);
+         //map.push([]);
          workable.push([]);
          for (let j = 0; j < cols; j++) {
-             map[i][j] = 0;
+             //map[i][j] = 0;
              workable[i][j] = false;
          }
      }
@@ -50,14 +60,16 @@
 
 
  function renderMatrixDynamically() {
+     let temp = seededMap;
+     map = seededMap;
      //console.log(map);
      //1.zerofy--intializes both
-     zerofy();
+     //zerofy();
      //console.log(map);
      //mark woarkbale to enable solve
      markWorkable();
      //2. solve--solves empty borad
-     solve();
+     //();
      //console.log(map);
      //3.delete randomly--random from board made 0
      deleteRandom();
@@ -65,6 +77,11 @@
      //4.rander this--this is whats renderered 
      renderMatrix();
      //console.log(map);
+
+
+     //restore
+
+     seededMap = temp;
  }
 
  function display() {
@@ -130,41 +147,54 @@
      let currentCellListIndex = 0;
      //we use existing
      let compute = true;
-     //scan for empty
-     for (let i = 0; i < rows && i >= 0; i++) {
-         for (let j = 0; j < cols;) {
-             if (workable[i][j]) {
-                 if (compute) {
-                     validCellList.push([]);
-                     //fill with nums/valid
-                     for (let num = 1; num <= 9; num++) {
-                         if (isValid(i, j, num)) {
-                             validCellList[currentCellListIndex].push(num);
-                         }
-                     } //end for - nums
 
-                 } //end if compute/recompute
+     outer:
+         //scan for empty
+         for (let i = 0; i < rows && i >= 0; i++) {
+             for (let j = 0; j < cols;) {
+                 if (workable[i][j]) {
+                     if (compute) {
+                         validCellList.push([]);
+                         //fill with nums/valid
+                         for (let num = 1; num <= 9; num++) {
+                             if (isValid(i, j, num)) {
+                                 validCellList[currentCellListIndex].push(num);
+                             }
+                         } //end for - nums
 
-                 //here we have a list
-                 let currentList = validCellList[currentCellListIndex]
+                     } //end if compute/recompute
 
-                 //empty or not
-                 if (currentList.length !== 0) {
-                     map[i][j] = currentList[0]; //take the first in list
+                     //here we have a list
+                     let currentList = validCellList[currentCellListIndex]
 
-                     //remove the first from list
-                     currentList.shift();
-                     //move to next list
-                     currentCellListIndex++;
-                     //set compute
-                     compute = true;
+                     //empty or not
+                     if (currentList.length !== 0) {
+                         map[i][j] = currentList[0]; //take the first in list
 
-                 } else {
-                     currentList = null;
-                     currentCellListIndex--;
-                     compute = false;
+                         //remove the first from list
+                         currentList.shift();
+                         //move to next list
+                         currentCellListIndex++;
+                         //set compute
+                         compute = true;
 
-                 } //check if list valid or not
+                     } else {
+                         currentList = null;
+                         currentCellListIndex--;
+                         compute = false;
+
+                     } //check if list valid or not
+
+                     //there is no solution
+                     if (validCellList[0].length === 0 &&
+                         //should be for the first ever encounter cell;
+                         map[r][c] === 0
+                     ) {
+                         console.log("No solution ");
+                         //exit the whole program-three loops
+                         break outer;
+                     }
+                 }
 
              } //end if for empty nums/workable
 
@@ -189,8 +219,8 @@
 
          } //scan
 
-     } //scan
- }
+ } //scan
+
 
 
  function markWorkable() {
@@ -355,7 +385,7 @@
                  //delay works
                  //pause/resume
                  while (isPaused) {
-                     await sleep(100);
+                     await sleep(10);
                  }
                  //reset
                  if (stop) {
@@ -375,7 +405,7 @@
                  if (cell) {
                      cell.classList.add('scan');
                      //await sleep here to avoid insta magic
-                     await sleep(500);
+                     await sleep(10);
                  }
 
 
@@ -395,7 +425,7 @@
                      if (cell) {
                          cell.classList.remove('scan');
                          cell.classList.add('empty-cell');
-                         await sleep(500);
+                         await sleep(10);
                      }
 
                      //create table and all for displaying data as we move across
@@ -438,7 +468,7 @@
                                  //labels pile side by sie with unique id,beats just adding content to td
                                  statusRow.children[1].innerHTML += `<label id=${num}> <b>${num}</b></label>`;
                                  //progressTable.appendChild(currenRow);
-                                 await sleep(500);
+                                 await sleep(10);
 
 
 
@@ -585,6 +615,8 @@
              } //scan
 
          } //scan
+
+     console.log(map);
  }
 
  function getFirstCellValid() {
@@ -644,10 +676,19 @@
  }
 
  function renderMatrix() {
+
+     let temp = seededMap;
+
+     map = seededMap;
      //build mirror
-     //zerofy();
+     zerofy();
      //mapify();
      //markWorkable(); //forgot this and had trouble 
+     //delete rand
+     deleteRandom();
+
+     //mark after delete
+     markWorkable(); //forgot this and had trouble
      //render this 
 
      let container = document.querySelector('.main-content #matrix');
@@ -682,9 +723,11 @@
      }
 
      container.appendChild(table);
+
+     seededMap = temp;
  }
 
 
 
-
- renderMatrixDynamically();
+ renderMatrix();
+ //renderMatrixDynamically();
