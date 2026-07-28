@@ -117,7 +117,7 @@ async function findBasin() {
                 //await sleep(100);
                 //if along the border
                 //if(){}
-                j += 1;
+                //j += 1;//inefficient version with or without this this determines all
 
 
             }
