@@ -1,9 +1,15 @@
-.cell {}
-
-.basin {
-    background-color: green;
-}
-
-.not-basin {
-    background-color: yellow;
-}
+        .cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            border: 2px solid grey;
+            border-radius: 5px;
+        }
+        
+        .basin {
+            background-color: green;
+        }
+        
+        .not-basin {
+            background-color: yellow;
+        }

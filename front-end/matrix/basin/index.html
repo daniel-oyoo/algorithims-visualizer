@@ -2,24 +2,7 @@
 <html>
 
 <head>
-    <style>
-        .cell {
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            border: 2px solid grey;
-            border-radius: 5px;
-        }
-        
-        .basin {
-            background-color: green;
-        }
-        
-        .not-basin {
-            background-color: yellow;
-        }
-    </style>
-    <!--<link rel="text/css" href="style.css">-->
+    <link rel="stylesheet/css" href="\basinstyle.css" type="text/css">
 </head>
 
 <body>
@@ -102,17 +85,17 @@
 
     <script type="text/javascript" src="script.js">
         /*
-                                                                                                                                                                                                                                                                                                   compare only to valid neighbours
+                                                                                                                                                                                                                                                                                                                                                                                                                   compare only to valid neighbours
 
-                                                                                                                                                                                                                                                                                                   1. inefficient ---scan everything even afte rfinding basin
+                                                                                                                                                                                                                                                                                                                                                                                                                   1. inefficient ---scan everything even afte rfinding basin
 
-                                                                                                                                                                                                                                                                                                   2. efficient ---if we find basin we know the next  four cells surely cant be basins so we just skip over them
+                                                                                                                                                                                                                                                                                                                                                                                                                   2. efficient ---if we find basin we know the next  four cells surely cant be basins so we just skip over them
 
-                                                                                                                                                                                                                                                                                                   we hava a scan light and a line that marks basins 
-                                                                                                                                                                                                                                ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin
-                                                                                                                                                                                                                                                                                                   both versions are under startegy
-                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                */
+                                                                                                                                                                                                                                                                                                                                                                                                                   we hava a scan light and a line that marks basins 
+                                                                                                                                                                                                                                                                                                                                                ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin
+                                                                                                                                                                                                                                                                                                                                                                                                                   both versions are under startegy
+                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                */
     </script>
 </body>
 
