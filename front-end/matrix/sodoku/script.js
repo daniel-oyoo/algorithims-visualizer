@@ -1,10 +1,10 @@
  /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             1.solve sodoku log to console
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 
-                                                                       //let map = []; //board
-                                                                       //let workable = []; //visited/workable/empty
-                                                                      */
+                                                                                      //let map = []; //board
+                                                                                      //let workable = []; //visited/workable/empty
+                                                                                     */
  let map = []; //board
  //pre-seeded to avoid re render overhead
  let seededMap = [
@@ -442,12 +442,6 @@
                  }
 
 
-                 //aniamtions
-                 // let num = 1;
-
-
-
-
 
                  //check if empty//cells that are 0 
                  if (workable[i][j]) {
@@ -489,9 +483,9 @@
                                  //anime
                                  //colTwo.innerText += `${num}`;
                                  //labels pile side by sie with unique id,beats just adding content to td
-                                 statusRow.children[1].innerHTML += `<label class=lbl id=${currentCellListIndex}> <b>${num}</b></label>`;
+                                 statusRow.children[1].innerHTML += `<label class=lbl id=${num}> <b>${num}</b></label>`;
                                  //progressTable.appendChild(currenRow);
-                                 await sleep(1000); //this clearly demostrates step bys tep how usable are added we now only need to remove them 
+                                 //await sleep(1000); //this clearly demostrates step bys tep how usable are added we now only need to remove them 
                                  //slowly too when we exit and go back to the previous table-row
 
 
@@ -521,7 +515,7 @@
                          map[i][j] = currentList[0]; //take the first in list
 
 
-                         document.getElementById(`${currentCellListIndex}`).innerHTML = "";
+                         //document.getElementById(`${currenList[0]}`).innerHTML = ""; //removes all occurences oof tthis
                          //await sleep(10); //remove slowly
 
                          //anime 
@@ -561,7 +555,7 @@
                          //remove current row
                          let removedRow = document.getElementById(`
                          list - ${currentCellListIndex}`);
-                         removedRow.innerHTML = "";
+                         //removedRow.innerHTML = "";
 
                          //remove this list from our global list
                          // validCellList[currentCellListIndex] = null;
@@ -571,8 +565,9 @@
                          //go ack to previous cell
                          currentCellListIndex--;
 
-                         document.getElementById(`
-                         list - ${currentCellListIndex}`).classList.add('scan');
+                         //document.getElementById(`
+                         //list - $ { currentCellListIndex }
+                         //`).classList.add('scan');--always highlight current table or previous one in both its curreny
 
 
                          //map[i][j]=0;//bug or maybe has no effect
@@ -587,9 +582,15 @@
                          //here
 
                          //assign results divs to these varialbes
-                         pboards.innerText = `${ pboard++ }`;
-                         solved.innerText = `${ emptycells++ }`;
-                         solved.innerText = `${ solvedcells-- }`;
+                         pboards.innerText = `
+                         ${ pboard++ }
+                         `;
+                         solved.innerText = `
+                         ${ emptycells++ }
+                         `;
+                         solved.innerText = `
+                         ${ solvedcells-- }
+                         `;
 
                      } //check if list valid or not
 
@@ -663,11 +664,13 @@
      //returns a collection of children
      //animations
      let currentRow = document.createElement('tr');
-     currentRow.id = `list - ${ index }`;
+     currentRow.id = `
+                         list - ${index }
+                         `;
      //currentRow.className='list-${currenCellListIndex}'
      let colOne = document.createElement('td');
      let colTwo = document.createElement('td');
-     colOne.innerText = `[${ i }, ${ j }]`;
+     colOne.innerText = ` [${ i }, ${ j }] `;
      currentRow.appendChild(colOne);
      currentRow.appendChild(colTwo);
      progressTable.appendChild(currentRow);
@@ -735,20 +738,20 @@
 
      console.log(container);
      //clear
-     container.innerHTML = " ";
+     container.innerHTML = "";
      //1.get table
      let table = document.createElement('table');
      table.id = "table-matrix";
-     table.border = "1 ";
+     table.border = "1";
      for (let i = 0; i < rows; i++) {
          //create rows
          let r = document.createElement('tr');
          for (let j = 0; j < cols; j++) {
              let c = document.createElement('td');
              //class
-             c.className = "cell ";
+             c.className = "cell";
              //id
-             c.id = `${ i } - ${ j }`;
+             c.id = `${i}-${j}`;
              //text maybe
              c.innerText = map[i][j];
              if (workable[i][j]) {
