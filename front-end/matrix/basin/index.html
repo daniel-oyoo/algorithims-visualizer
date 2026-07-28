@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet/css" href="\basinstyle.css" type="text/css">
+    <link rel="stylesheet/css" href="\basin\style.css" type="text/css">
 </head>
 
 <body>
@@ -50,7 +50,12 @@
         <!-- progress/status-->
         <p>Compare Zone</p>
         <div class="content-card" id="progress" scroll="true">
-            <!-- table headers and table structure<p>Progress</p>-->
+            <!-- table headers and table structure<p>Progress</p>
+             we show in great details animate step by step comparison of current with all its four neighbours 
+             steps 
+             animates all neighbours as colored boxed 
+             comapre them oe by one with current 
+             winner is shown to be a basin or not by showing on progress and coloring borad appropriately-->
             <table id="status" border="0">
                 <div id="comparison-space"></div>
             </table>
@@ -58,24 +63,13 @@
     </div>
 
     <div class="result-container">
-        <!--results cards as class ,uniwue as id-->
+        <!--results cards as class ,uniwue as id
+        our results goes down her eg logs-->
         <div class="results">
             <!-- logs-->
             <p>logs</p>
             <div class="results-card" id="logs">
             </div>
-            <!-- empty cells-->
-            <p>Empty</p>
-            <div class="results-card" id="empty"></div>
-            <!-- solved cells-->
-            <p>Solved</p>
-            <div class="results-card" id="solved"></div>
-            <!-- current cell cells-->
-            <p>Current<br>Cell</p>
-            <div class="results-card" id="current-cell"></div>
-            <!-- Partial boards solved-->
-            <p>Partial boards</p>
-            <div class="results-card " id="p-boards"></div>
         </div>
     </div>
 
@@ -85,18 +79,23 @@
 
     <script type="text/javascript" src="script.js">
         /*
-                                                                                                                                                                                                                                                                                                                                                                                                                   compare only to valid neighbours
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   compare only to valid neighbours
 
-                                                                                                                                                                                                                                                                                                                                                                                                                   1. inefficient ---scan everything even afte rfinding basin
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1. inefficient ---scan everything even afte rfinding basin
 
-                                                                                                                                                                                                                                                                                                                                                                                                                   2. efficient ---if we find basin we know the next  four cells surely cant be basins so we just skip over them
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   2. efficient ---if we find basin we know the next  four cells surely cant be basins so we just skip over them
 
-                                                                                                                                                                                                                                                                                                                                                                                                                   we hava a scan light and a line that marks basins 
-                                                                                                                                                                                                                                                                                                                                                ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin
-                                                                                                                                                                                                                                                                                                                                                                                                                   both versions are under startegy
-                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   we hava a scan light and a line that marks basins 
+                                                                                                                                                                                                                                                                                                                                                                                                                ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   both versions are under startegy
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
     </script>
+</body>
+
+</html> /* compare only to valid neighbours 1. inefficient ---scan everything even afte rfinding basin 2. efficient ---if we find basin we know the next four cells surely cant be basins so we just skip over them we hava a scan light and a line that marks basins
+ofcourse it goes wihtout saying this does us no benefit when ther is actsully no basin both versions are under startegy */
+</script>
 </body>
 
 </html>
