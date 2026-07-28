@@ -1,10 +1,14 @@
  /*do it as a class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             1.solve sodoku log to console
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-
-                                                                                      //let map = []; //board
-                                                                                      //let workable = []; //visited/workable/empty
-                                                                                     */
+   aor mabe as functions any can do but i especially wanted the best perfomance and nothing changed much apart from 
+   refactoring 
+   even so this current implementation is amazing cazy and clver as fuck 
+   just add mrv under stragtegyes or algorithims and make sure 
+   mine is also working and a way to actaully compare running of two algorithims 
+   eg we cans tr in local stoarge the results and pull it up for c
+   comapriso side by side 
+                                                                                                     
+                                                                                                     
+    */
  let map = []; //board
  //pre-seeded to avoid re render overhead
  let seededMap = [
@@ -484,7 +488,7 @@
                                  //colTwo.innerText += `${num}`;
                                  //labels pile side by sie with unique id,beats just adding content to td
                                  statusRow.children[1].innerHTML += `<label class=lbl id=${num}> <b>${num}</b></label>`;
-                                 //progressTable.appendChild(currenRow);
+                                 //progressTable.appendChild(currenRow);git 
                                  //await sleep(1000); //this clearly demostrates step bys tep how usable are added we now only need to remove them 
                                  //slowly too when we exit and go back to the previous table-row
 
@@ -553,9 +557,8 @@
                      } else {
 
                          //remove current row
-                         let removedRow = document.getElementById(`
-                         list - ${currentCellListIndex}`);
-                         //removedRow.innerHTML = "";
+                         // let removedRow = document.getElementById(`list-${currentCellListIndex}`);
+                         // removedRow.innerHTML = "";
 
                          //remove this list from our global list
                          // validCellList[currentCellListIndex] = null;
@@ -664,9 +667,7 @@
      //returns a collection of children
      //animations
      let currentRow = document.createElement('tr');
-     currentRow.id = `
-                         list - ${index }
-                         `;
+     currentRow.id = `list-${index}`;
      //currentRow.className='list-${currenCellListIndex}'
      let colOne = document.createElement('td');
      let colTwo = document.createElement('td');
@@ -705,6 +706,10 @@
  }
 
  function renderMatrix() {
+
+
+     //set table to null too
+     document.querySelectorAll('.cell').innerHTML = "";
 
      //let temp = seededMap;
 
