@@ -90,14 +90,21 @@ function findBasin() {
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
             if (
+                map[i][j] !== -1 &&
                 isBasin(i, j)
-                // &&
-                //map[i][j] !== -1 //avoid false basins
+                //avoid false basins
             ) {
                 let temp = map[i][j];
                 //mark
-                map[i][j] = -1;
+                //map[i][j] = -1;
+
+                console.log(map);
+
+                //if along the border
+                //if(){}
                 j += 1;
+
+
             }
         }
     }
