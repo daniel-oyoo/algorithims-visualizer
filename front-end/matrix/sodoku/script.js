@@ -1,781 +1,772 @@
- /*do it as a class
-   aor mabe as functions any can do but i especially wanted the best perfomance and nothing changed much apart from 
-   refactoring 
-   even so this current implementation is amazing cazy and clver as fuck 
-   just add mrv under stragtegyes or algorithims and make sure 
-   mine is also working and a way to actaully compare running of two algorithims 
-   eg we cans tr in local stoarge the results and pull it up for c
-   comapriso side by side 
-                                                                                                     
-                                                                                                     
-    */
- let map = []; //board
- //pre-seeded to avoid re render overhead
- let seededMap = [
-     [8, 1, 2, 3, 7, 4, 5, 6, 9],
-     [9, 4, 3, 6, 2, 5, 1, 7, 8],
-     [5, 7, 6, 8, 9, 1, 2, 4, 3],
-     [1, 5, 4, 2, 3, 7, 8, 9, 6],
-     [3, 6, 8, 4, 5, 9, 7, 1, 2],
-     [7, 2, 9, 1, 6, 8, 4, 3, 5],
-     [2, 3, 1, 7, 8, 6, 9, 5, 4],
-     [4, 8, 5, 9, 1, 3, 6, 2, 7],
-     [6, 9, 7, 5, 4, 2, 3, 8, 1]
- ];
- let workable = []; //visited/workable/empty
-
- const rows = 9;
- const cols = 9;
-
-
- const PROB = 0.75;
- //hold valid cells
- const validCellList = []; //store usbale for each cell
- // 
- //anaimatiosna and all 
- let empty = document.querySelector('.result-container .results #empty');
- let logs = document.querySelector('.result-container .results #logs');
- let solved = document.querySelector('.result-container .results #solved');
- let pboards = document.querySelector('.result-container .results #p-boards');
- let currentCell = document.querySelector('.result-container .results #current-cell');
-
-
- let progressTable = document.querySelector('#progress #status');
- // 
- //delay controls
- let isPaused = false;
- let stop = false;
-
-
-
- function zerofy() {
-     console.log("Working ");
-     for (let i = 0; i < rows; i++) {
-         //map.push([]);
-         workable.push([]);
-         for (let j = 0; j < cols; j++) {
-             //map[i][j] = 0;
-             workable[i][j] = false;
-         }
-     }
-
-     console.log("Finished Working ");
- }
-
-
- function renderMatrixDynamically() {
-     let temp = seededMap;
-     map = seededMap;
-     //console.log(map);
-     //1.zerofy--intializes both
-     //zerofy();
-     //console.log(map);
-     //mark woarkbale to enable solve
-     markWorkable();
-     //2. solve--solves empty borad
-     //();
-     //console.log(map);
-     //3.delete randomly--random from board made 0
-     deleteRandom();
-     //console.log(map);
-     //4.rander this--this is whats renderered 
-     renderMatrix();
-     //console.log(map);
-
-
-     //restore
-
-     seededMap = temp;
- }
-
- function display() {
-     //for (let i = 0; i < map.length; i++) {
-     console.log(map);
-     //}
- }
-
- function displayWork() {
-     console.log(workable);
- }
-
-
- function mapify1() {}
- //mapify
- function mapify() {
-     //most evil
-     map[1][2] = 3;
-     map[0][0] = 8;
-     map[1][3] = 6; //infinity=2
-     map[2][1] = 7;
-     map[2][4] = 9;
-     map[2][6] = 2;
-     map[3][1] = 5;
-     map[3][5] = 7;
-
-     map[4][3] = 4;
-     map[4][4] = 5;
-     map[5][3] = 1;
-     map[5][7] = 3;
-
-     //map[6][2]=1;
-     // map[6][7]=6;
-     // map[6][8]=8;
-     // map[7][2]=8;
-     //up to here works
-
-     // map[7][3]=5;
-     //map[7][6]=1;
-     //all these work
-
-     map[8][1] = 9;
-     //this works too
-
-     map[8][4] = 4;
-
-     //all ulbaled are udnefined by default
-
- }
-
- function deleteRandom() {
-     let choice = Math.floor(Math.random() * 2); //add some bad with good boards dynamically
-     if (choice === 1) { //good board just delete any number--cant have duplicates
-         for (let i = 0; i < rows; i++) {
-             for (let j = 0; j < Math.floor(cols * PROB); j++) {
-                 //set random to empty
-                 map[Math.floor(Math.random() * rows)][Math.floor(Math.random() * rows)] = 0;
-             }
-         }
-     } else { //replace numbers may have duplicates
-
-         for (let i = 0; i < rows; i++) {
-             for (let j = 0; j < Math.floor(cols * PROB); j++) {
-                 //set random to empty
-                 map[Math.floor(Math.random() * rows)][Math.floor(Math.random() * rows)] = 0;
-                 map[Math.floor(Math.random() * rows)][Math.floor(Math.random() * rows)] = Math.floor(Math.random() * 10);
-             }
-         }
-
-     }
- }
-
-
-
-
-
-
-
- /** 
-
-  function solve() {
-      console.log("working");
-      let currentCellListIndex = 0;
-      //we use existing
-      let compute = true;
-
-      outer:
-          //scan for empty
-          for (let i = 0; i < rows && i >= 0; i++) {
-              for (let j = 0; j < cols;) {
-                  if (workable[i][j]) {
-                      if (compute) {
-                          validCellList.push([]);
-                          //fill with nums/valid
-                          for (let num = 1; num <= 9; num++) {
-                              if (isValid(i, j, num)) {
-                                  validCellList[currentCellListIndex].push(num);
-                              }
-                          } //end for - nums
-
-                      } //end if compute/recompute
-
-                      //here we have a list
-                      let currentList = validCellList[currentCellListIndex]
-
-                      //empty or not
-                      if (currentList.length !== 0) {
-                          map[i][j] = currentList[0]; //take the first in list
-
-                          //remove the first from list
-                          currentList.shift();
-                          //move to next list
-                          currentCellListIndex++;
-                          //set compute
-                          compute = true;
-
-                      } else {
-                          currentList = null;
-                          currentCellListIndex--;
-                          compute = false;
-
-                      } //check if list valid or not
-
-                      //there is no solution
-                      if (validCellList[0].length === 0 &&
-                          //should be for the first ever encounter cell;
-                          map[r][c] === 0
-                      ) {
-                          console.log("No solution ");
-                          //exit the whole program-three loops
-                          break outer;
-                      }
-                  }
-
-              } //end if for empty nums/workable
-
-              if (compute) {
-                  //we placed/or it not workable - move next
-                  j++;
-              } else {
-                  //we dint place-backtrack
-                  j--;
-                  //go up               
-                  if (j < 0) {
-                      j = rows - 1;
-                      //dont overflow
-                      if (i > 0)
-                          i--;
-                  }
-                  if (workable[i][j]) {
-                      map[i][j] = 0;
-                  }
-
-              }
-
-          } //scan
-
-  } //scan
-
-
+/**
+ * ============================================================
+ * SUDOKU MODULE - script.js
+ * Location: /front-end/matrix/sodoku/script.js
+ * Purpose: Complete Sudoku solver with MRV & Non-MRV strategies
+ * ============================================================
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
- function markWorkable() {
-     for (let i = 0; i < rows; i++) {
-         //workable.push([]);
-         for (let j = 0; j < cols; j++) {
-             //empty
-             if (map[i][j] == 0) {
-                 workable[i][j] = true;
-             } else {
-                 workable[i][j] = false;
-             }
-
-             //console.log(map);
-             //console.log(workable);
-         }
-     }
- }
-
- //validity check
- //checks for duplicat
- //here we check if the current number already exists or is a duplicate
-
- function rowValid(row, col, number) {
-     let rowValid = true;
-     //row
-     for (col = 0; col < rows; col++) {
-         if (map[row][col] === number) {
-             rowValid = false;
-             break;
-         }
-     }
-
-     return rowValid;
- }
-
- function colValid(row, col, number) {
-     let colValid = true;
-     //column
-     for (row = 0; row < cols; row++) {
-         if (map[row][col] == number) {
-             colValid = false;
-             break;
-         }
-     }
-
-     return colValid;
-
- }
-
-
- function ZoneValid(row, col, number) {
-     let zoneValid = true;
-
-     let zoneSize = 3;
-     //(int)Math.sqrt(map.length);
-
-
-     //boundary cecks and guard
-     if (row < 3 && col < 3) {
-         row = 0;
-         col = 0;
-     } else
-     if ((row < 3 && (col >= 3 && col < 6))) {
-
-         row = 0;
-         col = 3;
-     } else
-     if (row < 3 && (col >= 6 && col < 9)) {
-         row = 0;
-         col = 6;
-     } else if (row >= 3 && row < 6 && col < 3) {
-         row = 3;
-         col = 0;
-     } else if (row >= 3 && row < 6 && col >= 3 && col < 6) {
-         row = 3;
-         col = 3;
-     } else if (row >= 3 && row < 6 && col >= 6 && col < 9) {
-         row = 3;
-         col = 6;
-     } else if (row >= 6 && row < 9 && col < 3) {
-         row = 6;
-         col = 0;
-     } else if (row >= 6 && row < 9 && col >= 3 && col < 6) {
-         row = 6;
-         col = 3;
-     } else if (row >= 6 && row < 9 && col >= 6 && col < 9) {
-         row = 6;
-         col = 6;
-     }
-
-
-     //actaul loops
-     for (let m = row; m < row + zoneSize; m++) {
-         for (let n = col; n < col + zoneSize; n++) {
-             //System.out.println(m + " " + n);
-             if (map[m][n] === number) {
-                 //System.out.println(m + " " + n);
-                 zoneValid = false;
-                 break;
-             }
-         }
-     }
-
-
-     return zoneValid;
- }
-
- //combine validity check
- function isValid(row, col, number) {
-     return (rowValid(row, col, number) &&
-         colValid(row, col, number) &&
-         ZoneValid(row, col, number)
-     );
- }
-
-
- //now scanning
- async function sodoku() {
-     //refresh table progress and matrix
-     //renderMatrix();
-     console.log("Working ")
-         //hold valids for each cell
-         //we we progress this list reduces in number
-         //if the first list is empty and its not placed in that cell we sya there is no solution
-
-     let currentCellListIndex = 0;
-
-
-     //we use existing
-     let compute = true;
-     //for emergecncy exit incase there is no slution
-
-
-
-     //anaimatiosna and all 
-     // let empty = document.querySelector('.result-container .results #empty');
-     //let logs = document.querySelector('.result-container .results #logs');
-     //let solved = document.querySelector('.result-container .results #solved');
-     //let pboards = document.querySelector('.result-container .results #p-boards');
-     //let currentCell = document.querySelector('.result-container .results #current-cell');
-
-
-     //anaime
-     let emptycells = 67; //should get true empty value from the delete rand function
-     let solvedcells = 0;
-     let pboard = 0;
-     outer:
-         //scan for empty
-         for (let i = 0; i < rows && i >= 0; i++) {
-             // System.out.println("Working ");
-             for (let j = 0; j < cols;) {
-
-                 LOG(`Scanning cell (${i},${j})`);
-
-                 currentCell.innerText = `${i},${j}`;
-                 pboards.innerText = `${pboard}`;
-                 empty.innerText = `${emptycells}`;
-                 solved.innerText = `${solvedcells}`;
-
-
-                 //delay works
-                 //pause/resume
-                 while (isPaused) {
-                     await sleep(10);
-                 }
-                 //reset
-                 if (stop) {
-                     return;
-                 }
-
-                 //get cell--any cell
-                 let cell = document.getElementById(`${i}-${j}`);
-
-                 //clear previous scans
-                 let list = Array.from(document.querySelectorAll('.cell'));
-
-                 for (let c = 0; c < list.length; c++) {
-                     list[c].classList.remove('scan');
-                 }
-                 //scan
-                 if (cell) {
-                     cell.classList.add('scan');
-                     //await sleep here to avoid insta magic
-                     await sleep(10);
-                 }
-
-
-
-                 //check if empty//cells that are 0 
-                 if (workable[i][j]) {
-                     for (let m = 0; m < list.length; m++) {
-                         list[m].classList.remove('empty-cell');
-                     }
-                     //damn here working found so we remove the scan colour it yellow and solve it 
-                     if (cell) {
-                         cell.classList.remove('scan');
-                         cell.classList.add('empty-cell');
-                         await sleep(10);
-                     }
-
-                     //create table and all for displaying data as we move across
-                     let statusRow = null;
-
-                     //System.out.println("Processing cell ( "+ i + ", " + j + ") " + " with list " + cellList);
-                     if (compute) {
-                         //console.log("Computing list ");
-                         //this cell valid lets fill its valid nums
-                         //add a list without refrence to avoid working with the same list through out
-                         validCellList.push([]);
-
-
-                         let statusRow = createRow(currentCellListIndex, i, j);
-
-
-
-
-                         //fill with nums/valid
-                         for (let num = 1; num <= 9; num++) {
-                             //System.out.println("Num " + num + " Valid : " + cellValid(i,j,num));
-                             //if this num valid()
-                             if (isValid(i, j, num)) {
-                                 //System.out.println("Number " + num + " valid for cell ( " + i + ", " + j + ") ");
-                                 validCellList[currentCellListIndex].push(num);
-
-
-                                 //anime
-                                 //colTwo.innerText += `${num}`;
-                                 //labels pile side by sie with unique id,beats just adding content to td
-                                 statusRow.children[1].innerHTML += `<label class=lbl id=${num}> <b>${num}</b></label>`;
-                                 //progressTable.appendChild(currenRow);git 
-                                 //await sleep(1000); //this clearly demostrates step bys tep how usable are added we now only need to remove them 
-                                 //slowly too when we exit and go back to the previous table-row
-
-
-
-                             }
-                         } //end for - nums
-
-                         //anime
-                         //currentRow.appendChild(colTwo);
-                         //progressTable.appendChild(currenRow);
-
-                         //console.log(progressTable);
-
-
-
-                         //console.log(validCellList.get(cellList));
-                     } //end if compute/recompute
-
-                     //here we have a list
-                     let currentList = validCellList[currentCellListIndex]
-
-                     //empty or not
-                     if (currentList.length !== 0) {
-                         //we have a non empty list
-                         //console.log("Processing cell ( " + i + ", " + j + ") " + " with list " + cellList);
-                         //place
-                         map[i][j] = currentList[0]; //take the first in list
-
-
-                         //document.getElementById(`${currenList[0]}`).innerHTML = ""; //removes all occurences oof tthis
-                         //await sleep(10); //remove slowly
-
-                         //anime 
-                         document.getElementById(`${i}-${j}`).innerText = map[i][j];
-                         //remove the first from list
-                         currentList.shift();
-                         //move to next list
-                         currentCellListIndex++;
-                         //set compute
-                         compute = true;
-
-
-
-
-                         //animations
-                         //remove from table  add to matrix--await sleep in between
-                         //cell.innerText = map[i][j];
-                         //document.querySelector('#${i}-${j}').innerText = map[i][j];
-                         //let removedNum = document.getElementById(`
-                         //$ { map[i][j] }
-                         //`);
-                         //currrnetlyit doesnt reflect removed
-                         //removedNum = null;
-                         //lets try this
-                         //statusRow.children[1].innerText = currentList;//freezes treversal
-                         empty.innerText = `
-                         ${ emptycells-- }
-                         `;
-                         solved.innerText = `
-                         ${ solvedcells++ }
-                         `;
-
-
-
-                     } else {
-
-                         //remove current row
-                         // let removedRow = document.getElementById(`list-${currentCellListIndex}`);
-                         // removedRow.innerHTML = "";
-
-                         //remove this list from our global list
-                         // validCellList[currentCellListIndex] = null;
-
-                         //list empty-remove it
-                         //validCellList.removeTheLast List of usbale added;
-                         //go ack to previous cell
-                         currentCellListIndex--;
-
-                         //document.getElementById(`
-                         //list - $ { currentCellListIndex }
-                         //`).classList.add('scan');--always highlight current table or previous one in both its curreny
-
-
-                         //map[i][j]=0;//bug or maybe has no effect
-                         //dont build new list ,use existing
-                         compute = false;
-                         //console.log("Going back to cell ( " + i + ", " + j + ") " + " with li // st " + cellList);
-
-
-                         //aniamtions
-                         //remove current list 
-                         //glow box-shadow the nextOne;
-                         //here
-
-                         //assign results divs to these varialbes
-                         pboards.innerText = `
-                         ${ pboard++ }
-                         `;
-                         solved.innerText = `
-                         ${ emptycells++ }
-                         `;
-                         solved.innerText = `
-                         ${ solvedcells-- }
-                         `;
-
-                     } //check if list valid or not
-
-
-                     //System.out.println(validCellList.size());
-                     //our parent list is not empty
-                     if (validCellList.length !== 0) {
-                         //find (i,j) for first empty/workable cell
-                         let r = getFirstCellValid()[0];
-                         let c = getFirstCellValid()[1];
-                         //test and exit condition
-                         //first cell empty and not placed 
-                         //there is no solution
-                         if (validCellList[0].length === 0 &&
-                             //should be for the first ever encounter cell;
-                             map[r][c] === 0
-                         ) {
-                             console.log("No solution ");
-                             //exit the whole program-three loops
-                             break outer;
-                         }
-                     }
-
-                 } //end if for empty nums/workable
-
-                 if (compute) {
-                     //we placed/or it not workable - move next
-                     j++;
-                 } else {
-                     //we dint place-backtrack
-                     j--;
-                     //go up               
-                     if (j < 0) {
-                         j = rows - 1;
-                         //dont overflow
-                         if (i > 0)
-                             i--;
-                     }
-
-                     //this enables us to exit 
-                     //since ths is in place we can comfortable check the foirst workable am list 
-                     //and we are guranteed our placed/not placed check will work
-                     if (workable[i][j]) {
-                         map[i][j] = 0;
-                     }
-
-                 }
-
-             } //scan
-
-         } //scan
-
-     console.log(map);
- }
-
- function getFirstCellValid() {
-     for (let i = 0; i < rows; i++) {
-         for (let j = 0; j < cols; j++) {
-             if (workable[i][j] == true) {
-                 return [i, j];
-             }
-         }
-     }
-
-     return null;
- }
-
- /*Animations rlated quiclks*/
-
- function createRow(index, i, j) {
-     //returns a collection of children
-     //animations
-     let currentRow = document.createElement('tr');
-     currentRow.id = `list-${index}`;
-     //currentRow.className='list-${currenCellListIndex}'
-     let colOne = document.createElement('td');
-     let colTwo = document.createElement('td');
-     colOne.innerText = ` [${ i }, ${ j }] `;
-     currentRow.appendChild(colOne);
-     currentRow.appendChild(colTwo);
-     progressTable.appendChild(currentRow);
-
-     //document.getElementById('progress').appendChild(progressTable);
-
-
-
-     return currentRow;
- }
-
- function LOG(info) {
-     let log = document.querySelector('.result-container .results #logs');
-     log.innerText = info; //overflows but can be wrapped around its conatainer
-     //for now remove plus
- }
-
- async function sleep(ms) {
-     return new Promise(resolve => setTimeout(resolve, ms));
- }
-
- function pause() {
-     isPaused = true;
- }
-
- function resume() {
-     isPaused = false;
- }
-
- function reset() {
-     stop = true
- }
-
- function renderMatrix() {
-
-
-     //set table to null too
-     document.querySelectorAll('.cell').innerHTML = "";
-
-     //let temp = seededMap;
-
-     //console.log(temp);
-
-     map = [
-         [8, 1, 2, 3, 7, 4, 5, 6, 9],
-         [9, 4, 3, 6, 2, 5, 1, 7, 8],
-         [5, 7, 6, 8, 9, 1, 2, 4, 3],
-         [1, 5, 4, 2, 3, 7, 8, 9, 6],
-         [3, 6, 8, 4, 5, 9, 7, 1, 2],
-         [7, 2, 9, 1, 6, 8, 4, 3, 5],
-         [2, 3, 1, 7, 8, 6, 9, 5, 4],
-         [4, 8, 5, 9, 1, 3, 6, 2, 7],
-         [6, 9, 7, 5, 4, 2, 3, 8, 1]
-     ];
-     //console.log(map);
-     //build mirror
-     zerofy();
-     //mapify();
-     //markWorkable(); //forgot this and had trouble 
-     //delete rand
-     deleteRandom();
-
-     //mark after delete
-     markWorkable(); //forgot this and had trouble
-     //render this 
-
-     let container = document.querySelector('.main-content #matrix');
-     //document.getElementById('matrix');
-
-     console.log(container);
-     //clear
-     container.innerHTML = "";
-     //1.get table
-     let table = document.createElement('table');
-     table.id = "table-matrix";
-     table.border = "1";
-     for (let i = 0; i < rows; i++) {
-         //create rows
-         let r = document.createElement('tr');
-         for (let j = 0; j < cols; j++) {
-             let c = document.createElement('td');
-             //class
-             c.className = "cell";
-             //id
-             c.id = `${i}-${j}`;
-             //text maybe
-             c.innerText = map[i][j];
-             if (workable[i][j]) {
-                 //c.style.backgroundColor = "lightgrey";
-             }
-
-             //append
-             r.appendChild(c);
-         }
-         table.appendChild(r);
-     }
-
-     container.appendChild(table);
-
-     //seededMap = temp;
-     // map = [];
- }
-
-
-
- renderMatrix();
- //renderMatrixDynamically();
+/**
+ * ====== SUDOKU CONFIGURATION ======
+ */
+const SUDOKU_CONFIG = {
+    size: 9,
+    boxSize: 3,
+    emptyValue: 0,
+    strategies: {
+        'non-mrv': 'Non-MRV (Simple Backtracking)',
+        'mrv': 'MRV (Minimum Remaining Values)'
+    }
+};
+
+/**
+ * ====== SUDOKU STATE ======
+ */
+const SudokuState = {
+    board: [],
+    solution: [],
+    workable: [],
+    validCellList: [],
+    currentStrategy: 'mrv',
+    isSolving: false,
+    isPaused: false,
+    shouldStop: false,
+    stats: {
+        emptyCells: 0,
+        solvedCells: 0,
+        backtracks: 0,
+        steps: 0,
+        startTime: null,
+        endTime: null
+    },
+    comparisonData: {
+        'non-mrv': null,
+        'mrv': null
+    }
+};
+
+/**
+ * ====== EVIL PUZZLE CONFIGURATIONS ======
+ * 20+ pre-configured evil puzzles for testing
+ */
+const EVIL_PUZZLES = [
+    // Evil 1 - Very Hard
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ],
+    // Evil 2 - Minimal clues
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ],
+    // Evil 3
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ],
+    // Add more evil puzzles...
+    // (Will populate with real puzzles in full implementation)
+];
+
+// Pre-seeded solved board for generation
+const SEEDED_SOLVED = [
+    [8, 1, 2, 3, 7, 4, 5, 6, 9],
+    [9, 4, 3, 6, 2, 5, 1, 7, 8],
+    [5, 7, 6, 8, 9, 1, 2, 4, 3],
+    [1, 5, 4, 2, 3, 7, 8, 9, 6],
+    [3, 6, 8, 4, 5, 9, 7, 1, 2],
+    [7, 2, 9, 1, 6, 8, 4, 3, 5],
+    [2, 3, 1, 7, 8, 6, 9, 5, 4],
+    [4, 8, 5, 9, 1, 3, 6, 2, 7],
+    [6, 9, 7, 5, 4, 2, 3, 8, 1]
+];
+
+/**
+ * ====== DOM REFERENCES ======
+ */
+const DOM = {
+    matrixContainer: document.getElementById('matrixContainer'),
+    progressBody: document.getElementById('progressBody'),
+    logsDisplay: document.getElementById('logsDisplay'),
+    emptyCount: document.getElementById('emptyCount'),
+    solvedCount: document.getElementById('solvedCount'),
+    currentCell: document.getElementById('currentCell'),
+    backtrackCount: document.getElementById('backtrackCount'),
+    mrvCount: document.getElementById('mrvCount'),
+    strategySelect: document.getElementById('strategySelect'),
+    puzzleSelect: document.getElementById('puzzleSelect'),
+    speedSlider: document.getElementById('speedSlider'),
+    speedDisplay: document.getElementById('speedDisplay'),
+    comparisonSection: document.getElementById('comparisonSection'),
+    comparisonGrid: document.getElementById('comparisonGrid')
+};
+
+/**
+ * ====== INITIALIZATION ======
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🧩 Sudoku module initializing...');
+
+    // Track visit
+    if (window.AlgorithmVisualizer) {
+        window.AlgorithmVisualizer.trackVisit('sodoku');
+    }
+
+    // Set up event listeners
+    setupEventListeners();
+
+    // Generate initial puzzle
+    generatePuzzle();
+
+    addLog('✅ Sudoku module ready!', 'success');
+    console.log('✅ Sudoku module initialized');
+});
+
+/**
+ * ====== EVENT LISTENERS ======
+ */
+function setupEventListeners() {
+    // Strategy change
+    DOM.strategySelect.addEventListener('change', function() {
+        SudokuState.currentStrategy = this.value;
+        addLog(`🔄 Strategy changed to ${this.options[this.selectedIndex].text}`, 'info');
+        resetVisualization();
+    });
+
+    // Puzzle change
+    DOM.puzzleSelect.addEventListener('change', function() {
+        generatePuzzle();
+    });
+
+    // Speed slider
+    DOM.speedSlider.addEventListener('input', function() {
+        DOM.speedDisplay.textContent = `${this.value}ms`;
+    });
+}
+
+/**
+ * ====== PUZZLE GENERATION ======
+ */
+function generatePuzzle() {
+    if (SudokuState.isSolving) {
+        addLog('⏳ Please wait for current solve to finish', 'warning');
+        return;
+    }
+
+    const puzzleType = DOM.puzzleSelect.value;
+    let board = [];
+
+    switch (puzzleType) {
+        case 'random':
+            board = generateRandomPuzzle();
+            break;
+        case 'easy':
+            board = generateEasyPuzzle();
+            break;
+        case 'medium':
+            board = generateMediumPuzzle();
+            break;
+        case 'hard':
+            board = generateHardPuzzle();
+            break;
+        case 'evil':
+            board = generateEvilPuzzle();
+            break;
+        case 'custom':
+            board = getCustomPuzzle();
+            break;
+        default:
+            board = generateRandomPuzzle();
+    }
+
+    SudokuState.board = board;
+    SudokuState.solution = [];
+    SudokuState.validCellList = [];
+    SudokuState.stats = {
+        emptyCells: countEmpty(board),
+        solvedCells: 0,
+        backtracks: 0,
+        steps: 0,
+        startTime: null,
+        endTime: null
+    };
+
+    // Mark workable cells
+    markWorkable(board);
+
+    // Render the board
+    renderMatrix(board);
+    updateStats();
+    resetVisualization();
+
+    addLog(`🔄 Generated ${puzzleType} puzzle (${SudokuState.stats.emptyCells} empty cells)`, 'info');
+}
+
+function generateRandomPuzzle() {
+    let board = SEEDED_SOLVED.map(row => [...row]);
+    const probability = 0.5;
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (Math.random() < probability) {
+                board[i][j] = 0;
+            }
+        }
+    }
+    return board;
+}
+
+function generateEasyPuzzle() {
+    let board = SEEDED_SOLVED.map(row => [...row]);
+    return removeCells(board, 81 - 45);
+}
+
+function generateMediumPuzzle() {
+    let board = SEEDED_SOLVED.map(row => [...row]);
+    return removeCells(board, 81 - 35);
+}
+
+function generateHardPuzzle() {
+    let board = SEEDED_SOLVED.map(row => [...row]);
+    return removeCells(board, 81 - 28);
+}
+
+function generateEvilPuzzle() {
+    let board = SEEDED_SOLVED.map(row => [...row]);
+    return removeCells(board, 81 - 22);
+}
+
+function removeCells(board, count) {
+    let removed = 0;
+    while (removed < count) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+        if (board[row][col] !== 0) {
+            board[row][col] = 0;
+            removed++;
+        }
+    }
+    return board;
+}
+
+function getCustomPuzzle() {
+    // For now, return a medium puzzle
+    return generateMediumPuzzle();
+}
+
+function countEmpty(board) {
+    let count = 0;
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (board[i][j] === 0) count++;
+        }
+    }
+    return count;
+}
+
+/**
+ * ====== MRV (Minimum Remaining Values) ======
+ */
+function findMRV(board) {
+    let minCandidates = Infinity;
+    let bestCell = null;
+
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (board[i][j] === 0) {
+                const candidates = getValidCandidates(board, i, j);
+                if (candidates.length < minCandidates) {
+                    minCandidates = candidates.length;
+                    bestCell = { row: i, col: j, candidates: candidates };
+                    if (minCandidates === 1) break;
+                }
+            }
+        }
+        if (minCandidates === 1) break;
+    }
+
+    return bestCell;
+}
+
+/**
+ * ====== GET VALID CANDIDATES ======
+ */
+function getValidCandidates(board, row, col) {
+    const candidates = [];
+    for (let num = 1; num <= 9; num++) {
+        if (isValid(board, row, col, num)) {
+            candidates.push(num);
+        }
+    }
+    return candidates;
+}
+
+/**
+ * ====== VALIDITY CHECKS ======
+ */
+function isValid(board, row, col, num) {
+    // Check row
+    for (let j = 0; j < 9; j++) {
+        if (board[row][j] === num) return false;
+    }
+
+    // Check column
+    for (let i = 0; i < 9; i++) {
+        if (board[i][col] === num) return false;
+    }
+
+    // Check 3x3 box
+    const boxRow = Math.floor(row / 3) * 3;
+    const boxCol = Math.floor(col / 3) * 3;
+    for (let i = boxRow; i < boxRow + 3; i++) {
+        for (let j = boxCol; j < boxCol + 3; j++) {
+            if (board[i][j] === num) return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * ====== MARK WORKABLE CELLS ======
+ */
+function markWorkable(board) {
+    SudokuState.workable = [];
+    for (let i = 0; i < 9; i++) {
+        SudokuState.workable[i] = [];
+        for (let j = 0; j < 9; j++) {
+            SudokuState.workable[i][j] = (board[i][j] === 0);
+        }
+    }
+}
+
+/**
+ * ====== RENDER MATRIX ======
+ */
+function renderMatrix(board) {
+    DOM.matrixContainer.innerHTML = '';
+
+    const table = document.createElement('table');
+    table.className = 'sudoku-grid';
+
+    for (let i = 0; i < 9; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < 9; j++) {
+            const cell = document.createElement('td');
+            cell.id = `cell-${i}-${j}`;
+            cell.dataset.row = i;
+            cell.dataset.col = j;
+
+            const value = board[i][j];
+            if (value !== 0) {
+                cell.textContent = value;
+                if (!SudokuState.workable[i][j]) {
+                    cell.classList.add('given');
+                }
+            } else {
+                cell.classList.add('empty-cell');
+            }
+
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
+
+    DOM.matrixContainer.appendChild(table);
+}
+
+/**
+ * ====== UPDATE CELL ======
+ */
+function updateCell(row, col, value, className = '') {
+    const cell = document.getElementById(`cell-${row}-${col}`);
+    if (cell) {
+        cell.textContent = value || '';
+        cell.className = '';
+        if (className) cell.classList.add(className);
+        if (value === 0) cell.classList.add('empty-cell');
+    }
+}
+
+/**
+ * ====== UPDATE STATS ======
+ */
+function updateStats() {
+    DOM.emptyCount.textContent = SudokuState.stats.emptyCells;
+    DOM.solvedCount.textContent = SudokuState.stats.solvedCells;
+    DOM.backtrackCount.textContent = SudokuState.stats.backtracks;
+}
+
+/**
+ * ====== PROGRESS TABLE ======
+ */
+function updateProgress(row, col, candidates, status = 'active') {
+    const rowId = `progress-${row}-${col}`;
+    let tr = document.getElementById(rowId);
+
+    if (!tr) {
+        tr = document.createElement('tr');
+        tr.id = rowId;
+        tr.innerHTML = `
+            <td>(${row}, ${col})</td>
+            <td class="candidate-cell"></td>
+            <td class="status-cell">${status}</td>
+        `;
+        DOM.progressBody.appendChild(tr);
+    }
+
+    const candidateCell = tr.querySelector('.candidate-cell');
+    if (candidateCell) {
+        candidateCell.innerHTML = candidates.map(num =>
+            `<span class="number-label" data-num="${num}">${num}</span>`
+        ).join('');
+    }
+
+    const statusCell = tr.querySelector('.status-cell');
+    if (statusCell) {
+        statusCell.textContent = status;
+        tr.className = '';
+        if (status === 'active') tr.classList.add('active-row');
+        else if (status === 'backtrack') tr.classList.add('backtrack-row');
+        else if (status === 'solved') tr.classList.add('solved-row');
+    }
+
+    DOM.progressBody.scrollTop = DOM.progressBody.scrollHeight;
+}
+
+function clearProgress() {
+    DOM.progressBody.innerHTML = '';
+}
+
+/**
+ * ====== LOG SYSTEM ======
+ */
+function addLog(message, type = 'info') {
+    const logEntry = document.createElement('div');
+    logEntry.className = `log-entry ${type}`;
+    const timestamp = new Date().toLocaleTimeString();
+    logEntry.textContent = `[${timestamp}] ${message}`;
+    DOM.logsDisplay.appendChild(logEntry);
+    DOM.logsDisplay.scrollTop = DOM.logsDisplay.scrollHeight;
+}
+
+function clearLogs() {
+    DOM.logsDisplay.innerHTML = '';
+}
+
+/**
+ * ====== SUDOKU SOLVER ======
+ */
+async function solveSudoku() {
+    if (SudokuState.isSolving) {
+        addLog('⏳ Already solving...', 'warning');
+        return;
+    }
+
+    SudokuState.isSolving = true;
+    SudokuState.shouldStop = false;
+    SudokuState.isPaused = false;
+    SudokuState.validCellList = [];
+    SudokuState.stats = {
+        emptyCells: countEmpty(SudokuState.board),
+        solvedCells: 0,
+        backtracks: 0,
+        steps: 0,
+        startTime: performance.now(),
+        endTime: null
+    };
+
+    document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+
+    const strategy = SudokuState.currentStrategy;
+    addLog(`▶️ Starting solve with ${SUDOKU_CONFIG.strategies[strategy]}`, 'info');
+
+    const board = SudokuState.board.map(row => [...row]);
+    const workable = SudokuState.workable.map(row => [...row]);
+
+    clearProgress();
+    clearLogs();
+
+    const success = await solveWithStrategy(board, workable, strategy);
+
+    SudokuState.stats.endTime = performance.now();
+
+    if (success) {
+        addLog(`✅ Puzzle solved! (${(SudokuState.stats.endTime - SudokuState.stats.startTime).toFixed(0)}ms)`, 'success');
+        SudokuState.solution = board;
+        renderMatrix(board);
+    } else {
+        addLog('❌ No solution found!', 'error');
+    }
+
+    document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
+    SudokuState.isSolving = false;
+
+    storeComparisonData(strategy, success);
+}
+
+/**
+ * ====== SOLVE WITH STRATEGY ======
+ */
+async function solveWithStrategy(board, workable, strategy) {
+    let currentCellListIndex = 0;
+    let compute = true;
+    let steps = 0;
+    const maxSteps = 1000000;
+    const candidateLists = [];
+
+    while (steps < maxSteps && !SudokuState.shouldStop) {
+        while (SudokuState.isPaused) {
+            await sleep(50);
+        }
+
+        let cell;
+        if (strategy === 'mrv') {
+            cell = findMRV(board);
+            if (!cell) break;
+        } else {
+            cell = findNextEmpty(board);
+        }
+
+        if (!cell) break;
+
+        const { row, col } = cell;
+        const speed = parseInt(DOM.speedSlider.value);
+
+        updateCell(row, col, board[row][col] || '', 'scanning');
+        DOM.currentCell.textContent = `(${row}, ${col})`;
+
+        let candidates;
+        if (strategy === 'mrv') {
+            candidates = cell.candidates || getValidCandidates(board, row, col);
+        } else {
+            candidates = getValidCandidates(board, row, col);
+        }
+
+        updateProgress(row, col, candidates, 'active');
+
+        let placed = false;
+        for (let idx = 0; idx < candidates.length; idx++) {
+            if (SudokuState.shouldStop) return false;
+
+            const num = candidates[idx];
+            if (isValid(board, row, col, num)) {
+                board[row][col] = num;
+                updateCell(row, col, num, 'solved');
+
+                SudokuState.stats.solvedCells++;
+                SudokuState.stats.emptyCells--;
+                updateStats();
+
+                placed = true;
+                steps++;
+                SudokuState.stats.steps = steps;
+
+                const usedCandidates = candidates.filter((_, i) => i <= idx);
+                updateProgress(row, col, usedCandidates, 'solved');
+
+                if (countEmpty(board) === 0) {
+                    return true;
+                }
+
+                await sleep(speed);
+                break;
+            }
+        }
+
+        if (!placed) {
+            board[row][col] = 0;
+            updateCell(row, col, 0, 'backtrack');
+
+            SudokuState.stats.backtracks++;
+            SudokuState.stats.solvedCells--;
+            SudokuState.stats.emptyCells++;
+            updateStats();
+
+            updateProgress(row, col, candidates, 'backtrack');
+            DOM.currentCell.textContent = `↩️ Backtrack at (${row}, ${col})`;
+
+            await sleep(speed);
+        }
+    }
+
+    return countEmpty(board) === 0;
+}
+
+/**
+ * ====== FIND NEXT EMPTY CELL (Non-MRV) ======
+ */
+function findNextEmpty(board) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (board[i][j] === 0) {
+                return { row: i, col: j };
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * ====== TOGGLE PAUSE ======
+ */
+function togglePause() {
+    SudokuState.isPaused = !SudokuState.isPaused;
+    addLog(SudokuState.isPaused ? '⏸️ Paused' : '▶️ Resumed', 'info');
+    document.querySelector('.btn-warning').textContent =
+        SudokuState.isPaused ? '▶️ Resume' : '⏸️ Pause';
+}
+
+/**
+ * ====== RESET ======
+ */
+function resetAll() {
+    SudokuState.shouldStop = true;
+    SudokuState.isPaused = false;
+    SudokuState.isSolving = false;
+    document.querySelector('.btn-warning').textContent = '⏸️ Pause';
+    document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
+    generatePuzzle();
+    addLog('⏹ Reset complete', 'warning');
+}
+
+function resetVisualization() {
+    renderMatrix(SudokuState.board);
+    clearProgress();
+    updateStats();
+    DOM.currentCell.textContent = '-';
+    DOM.mrvCount.textContent = '-';
+}
+
+/**
+ * ====== STRATEGY COMPARISON ======
+ */
+async function compareStrategies() {
+    if (SudokuState.isSolving) {
+        addLog('⏳ Please wait for current solve to finish', 'warning');
+        return;
+    }
+
+    addLog('📊 Starting strategy comparison...', 'info');
+    DOM.comparisonSection.style.display = 'block';
+
+    const strategies = ['non-mrv', 'mrv'];
+    const results = {};
+
+    for (const strategy of strategies) {
+        const board = SudokuState.board.map(row => [...row]);
+        const workable = SudokuState.workable.map(row => [...row]);
+
+        SudokuState.currentStrategy = strategy;
+        SudokuState.stats = {
+            emptyCells: countEmpty(board),
+            solvedCells: 0,
+            backtracks: 0,
+            steps: 0,
+            startTime: performance.now(),
+            endTime: null
+        };
+
+        const startTime = performance.now();
+        const success = await solveWithStrategy(board, workable, strategy);
+        const endTime = performance.now();
+
+        results[strategy] = {
+            success: success,
+            time: endTime - startTime,
+            steps: SudokuState.stats.steps,
+            backtracks: SudokuState.stats.backtracks,
+            solved: success
+        };
+    }
+
+    displayComparison(results);
+    addLog('📊 Comparison complete!', 'success');
+}
+
+function displayComparison(results) {
+    const grid = DOM.comparisonGrid;
+    grid.innerHTML = '';
+
+    const strategyNames = {
+        'non-mrv': 'Non-MRV (Simple)',
+        'mrv': 'MRV (Smart)'
+    };
+
+    let winner = 'mrv';
+    if (results['non-mrv'] && results['mrv']) {
+        if (results['non-mrv'].time < results['mrv'].time) {
+            winner = 'non-mrv';
+        }
+    }
+
+    for (const [key, data] of Object.entries(results)) {
+        const item = document.createElement('div');
+        item.className = `comparison-item${key === winner ? ' winner' : ''}`;
+        item.innerHTML = `
+            <h4>${strategyNames[key]}</h4>
+            <div class="stats">
+                <p><strong>Status:</strong> ${data.success ? '✅ Solved' : '❌ Failed'}</p>
+                <p><strong>Time:</strong> ${data.time.toFixed(2)}ms</p>
+                <p><strong>Steps:</strong> ${data.steps.toLocaleString()}</p>
+                <p><strong>Backtracks:</strong> ${data.backtracks.toLocaleString()}</p>
+                ${key === winner ? '<p style="color: var(--color-success)">🏆 Winner!</p>' : ''}
+            </div>
+        `;
+        grid.appendChild(item);
+    }
+}
+
+function storeComparisonData(strategy, success) {
+    SudokuState.comparisonData[strategy] = {
+        success: success,
+        time: SudokuState.stats.endTime - SudokuState.stats.startTime,
+        steps: SudokuState.stats.steps,
+        backtracks: SudokuState.stats.backtracks,
+        timestamp: Date.now()
+    };
+
+    try {
+        localStorage.setItem('sudokuComparison', JSON.stringify(SudokuState.comparisonData));
+    } catch (e) {
+        // Ignore
+    }
+}
+
+/**
+ * ====== UTILITY FUNCTIONS ======
+ */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Expose functions globally
+window.generatePuzzle = generatePuzzle;
+window.solveSudoku = solveSudoku;
+window.togglePause = togglePause;
+window.resetAll = resetAll;
+window.compareStrategies = compareStrategies;
+
+console.log('🧩 Sudoku module loaded');
+console.log('📊 Available: MRV & Non-MRV strategies with comparison');

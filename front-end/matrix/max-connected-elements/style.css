@@ -1,7 +1,7 @@
 /* ============================================================
-   WALK CENTRE MODULE - style.css
-   Location: /front-end/matrix/walk-centre/style.css
-   Purpose: Walk Centre-specific styles
+   MAX CONNECTED ELEMENTS MODULE - style.css
+   Location: /front-end/matrix/max-connected-elements/style.css
+   Purpose: Connected component flood fill specific styles
    ============================================================ */
 
 
@@ -217,19 +217,17 @@
     border: 1px solid var(--color-border);
 }
 
-.legend-box.active {
-    background: var(--color-primary);
+.legend-box.scanning {
+    background: var(--color-info);
+    box-shadow: 0 0 10px var(--color-info);
 }
 
-.legend-box.evaluating {
+.legend-box.infecting {
     background: var(--color-warning);
+    box-shadow: 0 0 10px var(--color-warning);
 }
 
 .legend-box.visited {
-    background: var(--color-text-muted);
-}
-
-.legend-box.chosen {
     background: var(--color-success);
 }
 
@@ -240,62 +238,176 @@
 }
 
 
-/* ====== MAIN CONTENT AREA ====== */
+/* ====== DISPLAY ZONE ====== */
 
-.main-content-area {
+.display-zone {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1fr 340px;
     gap: var(--spacing-lg);
     padding: var(--spacing-lg) 0;
 }
 
-.grid-wrapper {
+.matrix-card,
+.zones-card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: var(--spacing-lg);
 }
 
-.grid-wrapper h3 {
-    color: var(--color-text-light);
-    margin-bottom: var(--spacing-md);
-}
-
-.content-card {
-    overflow: auto;
-    min-height: 350px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-/* ====== INFO WRAPPER ====== */
-
-.info-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-}
-
-.status-zone,
-.results-zone {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    flex: 1;
-}
-
-.status-zone h3,
-.results-zone h3 {
+.matrix-card h3,
+.zones-card h3 {
     color: var(--color-text-light);
     margin-bottom: var(--spacing-md);
     font-size: 1rem;
 }
 
+.grid-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    overflow-x: auto;
+}
 
-/* ====== LOG BOX ====== */
+
+/* ====== GRID TABLE ====== */
+
+.grid-table {
+    border-collapse: collapse;
+    user-select: none;
+}
+
+.grid-table td {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-border);
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background-color: var(--color-bg);
+    color: var(--color-text-light);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+
+/* Cell States */
+
+.grid-table td.scanning {
+    outline: 3px solid var(--color-info);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+    z-index: 5;
+    transform: scale(1.05);
+}
+
+.grid-table td.infecting {
+    transform: scale(1.15);
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    animation: infectPulse 0.5s ease-in-out;
+}
+
+.grid-table td.infected {
+    color: #fff !important;
+    font-weight: 700;
+}
+
+@keyframes infectPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* ====== ZONES TABLE ====== */
+
+.zones-table-wrapper {
+    max-height: 350px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.zones-table-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.zones-table-wrapper::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border-radius: 3px;
+}
+
+.zones-table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+.zones-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.zones-table th,
+.zones-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+}
+
+.zones-table th {
+    background: var(--color-bg);
+    position: sticky;
+    top: 0;
+    color: var(--color-text-light);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+.color-badge {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    border: 1px solid var(--color-border);
+}
+
+
+/* ====== RESULTS ZONE ====== */
+
+.results-zone {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
+}
+
+.log-wrapper,
+.metrics-wrapper {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.log-wrapper h4,
+.metrics-wrapper h4 {
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-md);
+    font-size: 0.9rem;
+}
 
 .log-box {
     font-family: var(--font-mono);
@@ -303,7 +415,7 @@
     background: var(--color-bg);
     padding: var(--spacing-md);
     border-radius: var(--radius-sm);
-    height: 120px;
+    height: 100px;
     overflow-y: auto;
     border: 1px solid var(--color-border);
     color: var(--color-text-muted);
@@ -325,9 +437,9 @@
 }
 
 
-/* ====== METRICS GRID ====== */
+/* ====== METRICS ====== */
 
-.metrics-grid {
+.metrics-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-sm);
@@ -348,90 +460,11 @@
 }
 
 .metric-card .lbl {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 2px;
-}
-
-
-/* ====== GRID TABLE ====== */
-
-.grid-table {
-    border-collapse: collapse;
-    user-select: none;
-}
-
-.grid-table td {
-    width: 50px;
-    height: 50px;
-    border: 2px solid var(--color-border);
-    text-align: center;
-    font-weight: 700;
-    font-size: 1rem;
-    background-color: var(--color-bg);
-    color: var(--color-text-light);
-    transition: all 0.3s ease;
-    position: relative;
-    cursor: default;
-}
-
-
-/* Cell States */
-
-.grid-table td.active {
-    background-color: var(--color-primary) !important;
-    color: #fff !important;
-    box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
-    transform: scale(1.05);
-    z-index: 2;
-    animation: pulse 0.8s ease-in-out infinite alternate;
-}
-
-.grid-table td.evaluating {
-    background-color: var(--color-warning) !important;
-    color: var(--color-bg) !important;
-    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
-}
-
-.grid-table td.visited {
-    background-color: var(--color-text-muted) !important;
-    color: var(--color-bg) !important;
-    opacity: 0.6;
-}
-
-.grid-table td.chosen {
-    background-color: var(--color-success) !important;
-    color: var(--color-bg) !important;
-    box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
-}
-
-.grid-table td.target {
-    background-color: var(--color-secondary) !important;
-    color: #fff !important;
-    box-shadow: 0 0 30px rgba(255, 101, 132, 0.6);
-    animation: targetPulse 1s ease-in-out infinite alternate;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1.08);
-    }
-}
-
-@keyframes targetPulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 20px rgba(255, 101, 132, 0.4);
-    }
-    100% {
-        transform: scale(1.1);
-        box-shadow: 0 0 40px rgba(255, 101, 132, 0.8);
-    }
 }
 
 
@@ -467,7 +500,7 @@
 /* ====== RESPONSIVE ====== */
 
 @media (max-width: 1024px) {
-    .main-content-area {
+    .display-zone {
         grid-template-columns: 1fr;
     }
     .control-row {
@@ -476,15 +509,19 @@
     .description-grid {
         grid-template-columns: 1fr;
     }
+    .results-zone {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
     .grid-table td {
-        width: 40px;
-        height: 40px;
-        font-size: 0.85rem;
+        width: 32px;
+        height: 32px;
+        font-size: 0.7rem;
+        border-width: 1px;
     }
-    .metrics-grid {
+    .metrics-container {
         grid-template-columns: 1fr 1fr;
     }
     .button-group .btn {
@@ -497,12 +534,11 @@
 
 @media (max-width: 480px) {
     .grid-table td {
-        width: 32px;
-        height: 32px;
-        font-size: 0.7rem;
-        border-width: 1px;
+        width: 28px;
+        height: 28px;
+        font-size: 0.6rem;
     }
-    .metrics-grid {
+    .metrics-container {
         grid-template-columns: 1fr;
     }
 }
