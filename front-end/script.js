@@ -24,8 +24,7 @@ const ALGORITHM_MODULES = [{
         tags: ['Linear Algebra', 'Math'],
         runtime: 'O(n³)',
         difficulty: 'Intermediate',
-        color: '#6C63FF',
-        hasChildren: true
+        color: '#6C63FF'
     },
     {
         id: 'graph',
@@ -36,8 +35,7 @@ const ALGORITHM_MODULES = [{
         tags: ['Traversal', 'Pathfinding'],
         runtime: 'O(V + E)',
         difficulty: 'Advanced',
-        color: '#4ADE80',
-        hasChildren: false
+        color: '#4ADE80'
     }
 ];
 
@@ -272,4 +270,5 @@ window.AlgorithmVisualizer = {
     detectCurrentModule
 };
 
+console.log('📦 Algorithm Visualizer API exposed to window');
 console.log('📦 Algorithm Visualizer API exposed to window');

@@ -279,6 +279,7 @@ function renderMatrix(container, matrix, matrixId) {
 function updateOperationSymbol() {
     const op = MatrixState.currentOperation;
     //const symbol = MATRIX_CONFIG.operations[op] ? symbol || '?';
+    const symbol = MATRIX_CONFIG.operations[op] || '?';
     MatrixDOM.operationSymbol.textContent = symbol;
 }
 
