@@ -1,55 +1,247 @@
 <!DOCTYPE html>
-
 <html>
 
-<head></head>
+<head>
+    <title>Animated Sudoku Solver</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        
+        .container {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(9, 50px);
+            grid-template-rows: repeat(9, 50px);
+            gap: 2px;
+            background: #0f3460;
+            padding: 2px;
+            border-radius: 10px;
+        }
+        
+        .cell {
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #e94560;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .cell.empty {
+            color: #533483;
+        }
+        
+        .cell.placed {
+            color: #4ecca3;
+            animation: pop 0.3s ease;
+        }
+        
+        .cell.backtrack {
+            color: #ff6b6b;
+            animation: shake 0.3s ease;
+        }
+        
+        .cell.workable {
+            background: #1a1a3e;
+            border: 1px solid #533483;
+        }
+        
+        .cell.fixed {
+            color: #ffffff;
+        }
+        
+        .cell.current {
+            background: #e94560;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        button {
+            background: #e94560;
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        button:hover:not(:disabled) {
+            transform: scale(1.05);
+            background: #c73652;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        button.secondary {
+            background: #533483;
+        }
+        
+        button.secondary:hover:not(:disabled) {
+            background: #6a3f9e;
+        }
+        
+        .status {
+            color: #4ecca3;
+            font-size: 18px;
+            margin-top: 15px;
+            min-height: 30px;
+            text-align: center;
+        }
+        
+        .stats {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+        
+        input[type="range"] {
+            width: 150px;
+            accent-color: #e94560;
+        }
+        
+        @keyframes pop {
+            0% {
+                transform: scale(0.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
 
 <body>
+    <div class="container">
+        <div class="grid" id="grid"></div>
+        <div class="controls">
+            <button id="startBtn">▶ Solve</button>
+            <button id="resetBtn" class="secondary">⟳ Reset</button>
+            <div class="speed-control">
+                <span>🐢</span>
+                <input type="range" id="speedSlider" min="50" max="500" value="200">
+                <span>🐇</span>
+            </div>
+        </div>
+        <div class="status" id="status">Ready to solve!</div>
+        <div class="stats" id="stats">Steps: 0 | Backtracks: 0</div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="color-box" style="background: #ffffff;"></div>
+                <span>Fixed</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #4ecca3;"></div>
+                <span>Placed</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #ff6b6b;"></div>
+                <span>Backtrack</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box" style="background: #e94560;"></div>
+                <span>Current</span>
+            </div>
+        </div>
+    </div>
+
     <script>
-        import {
-            randomBytes
-        } from 'crypto';
-
-        class SolveSodoku {
-            static PROB = 0.75;
-            static validCellList = [];
-
-            constructor(i, j) {
+        class AnimatedSodoku {
+            constructor() {
                 this.map = Array.from({
-                    length: i
-                }, () => Array(j).fill(0));
+                    length: 9
+                }, () => Array(9).fill(0));
                 this.workable = Array.from({
-                    length: i
-                }, () => Array(j).fill(false));
-                // JavaScript doesn't have SecureRandom with seed, using crypto for equivalent
-                this.random = {
-                    nextInt: (bound) => Math.floor(Math.random() * bound)
-                };
+                    length: 9
+                }, () => Array(9).fill(false));
+                this.validCellList = [];
+                this.isRunning = false;
+                this.shouldStop = false;
+                this.steps = 0;
+                this.backtracks = 0;
+                this.speed = 200;
+
+                // Initialize with the same puzzle
                 this.mapify();
                 this.marWorkable();
-            }
-
-            display() {
-                for (let i = 0; i < this.map.length; i++) {
-                    console.log(JSON.stringify(this.map[i]));
-                }
-            }
-
-            displayWork() {
-                for (let i = 0; i < this.workable.length; i++) {
-                    console.log(JSON.stringify(this.workable[i]));
-                }
-            }
-
-            mapify1() {
-                // empty method
+                this.render();
+                this.updateStats();
             }
 
             mapify() {
-                // most evil
                 this.map[1][2] = 3;
                 this.map[0][0] = 8;
-                this.map[1][3] = 6; // infinity=2
+                this.map[1][3] = 6;
                 this.map[2][1] = 7;
                 this.map[2][4] = 9;
                 this.map[2][6] = 2;
@@ -59,23 +251,13 @@
                 this.map[4][4] = 5;
                 this.map[5][3] = 1;
                 this.map[5][7] = 3;
-                // this.map[6][2]=1;
-                // this.map[6][7]=6;
-                // this.map[6][8]=8;
-                // this.map[7][2]=8;
-                // up to here works
-                // this.map[7][3]=5;
-                // this.map[7][6]=1;
-                // all these work
                 this.map[8][1] = 9;
-                // this works too
                 this.map[8][4] = 4;
             }
 
             marWorkable() {
                 for (let i = 0; i < this.workable.length; i++) {
                     for (let j = 0; j < this.workable[i].length; j++) {
-                        // empty
                         if (this.map[i][j] === 0) {
                             this.workable[i][j] = true;
                         }
@@ -88,7 +270,6 @@
                 let columnValid = true;
                 let temp = b;
 
-                // row
                 for (b = 0; b < this.map.length; b++) {
                     if (this.map[a][b] === number) {
                         rowValid = false;
@@ -98,7 +279,6 @@
 
                 b = temp;
 
-                // column
                 for (a = 0; a < this.map.length; a++) {
                     if (this.map[a][b] === number) {
                         columnValid = false;
@@ -113,7 +293,6 @@
                 let zoneValid = true;
                 const boundary = 3;
 
-                // boundary checks and guard
                 if (a < 3 && b < 3) {
                     a = 0;
                     b = 0;
@@ -143,7 +322,6 @@
                     b = 6;
                 }
 
-                // actual loops
                 for (let m = a; m < a + boundary; m++) {
                     for (let n = b; n < b + boundary; n++) {
                         if (this.map[m][n] === num) {
@@ -160,73 +338,6 @@
                 return this.rowAndColumnValid(i, j, num) && this.threeByThreeZoneValid(i, j, num);
             }
 
-            sodoku() {
-                let cellList = 0;
-                let compute = true;
-
-                outer:
-                    for (let i = 0; i < this.map.length && i >= 0; i++) {
-                        for (let j = 0; j < this.map[i].length;) {
-                            if (this.workable[i][j]) {
-                                if (compute) {
-                                    console.log("Computing list");
-                                    SolveSodoku.validCellList.push([]);
-                                    for (let num = 1; num <= this.map.length; num++) {
-                                        if (this.cellValid(i, j, num)) {
-                                            SolveSodoku.validCellList[cellList].push(num);
-                                        }
-                                    }
-                                    console.log(SolveSodoku.validCellList[cellList]);
-                                }
-
-                                const current = SolveSodoku.validCellList[cellList];
-                                console.log("List empty : " + (current.length === 0));
-
-                                if (current.length > 0) {
-                                    console.log("Processing  cell (" + i + "," + j + ")" + " with list " + cellList);
-                                    this.map[i][j] = current[0];
-                                    current.shift();
-                                    cellList++;
-                                    compute = true;
-                                } else {
-                                    console.log("Stuck at (" + i + "," + j + ")");
-                                    SolveSodoku.validCellList.pop();
-                                    cellList--;
-                                    compute = false;
-                                    console.log("Going back to  cell (" + i + "," + j + ")" + " with list " + cellList);
-                                }
-
-                                if (SolveSodoku.validCellList.length > 0) {
-                                    const firstCell = this.getFirstCellValid();
-                                    const r = firstCell[0];
-                                    const c = firstCell[1];
-                                    if (SolveSodoku.validCellList[0].length === 0 &&
-                                        this.map[r][c] === 0) {
-                                        console.log("No solution");
-                                        break outer;
-                                    }
-                                }
-                            }
-
-                            if (compute) {
-                                j++;
-                            } else {
-                                j--;
-                                if (j < 0) {
-                                    j = this.map.length - 1;
-                                    if (i > 0) {
-                                        i--;
-                                    }
-                                }
-
-                                if (this.workable[i][j]) {
-                                    this.map[i][j] = 0;
-                                }
-                            }
-                        }
-                    }
-            }
-
             getFirstCellValid() {
                 for (let i = 0; i < this.map.length; i++) {
                     for (let j = 0; j < this.map.length; j++) {
@@ -237,24 +348,223 @@
                 }
                 return null;
             }
-        }
 
-        // Test class equivalent
-        class TestSolveSodoku {
-            static main() {
-                const sodoku = new SolveSodoku(9, 9);
-                const s = Date.now();
-                sodoku.sodoku();
-                sodoku.display();
-                const e = Date.now();
-                console.log(SolveSodoku.validCellList);
-                console.log(`\nTime : ${e - s} ms`);
+            sleep() {
+                return new Promise(resolve => setTimeout(resolve, this.speed));
+            }
+
+            async solve() {
+                if (this.isRunning) return;
+                this.isRunning = true;
+                this.shouldStop = false;
+                this.validCellList = [];
+                this.steps = 0;
+                this.backtracks = 0;
+
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('resetBtn').disabled = true;
+                document.getElementById('status').textContent = 'Solving...';
+
+                let cellList = 0;
+                let compute = true;
+
+                outer:
+                    for (let i = 0; i < this.map.length && i >= 0; i++) {
+                        for (let j = 0; j < this.map[i].length;) {
+                            if (this.shouldStop) break outer;
+
+                            if (this.workable[i][j]) {
+                                // Highlight current cell
+                                this.render(i, j, 'current');
+                                await this.sleep();
+
+                                if (compute) {
+                                    this.validCellList.push([]);
+                                    for (let num = 1; num <= this.map.length; num++) {
+                                        if (this.cellValid(i, j, num)) {
+                                            this.validCellList[cellList].push(num);
+                                        }
+                                    }
+                                }
+
+                                const current = this.validCellList[cellList];
+
+                                if (current.length > 0) {
+                                    // Place number
+                                    this.map[i][j] = current[0];
+                                    current.shift();
+                                    this.steps++;
+                                    this.render(i, j, 'placed');
+                                    await this.sleep();
+                                    cellList++;
+                                    compute = true;
+                                } else {
+                                    // Backtrack
+                                    this.validCellList.pop();
+                                    cellList--;
+                                    compute = false;
+                                    this.backtracks++;
+                                    this.map[i][j] = 0;
+                                    this.render(i, j, 'backtrack');
+                                    await this.sleep();
+                                }
+
+                                if (this.validCellList.length > 0) {
+                                    const firstCell = this.getFirstCellValid();
+                                    if (firstCell) {
+                                        const [r, c] = firstCell;
+                                        if (this.validCellList[0].length === 0 && this.map[r][c] === 0) {
+                                            document.getElementById('status').textContent = '❌ No solution exists!';
+                                            this.isRunning = false;
+                                            document.getElementById('startBtn').disabled = false;
+                                            document.getElementById('resetBtn').disabled = false;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (compute) {
+                                j++;
+                            } else {
+                                j--;
+                                if (j < 0) {
+                                    j = this.map.length - 1;
+                                    if (i > 0) i--;
+                                }
+                                if (this.workable[i] && this.workable[i][j]) {
+                                    this.map[i][j] = 0;
+                                }
+                            }
+                            this.updateStats();
+                        }
+                    }
+
+                // Check if solved
+                if (!this.shouldStop) {
+                    const solved = this.isSolved();
+                    document.getElementById('status').textContent = solved ? '✅ Solved successfully!' : '⚠️ Could not solve completely';
+                }
+
+                this.isRunning = false;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('resetBtn').disabled = false;
+                this.render();
+            }
+
+            isSolved() {
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        if (this.map[i][j] === 0) return false;
+                    }
+                }
+                return true;
+            }
+
+            render(highlightRow = -1, highlightCol = -1, highlightType = '') {
+                const grid = document.getElementById('grid');
+                grid.innerHTML = '';
+
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+
+                        const value = this.map[i][j];
+                        const isWorkable = this.workable[i][j];
+                        const isFixed = this.map[i][j] !== 0 && !this.workable[i][j];
+
+                        if (value === 0) {
+                            cell.textContent = '';
+                            cell.classList.add('empty');
+                        } else {
+                            cell.textContent = value;
+                        }
+
+                        if (isFixed) {
+                            cell.classList.add('fixed');
+                        }
+
+                        if (isWorkable && value === 0) {
+                            cell.classList.add('workable');
+                        }
+
+                        if (i === highlightRow && j === highlightCol) {
+                            if (highlightType === 'current') {
+                                cell.classList.add('current');
+                            } else if (highlightType === 'placed') {
+                                cell.classList.add('placed');
+                            } else if (highlightType === 'backtrack') {
+                                cell.classList.add('backtrack');
+                            }
+                        }
+
+                        // Add 3x3 box borders
+                        if (j % 3 === 0) cell.style.borderLeft = '2px solid #4ecca3';
+                        if (i % 3 === 0) cell.style.borderTop = '2px solid #4ecca3';
+                        if (j === 8) cell.style.borderRight = '2px solid #4ecca3';
+                        if (i === 8) cell.style.borderBottom = '2px solid #4ecca3';
+
+                        grid.appendChild(cell);
+                    }
+                }
+            }
+
+            updateStats() {
+                document.getElementById('stats').textContent =
+                    `Steps: ${this.steps} | Backtracks: ${this.backtracks}`;
+            }
+
+            reset() {
+                if (this.isRunning) {
+                    this.shouldStop = true;
+                    return;
+                }
+
+                this.map = Array.from({
+                    length: 9
+                }, () => Array(9).fill(0));
+                this.workable = Array.from({
+                    length: 9
+                }, () => Array(9).fill(false));
+                this.validCellList = [];
+                this.steps = 0;
+                this.backtracks = 0;
+                this.mapify();
+                this.marWorkable();
+                this.render();
+                this.updateStats();
+                document.getElementById('status').textContent = 'Ready to solve!';
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('resetBtn').disabled = false;
             }
         }
 
-        // Run the test
-        TestSolveSodoku.main();
-        //console.log()
+        // Initialize
+        const solver = new AnimatedSodoku();
+
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', () => {
+            solver.solve();
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            solver.reset();
+        });
+
+        document.getElementById('speedSlider').addEventListener('input', (e) => {
+            solver.speed = parseInt(e.target.value);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('startBtn').click();
+            }
+            if (e.key === 'r' || e.key === 'R') {
+                document.getElementById('resetBtn').click();
+            }
+        });
     </script>
 </body>
 
