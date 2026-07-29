@@ -15,10 +15,12 @@
  * These are the DIRECT children of the root level.
  * Root only shows: Matrix and Graph
  */
+
+//to-do add better icons for graph and matrix 
 const ALGORITHM_MODULES = [{
         id: 'matrix',
         name: 'Matrix Operations',
-        icon: '📊',
+        //icon: '📊',
         description: 'Visualize matrix transformations, multiplication, and operations in real-time. Includes sub-modules for Sudoku, Basin Detection, Walk Centre, and Max Connected Elements.',
         path: 'matrix/index.html',
         tags: ['Linear Algebra', 'Math'],
@@ -29,7 +31,7 @@ const ALGORITHM_MODULES = [{
     {
         id: 'graph',
         name: 'Graph Algorithms',
-        icon: '🔗',
+        // icon: '🔗',
         description: 'Explore BFS, DFS, Dijkstra, and more with interactive node-edge visualizations',
         path: 'graph/index.html',
         tags: ['Traversal', 'Pathfinding'],
@@ -63,14 +65,14 @@ const AppState = {
  * ====== INITIALIZATION ======
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Algorithm Visualizer initializing...');
+    console.log('Algorithm Visualizer initializing...');
 
     generateNavigation();
     generateAlgorithmCards();
     trackVisit('home');
     detectCurrentModule();
 
-    console.log('✅ Initialization complete');
+    console.log('Initialization complete');
 });
 
 /**
@@ -84,7 +86,7 @@ function generateNavigation() {
 
     DOM.nav.innerHTML = '';
 
-    const homeLink = createNavLink('🏠 Home', 'index.html', 'home');
+    const homeLink = createNavLink('Home', 'index.html', 'home');
     DOM.nav.appendChild(homeLink);
 
     ALGORITHM_MODULES.forEach(module => {
@@ -96,7 +98,7 @@ function generateNavigation() {
         DOM.nav.appendChild(link);
     });
 
-    console.log(`📋 Generated ${ALGORITHM_MODULES.length + 1} navigation links`);
+    console.log(`Generated ${ALGORITHM_MODULES.length + 1} navigation links`);
 }
 
 function createNavLink(text, href, id) {
@@ -132,7 +134,7 @@ function generateAlgorithmCards() {
         DOM.cardsGrid.appendChild(card);
     });
 
-    console.log(`🃏 Generated ${ALGORITHM_MODULES.length} algorithm cards`);
+    console.log(`Generated ${ALGORITHM_MODULES.length} algorithm cards`);
 }
 
 function createCardElement(module) {
@@ -143,7 +145,7 @@ function createCardElement(module) {
 
     // Add a badge if module has children
     const childBadge = module.hasChildren ?
-        `<span class="child-badge">📂 ${module.id === 'matrix' ? '4 Sub-Modules' : ''}</span>` : '';
+        `<span class="child-badge">${module.id === 'matrix' ? '4 Sub-Modules' : ''}</span>` : '';
 
     card.innerHTML = `
         <div class="card-icon">${module.icon}</div>
@@ -152,7 +154,7 @@ function createCardElement(module) {
         ${childBadge}
         <div class="card-meta">
             <span class="card-tag">${module.tags[0]}</span>
-            <span class="card-runtime">⏱️ ${module.runtime}</span>
+            <span class="card-runtime">${module.runtime}</span>
         </div>
     `;
 
@@ -169,7 +171,7 @@ function createCardElement(module) {
 function trackVisit(moduleId) {
     if (!AppState.visitedModules.includes(moduleId)) {
         AppState.visitedModules.push(moduleId);
-        console.log(`👣 Visited: ${moduleId} (${AppState.visitedModules.length} total visits)`);
+        console.log(`Visited: ${moduleId} (${AppState.visitedModules.length} total visits)`);
     }
 
     try {
@@ -191,7 +193,7 @@ function detectCurrentModule() {
     for (const module of ALGORITHM_MODULES) {
         if (currentPath.includes(module.path.replace('/', ''))) {
             AppState.currentModule = module.id;
-            console.log(`📍 Current module: ${module.name}`);
+            console.log(`Current module: ${module.name}`);
             document.title = `Algorithm Visualizer | ${module.name}`;
             break;
         }
@@ -211,7 +213,7 @@ function detectCurrentModule() {
                     AppState.visitedModules.push(id);
                 }
             });
-            console.log(`📚 Restored ${AppState.visitedModules.length} visits from session`);
+            console.log(`Restored ${AppState.visitedModules.length} visits from session`);
         }
     } catch (e) {
         // Ignore
@@ -270,5 +272,5 @@ window.AlgorithmVisualizer = {
     detectCurrentModule
 };
 
-console.log('📦 Algorithm Visualizer API exposed to window');
-console.log('📦 Algorithm Visualizer API exposed to window');
+console.log('Algorithm Visualizer API exposed to window');
+console.log('Algorithm Visualizer API exposed to window');
