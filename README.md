@@ -1,13 +1,13 @@
-# 🚀 Algorithm Visualizer
+#  Algorithm Visualizer
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-blue.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
-> **"Where complex algorithms become visual stories. Because reading code is overrated."**
+> **"Where complex algorithms become visual stories. Because reading code and books provide no mental model."**
 
-## 📖 Table of Contents
+##  Table of Contents
 
 - [Overview](#-overview)
 - [Live Demo](#-live-demo)
@@ -30,32 +30,32 @@
 
 ---
 
-## 🎯 Overview
+##  Overview
 
-**Algorithm Visualizer** is an interactive, frontend-only web application designed to demystify complex algorithms through real-time, step-by-step visualizations. Built with pure HTML, CSS, and JavaScript, it provides an immersive learning experience for students, developers, and algorithm enthusiasts.
+**Algorithm Visualizer** is an interactive, frontend-only(for now) web application designed to demystify complex algorithms through real-time, step-by-step visualizations. Built with pure HTML, CSS, and JavaScript, it provides an immersive learning experience for students, developers, and algorithm enthusiasts.
 
-### ✨ Key Highlights
+###  Key Highlights
 
-- 🎨 **Visual Learning** - Watch algorithms execute step-by-step with dynamic visual feedback
-- ⚡ **Interactive Controls** - Pause, step, speed up, or slow down execution in real-time
-- 📚 **Educational Content** - Each module includes descriptions, runtime analysis, and learning notes
-- 🎯 **Multiple Strategies** - Compare different algorithmic approaches side-by-side
-- 📱 **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
-- 🧩 **Modular Architecture** - Each algorithm lives in its own isolated module
+-  **Visual Learning** - Watch algorithms execute step-by-step with dynamic visual feedback
+-  **Interactive Controls** - Pause, step, speed up, or slow down execution in real-time
+-  **Educational Content** - Each module includes descriptions, runtime analysis, and learning notes
+-  **Multiple Strategies** - Compare different algorithmic approaches side-by-side
+-  **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
+-  **Modular Architecture** - Each algorithm lives in its own isolated module
 
 ---
 
-## 🌐 Live Demo
+##  Live Demo
 
 **[Coming Soon]** Deploy to GitHub Pages or Vercel for a live demo.
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 ALGORITHIM-VISUALIZER/
-└── front-end/                              # Root Directory
+└── docs/                                   # Root Directory
     ├── index.html                          # Main Dashboard (2 modules)
     ├── style.css                           # Global Styles
     ├── script.js                           # Shared Logic & Config
@@ -92,18 +92,18 @@ ALGORITHIM-VISUALIZER/
 
 ---
 
-## 🧩 Modules
+##  Modules
 
-### Matrix Operations 📊
-**Location:** `/front-end/matrix/`
+### Matrix Operations 
+**Location:** `/docs/matrix/`
 
 Visualize fundamental matrix operations with step-by-step execution and cell highlighting.
 
 **Supported Operations:**
-- ➕ **Addition** - Element-wise matrix addition (O(n × m))
-- ✖️ **Multiplication** - Standard matrix multiplication (O(n × m × p))
-- 🔄 **Transpose** - Flip matrix across diagonal (O(n × m))
-- 📐 **Determinant** - Calculate scalar value for square matrices (O(n³))
+-  **Addition** - Element-wise matrix addition (O(n × m))
+-  **Multiplication** - Standard matrix multiplication (O(n × m × p))
+- **Transpose** - Flip matrix across diagonal (O(n × m))
+-  **Determinant** - Calculate scalar value for square matrices (O(n³))
 
 **Key Features:**
 - Real-time cell highlighting
@@ -113,45 +113,45 @@ Visualize fundamental matrix operations with step-by-step execution and cell hig
 
 ---
 
-### Graph Algorithms 🔗
-**Location:** `/front-end/graph/` *(Coming Soon)*
+### Graph Algorithms 
+**Location:** `/docs/graph/` *(Coming Soon)*
 
 Explore graph traversal and pathfinding algorithms with interactive node-edge visualization.
 
 **Planned Algorithms:**
-- 🌊 BFS (Breadth-First Search)
-- 🧭 DFS (Depth-First Search)
-- 🗺️ Dijkstra's Algorithm
-- ⭐ A* Search Algorithm
+-  BFS (Breadth-First Search)
+-  DFS (Depth-First Search)
+-  Dijkstra's Algorithm
+-  A* Search Algorithm
 
 ---
 
-### Sudoku Solver 🧩
-**Location:** `/front-end/matrix/sodoku/`
+### Sudoku Solver 
+**Location:** `/docs/matrix/sodoku/`
 
 Watch backtracking algorithms solve Sudoku puzzles with two different strategies.
 
 **Features:**
-- 🎯 **Non-MRV Strategy** - Simple row-by-row backtracking
-- ⚡ **MRV Strategy** - Minimum Remaining Values heuristic (10-100x faster)
-- 📊 **Strategy Comparison** - Side-by-side performance analysis
-- 🧩 **20+ Evil Puzzles** - Pre-configured difficult puzzles
-- 📋 **Progress Table** - Visual candidate tracking per cell
+-  **Non-MRV Strategy** - Simple row-by-row backtracking
+-  **MRV Strategy** - Minimum Remaining Values heuristic (10-100x faster)
+-  **Strategy Comparison** - Side-by-side performance analysis
+-  **20+ Evil Puzzles** - Pre-configured difficult puzzles
+-  **Progress Table** - Visual candidate tracking per cell
 
 **Runtime Complexity:** O(9^(n²)) worst case, with MRV significantly faster in practice
 
 ---
 
-### Basin Finder 🏞️
-**Location:** `/front-end/matrix/basin/`
+### Basin Finder 
+**Location:** `/docs/matrix/basin/`
 
 Detect local minima (basins) in terrain grids with real-time visualization.
 
 **Features:**
-- 📐 **Full Grid Scan** - Compare each cell against its orthogonal neighbors
-- 🎨 **Heat Map Visualization** - Color-coded terrain values
-- 📊 **Terrain Analysis** - Statistics including slope, flat areas, and basin density
-- 🔍 **Live Comparison** - See each cell being evaluated against its neighbors
+-  **Full Grid Scan** - Compare each cell against its orthogonal neighbors
+-  **Heat Map Visualization** - Color-coded terrain values
+-  **Terrain Analysis** - Statistics including slope, flat areas, and basin density
+-  **Live Comparison** - See each cell being evaluated against its neighbors
 
 **Real-World Applications:** Topography, watershed analysis, GIS, terrain modeling
 
@@ -159,51 +159,51 @@ Detect local minima (basins) in terrain grids with real-time visualization.
 
 ---
 
-### Walk Centre 🚶
-**Location:** `/front-end/matrix/walk-centre/`
+### Walk Centre 
+**Location:** `/docs/matrix/walk-centre/`
 
 Simulate grid traversal using different pathfinding strategies.
 
 **Features:**
-- 🔄 **Greedy Strategy** - Always move to highest-value neighbor
-- ⭐ **A* Search** - Find path to global maximum using heuristic
-- 🧭 **Move Sets** - 4-Way (orthogonal) or 8-Way (including diagonals)
-- 📊 **Live Metrics** - Steps walked, current value, path length
-- 🔍 **Visual Feedback** - See each cell being evaluated
+-  **Greedy Strategy** - Always move to highest-value neighbor
+-  **A* Search** - Find path to global maximum using heuristic
+-  **Move Sets** - 4-Way (orthogonal) or 8-Way (including diagonals)
+-  **Live Metrics** - Steps walked, current value, path length
+-  **Visual Feedback** - See each cell being evaluated
 
 **Runtime Complexity:** O(n × m) with heuristic optimization
 
 ---
 
-### Max Connected Elements 🔲
-**Location:** `/front-end/matrix/max-connected-elements/`
+### Max Connected Elements 
+**Location:** `/docs/matrix/max-connected-elements/`
 
 Find connected components using a dual-wave flood fill approach.
 
 **Features:**
-- 🌊 **Search Wave** - Scans grid row by row for unvisited cells
-- 🦠 **Infection Wave** - Flood fills connected components recursively
-- 🔗 **Connectivity Options** - 4-Way or 8-Way connections
-- 📊 **Component Tracking** - Each component gets unique color and stats
-- 📋 **Zones Table** - Live tracking of discovered components
+-  **Search Wave** - Scans grid row by row for unvisited cells
+-  **Infection Wave** - Flood fills connected components recursively
+-  **Connectivity Options** - 4-Way or 8-Way connections
+-  **Component Tracking** - Each component gets unique color and stats
+-  **Zones Table** - Live tracking of discovered components
 
 **Runtime Complexity:** O(n × m) for both scan and flood fill
 
 ---
 
-## ✨ Features
+##  Features
 
 ### Core Features Across All Modules
 
 | Feature | Description |
 |---------|-------------|
-| 🎮 **Interactive Controls** | Play, pause, step, reset, speed control |
-| 🎨 **Visual Feedback** | Cell highlighting, animations, color coding |
-| 📊 **Live Metrics** | Real-time statistics and progress tracking |
-| 📝 **Operation Logs** | Detailed step-by-step execution logs |
-| ⌨️ **Keyboard Shortcuts** | Space, Enter, R, G for power users |
-| 📱 **Responsive Design** | Works on all screen sizes |
-| 🎯 **Educational Content** | Descriptions, runtime analysis, learning notes |
+|  **Interactive Controls** | Play, pause, step, reset, speed control |
+| **Visual Feedback** | Cell highlighting, animations, color coding |
+| **Live Metrics** | Real-time statistics and progress tracking |
+| **Operation Logs** | Detailed step-by-step execution logs |
+| **Keyboard Shortcuts** | Space, Enter, R, G for power users |
+| **Responsive Design** | Works on all screen sizes |
+| **Educational Content** | Descriptions, runtime analysis, learning notes |
 
 ### Shared Architecture
 
@@ -215,7 +215,7 @@ Find connected components using a dual-wave flood fill approach.
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 ### Frontend
 - **HTML5** - Semantic markup for accessibility
@@ -234,7 +234,7 @@ Find connected components using a dual-wave flood fill approach.
 
 ---
 
-## 📦 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 - A modern web browser (Chrome, Firefox, Safari, Edge)
@@ -244,14 +244,14 @@ Find connected components using a dual-wave flood fill approach.
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/algorithm-visualizer.git
+git clone https://github.com/daniel-oyoo/algorithm-visualizer.git
 cd algorithm-visualizer
 ```
 
 2. **Open the application**
 ```bash
 # Navigate to the front-end directory
-cd front-end
+cd docs
 
 # Open index.html in your browser
 open index.html
@@ -272,7 +272,7 @@ firefox index.html
 
 ---
 
-## 🎮 Usage Guide
+## Usage Guide
 
 ### Navigating the Dashboard
 1. **Home Page** - View all available algorithm modules
@@ -284,10 +284,10 @@ firefox index.html
 1. **Generate** - Create a new random dataset (matrix, puzzle, grid, etc.)
 2. **Visualize/Start** - Begin the algorithm visualization
 3. **Controls**:
-   - ⏸️ **Pause/Resume** - Pause and resume execution
-   - ⏭️ **Step** - Advance one step at a time
-   - ⏹️ **Reset** - Reset to initial state
-   - ⏱️ **Speed** - Adjust animation speed
+   - **Pause/Resume** - Pause and resume execution
+   -  **Step** - Advance one step at a time
+   -  **Reset** - Reset to initial state
+   -  **Speed** - Adjust animation speed
 4. **Monitor** - Watch the visualization, status messages, and metrics
 
 ### Keyboard Shortcuts
@@ -301,15 +301,15 @@ firefox index.html
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Whether you want to:
 
-- 🐛 Report a bug
-- 💡 Suggest a new algorithm
-- 📝 Improve documentation
-- 🎨 Enhance the UI
-- 🚀 Add a new feature
+-  Report a bug
+-  Suggest a new algorithm
+-  Improve documentation
+-  Enhance the UI
+-  Add a new feature
 
 ### How to Contribute
 
@@ -337,7 +337,7 @@ git push origin feature/amazing-feature
 
 ---
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
@@ -360,19 +360,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Open Source Community** - For the endless inspiration and resources
 - **Algorithm Enthusiasts** - For keeping the love of algorithms alive
 - **Educators** - For teaching the next generation of problem solvers
-- **Coffee** - For making late-night coding sessions possible ☕
+- **Coffee** - For making late-night coding sessions possible 
 
 ### Special Thanks
 
@@ -382,15 +382,15 @@ SOFTWARE.
 
 ---
 
-## 📬 Contact
+##  Contact
 
-**Your Name** - [Your Portfolio](https://yourportfolio.com) - [GitHub](https://github.com/yourusername)
+**Your Name** - [Your Portfolio](https://yourportfolio.com) - [GitHub](https://github.com/daniel-oyoo)
 
-**Project Link:** [https://github.com/yourusername/algorithm-visualizer](https://github.com/yourusername/algorithm-visualizer)
+**Project Link:** [https://github.com/yourusername/algorithm-visualizer](https://github.com/daniel-oyoo/algorithm-visualizer)
 
 ---
 
-## 🎯 Roadmap
+##  Roadmap
 
 - [x] Matrix Operations Module
 - [x] Sudoku Solver
@@ -406,12 +406,12 @@ SOFTWARE.
 
 ---
 
-### ⭐ Show Your Support
+###  Show Your Support
 
 If you found this project helpful, please give it a ⭐ on GitHub and share it with others!
 
 ---
 
-**Built with ❤️ and lots of ☕ by [Your Name]**
+**Built with love and lots of cofee by Daniel Oyoo**
 
 *"Every algorithm tells a story. We just make it visual."*
