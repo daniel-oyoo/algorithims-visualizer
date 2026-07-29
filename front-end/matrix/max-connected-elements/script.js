@@ -20,10 +20,10 @@ const CC_CONFIG = {
  */
 const DIRECTION_SETS = {
     4: [
-        [-1, 0], // Up
-        [1, 0], // Down
-        [0, -1], // Left
-        [0, 1] // Right
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1]
     ],
     8: [
         [-1, 0],
@@ -67,7 +67,7 @@ const CCState = {
 /**
  * ====== DOM REFERENCES ======
  */
-const DOM = {
+const maxDOM = {
     gridTable: document.getElementById('gridTable'),
     zonesTableBody: document.getElementById('zonesTableBody'),
     statusLog: document.getElementById('statusLog'),
@@ -89,59 +89,50 @@ const DOM = {
  * ====== INITIALIZATION ======
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔲 Max Connected Elements module initializing...');
+    console.log('Max Connected Elements module initializing');
 
-    // Track visit
     if (window.AlgorithmVisualizer) {
         window.AlgorithmVisualizer.trackVisit('max-connected-elements');
     }
 
-    // Set up event listeners
     setupEventListeners();
-
-    // Initialize grid
     initGrid();
 
-    console.log('✅ Max Connected Elements module initialized');
+    console.log('Max Connected Elements module initialized');
 });
 
 /**
  * ====== EVENT LISTENERS ======
  */
 function setupEventListeners() {
-    // Direction change
-    DOM.directionSelect.addEventListener('change', function() {
-        addLog(`🔄 Connection strategy changed to ${this.value}-Way`, 'info');
+    maxDOM.directionSelect.addEventListener('change', function() {
+        addLog('Connection strategy changed to ' + this.value + '-Way', 'info');
         resetSimulation();
     });
 
-    // Density change
-    DOM.densitySelect.addEventListener('change', function() {
+    maxDOM.densitySelect.addEventListener('change', function() {
         resetSimulation();
     });
 
-    // Size change
-    DOM.sizeSelect.addEventListener('change', function() {
+    maxDOM.sizeSelect.addEventListener('change', function() {
         resetSimulation();
     });
 
-    // Speed slider
-    DOM.speedSlider.addEventListener('input', function() {
+    maxDOM.speedSlider.addEventListener('input', function() {
         CCState.delayMs = parseInt(this.value);
-        DOM.speedDisplay.textContent = `${this.value}ms`;
+        maxDOM.speedDisplay.textContent = this.value + 'ms';
     });
 
-    // Buttons
-    DOM.btnStart.addEventListener('click', startWaves);
-    DOM.btnPause.addEventListener('click', togglePause);
-    DOM.btnReset.addEventListener('click', resetSimulation);
+    maxDOM.btnStart.addEventListener('click', startWaves);
+    maxDOM.btnPause.addEventListener('click', togglePause);
+    maxDOM.btnReset.addEventListener('click', resetSimulation);
 }
 
 /**
  * ====== GRID INITIALIZATION ======
  */
 function initGrid() {
-    const size = parseInt(DOM.sizeSelect.value);
+    const size = parseInt(maxDOM.sizeSelect.value);
     CCState.rows = size;
     CCState.cols = size;
     CCState.isRunning = false;
@@ -152,14 +143,12 @@ function initGrid() {
     CCState.maxComponentSize = 0;
     CCState.zoneIdCounter = 0;
 
-    const density = parseFloat(DOM.densitySelect.value);
+    const density = parseFloat(maxDOM.densitySelect.value);
 
-    // Generate grid with random values (positive = target, 0 = empty)
     CCState.grid = [];
     for (let i = 0; i < size; i++) {
         CCState.grid[i] = [];
         for (let j = 0; j < size; j++) {
-            // Cells with positive values based on density
             if (Math.random() < density) {
                 CCState.grid[i][j] = Math.floor(Math.random() * 9) + 1;
             } else {
@@ -171,33 +160,32 @@ function initGrid() {
     renderGrid();
     updateMetrics();
     clearLog();
-    addLog(`🔄 Generated ${size}×${size} grid with ${density * 100}% coverage`, 'info');
+    addLog('Generated ' + size + 'x' + size + ' grid with ' + (density * 100) + '% coverage', 'info');
 
-    // Count total positive cells
     let total = 0;
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
             if (CCState.grid[i][j] > 0) total++;
         }
     }
-    DOM.metricTotalCells.textContent = total;
+    maxDOM.metricTotalCells.textContent = total;
 
-    DOM.btnStart.disabled = false;
-    DOM.btnPause.disabled = true;
-    DOM.btnPause.textContent = '⏸️ Pause';
+    maxDOM.btnStart.disabled = false;
+    maxDOM.btnPause.disabled = true;
+    maxDOM.btnPause.textContent = 'Pause';
 }
 
 /**
  * ====== RENDER GRID ======
  */
 function renderGrid() {
-    DOM.gridTable.innerHTML = '';
+    maxDOM.gridTable.innerHTML = '';
 
     for (let i = 0; i < CCState.rows; i++) {
         const tr = document.createElement('tr');
         for (let j = 0; j < CCState.cols; j++) {
             const td = document.createElement('td');
-            td.id = `cell-${i}-${j}`;
+            td.id = 'cell-' + i + '-' + j;
             td.dataset.row = i;
             td.dataset.col = j;
 
@@ -213,7 +201,7 @@ function renderGrid() {
 
             tr.appendChild(td);
         }
-        DOM.gridTable.appendChild(tr);
+        maxDOM.gridTable.appendChild(tr);
     }
 }
 
@@ -221,39 +209,42 @@ function renderGrid() {
  * ====== GET CELL ELEMENT ======
  */
 function getCell(row, col) {
-    return document.getElementById(`cell-${row}-${col}`);
+    return document.getElementById('cell-' + row + '-' + col);
 }
 
 /**
  * ====== UPDATE METRICS ======
  */
 function updateMetrics() {
-    DOM.metricTotalZones.textContent = CCState.zoneIdCounter;
-    DOM.metricMaxConnected.textContent = CCState.maxComponentSize;
-    DOM.metricVisitedCells.textContent = CCState.totalVisited;
+    maxDOM.metricTotalZones.textContent = CCState.zoneIdCounter;
+    maxDOM.metricMaxConnected.textContent = CCState.maxComponentSize;
+    maxDOM.metricVisitedCells.textContent = CCState.totalVisited;
 }
 
 /**
  * ====== LOG SYSTEM ======
  */
-function addLog(message, type = 'info') {
+function addLog(message, type) {
+    type = type || 'info';
     const logEntry = document.createElement('div');
-    logEntry.className = `log-entry ${type}`;
+    logEntry.className = 'log-entry ' + type;
     const timestamp = new Date().toLocaleTimeString();
-    logEntry.textContent = `[${timestamp}] ${message}`;
-    DOM.statusLog.appendChild(logEntry);
-    DOM.statusLog.scrollTop = DOM.statusLog.scrollHeight;
+    logEntry.textContent = '[' + timestamp + '] ' + message;
+    maxDOM.statusLog.appendChild(logEntry);
+    maxDOM.statusLog.scrollTop = maxDOM.statusLog.scrollHeight;
 }
 
 function clearLog() {
-    DOM.statusLog.innerHTML = '';
+    maxDOM.statusLog.innerHTML = '';
 }
 
 /**
  * ====== SLEEP ======
  */
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+    });
 }
 
 /**
@@ -285,24 +276,19 @@ async function runInfectionWave(row, col, zoneObj, directions) {
     if (!CCState.isRunning) return;
     if (!await checkPause()) return;
 
-    // Mark cell as visited (-1 in grid)
     CCState.grid[row][col] = -1;
     zoneObj.count++;
     CCState.totalVisited++;
 
-    // Update max component size
     if (zoneObj.count > CCState.maxComponentSize) {
         CCState.maxComponentSize = zoneObj.count;
     }
 
-    // Update UI metrics
     updateMetrics();
 
-    // Update zone count in table
-    const countTd = document.getElementById(`zone-count-${zoneObj.id}`);
+    const countTd = document.getElementById('zone-count-' + zoneObj.id);
     if (countTd) countTd.textContent = zoneObj.count;
 
-    // Animate cell
     const cellEl = getCell(row, col);
     if (cellEl) {
         cellEl.style.backgroundColor = zoneObj.color;
@@ -313,8 +299,9 @@ async function runInfectionWave(row, col, zoneObj, directions) {
         cellEl.classList.add('infected');
     }
 
-    // Explore all valid neighbors
-    for (const [dr, dc] of directions) {
+    for (const dir of directions) {
+        const dr = dir[0];
+        const dc = dir[1];
         const nr = row + dr;
         const nc = col + dc;
         if (find(nr, nc)) {
@@ -328,7 +315,7 @@ async function runInfectionWave(row, col, zoneObj, directions) {
  * Searching wave scans grid, infection wave floods components
  */
 async function startDualWaveProcess() {
-    const use8Dir = DOM.directionSelect.value === '8';
+    const use8Dir = maxDOM.directionSelect.value === '8';
     const directions = use8Dir ? DIRECTION_SETS[8] : DIRECTION_SETS[4];
 
     CCState.zoneIdCounter = 0;
@@ -336,10 +323,8 @@ async function startDualWaveProcess() {
     CCState.maxComponentSize = 0;
     CCState.zoneList = [];
 
-    // Clear zones table
-    DOM.zonesTableBody.innerHTML = '';
+    maxDOM.zonesTableBody.innerHTML = '';
 
-    // Reset grid colors
     for (let i = 0; i < CCState.rows; i++) {
         for (let j = 0; j < CCState.cols; j++) {
             const cell = getCell(i, j);
@@ -354,24 +339,22 @@ async function startDualWaveProcess() {
     }
 
     updateMetrics();
-    addLog(`🌊 Starting ${use8Dir ? '8-Way' : '4-Way'} search wave...`, 'info');
+    addLog('Starting ' + (use8Dir ? '8-Way' : '4-Way') + ' search wave', 'info');
 
-    // SEARCHING WAVE: Scan row by row
     for (let i = 0; i < CCState.rows; i++) {
         for (let j = 0; j < CCState.cols; j++) {
             if (!CCState.isRunning || CCState.shouldStop) {
-                addLog('⏹ Process stopped by user', 'warning');
+                addLog('Process stopped by user', 'warning');
                 finishProcess();
                 return;
             }
 
             if (!await checkPause()) {
-                addLog('⏹ Process stopped', 'warning');
+                addLog('Process stopped', 'warning');
                 finishProcess();
                 return;
             }
 
-            // Animate scanning
             const cellEl = getCell(i, j);
             if (cellEl && CCState.grid[i][j] > 0) {
                 cellEl.classList.add('scanning');
@@ -379,12 +362,11 @@ async function startDualWaveProcess() {
                 cellEl.classList.remove('scanning');
             }
 
-            // If positive unvisited cell found, start infection wave
             if (find(i, j)) {
                 CCState.zoneIdCounter++;
                 const color = ZONE_COLORS[(CCState.zoneIdCounter - 1) % ZONE_COLORS.length];
 
-                addLog(`🎯 Target found at [${i}, ${j}]! Handing torch to Infection Wave...`, 'success');
+                addLog('Target found at [' + i + ', ' + j + ']. Handing torch to Infection Wave', 'success');
 
                 const zoneObj = {
                     id: CCState.zoneIdCounter,
@@ -395,30 +377,26 @@ async function startDualWaveProcess() {
                 };
                 CCState.zoneList.push(zoneObj);
 
-                // Add to zones table
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <span class="color-badge" style="background:${color}"></span>
-                        Zone #${zoneObj.id}
-                    </td>
-                    <td>[${i}, ${j}]</td>
-                    <td id="zone-count-${zoneObj.id}">0</td>
-                `;
-                DOM.zonesTableBody.appendChild(tr);
+                tr.innerHTML =
+                    '<td>' +
+                    '<span class="color-badge" style="background:' + color + '"></span>' +
+                    'Zone #' + zoneObj.id +
+                    '</td>' +
+                    '<td>[' + i + ', ' + j + ']</td>' +
+                    '<td id="zone-count-' + zoneObj.id + '">0</td>';
+                maxDOM.zonesTableBody.appendChild(tr);
                 updateMetrics();
 
-                // INFECTION WAVE: Flood fill the component
                 await runInfectionWave(i, j, zoneObj, directions);
 
-                addLog(`✅ Infection wave finished Zone #${zoneObj.id} (${zoneObj.count} cells)`, 'info');
+                addLog('Infection wave finished Zone #' + zoneObj.id + ' (' + zoneObj.count + ' cells)', 'info');
             }
         }
     }
 
-    // Process complete
-    addLog(`🎉 Searching completed! Found ${CCState.zoneIdCounter} connected components!`, 'success');
-    addLog(`📊 Largest component: ${CCState.maxComponentSize} cells`, 'info');
+    addLog('Searching completed. Found ' + CCState.zoneIdCounter + ' connected components', 'success');
+    addLog('Largest component: ' + CCState.maxComponentSize + ' cells', 'info');
 
     finishProcess();
 }
@@ -431,9 +409,9 @@ function finishProcess() {
     CCState.shouldStop = false;
     CCState.isPaused = false;
 
-    DOM.btnStart.disabled = false;
-    DOM.btnPause.disabled = true;
-    DOM.btnPause.textContent = '⏸️ Pause';
+    maxDOM.btnStart.disabled = false;
+    maxDOM.btnPause.disabled = true;
+    maxDOM.btnPause.textContent = 'Pause';
 }
 
 /**
@@ -446,17 +424,17 @@ async function startWaves() {
     CCState.shouldStop = false;
     CCState.isPaused = false;
 
-    DOM.btnStart.disabled = true;
-    DOM.btnPause.disabled = false;
-    DOM.btnPause.textContent = '⏸️ Pause';
+    maxDOM.btnStart.disabled = true;
+    maxDOM.btnPause.disabled = false;
+    maxDOM.btnPause.textContent = 'Pause';
 
     try {
         await startDualWaveProcess();
     } catch (error) {
-        addLog(`❌ Error: ${error.message}`, 'error');
+        addLog('Error: ' + error.message, 'error');
         CCState.isRunning = false;
-        DOM.btnStart.disabled = false;
-        DOM.btnPause.disabled = true;
+        maxDOM.btnStart.disabled = false;
+        maxDOM.btnPause.disabled = true;
     }
 }
 
@@ -465,8 +443,8 @@ async function startWaves() {
  */
 function togglePause() {
     CCState.isPaused = !CCState.isPaused;
-    DOM.btnPause.textContent = CCState.isPaused ? '▶️ Resume' : '⏸️ Pause';
-    addLog(CCState.isPaused ? '⏸️ Paused' : '▶️ Resumed', 'info');
+    maxDOM.btnPause.textContent = CCState.isPaused ? 'Resume' : 'Pause';
+    addLog(CCState.isPaused ? 'Paused' : 'Resumed', 'info');
 }
 
 /**
@@ -476,11 +454,11 @@ function resetSimulation() {
     CCState.shouldStop = true;
     CCState.isPaused = false;
     CCState.isRunning = false;
-    DOM.btnPause.textContent = '⏸️ Pause';
-    DOM.btnStart.disabled = false;
-    DOM.btnPause.disabled = true;
+    maxDOM.btnPause.textContent = 'Pause';
+    maxDOM.btnStart.disabled = false;
+    maxDOM.btnPause.disabled = true;
     initGrid();
-    addLog('⏹ Reset complete', 'warning');
+    addLog('Reset complete', 'warning');
 }
 
 /**
@@ -490,5 +468,5 @@ window.startWaves = startWaves;
 window.togglePause = togglePause;
 window.resetSimulation = resetSimulation;
 
-console.log('🔲 Max Connected Elements module loaded');
-console.log('🌊 Features: Dual-wave search, 4/8-way connectivity, component tracking');
+console.log('Max Connected Elements module loaded');
+console.log('Features: Dual-wave search, 4 and 8-way connectivity, component tracking');

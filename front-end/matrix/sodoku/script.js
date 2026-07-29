@@ -2,7 +2,7 @@
  * ============================================================
  * SUDOKU MODULE - script.js
  * Location: /front-end/matrix/sodoku/script.js
- * Purpose: Complete Sudoku solver with MRV & Non-MRV strategies
+ * Purpose: Complete Sudoku solver with MRV and Non-MRV strategies
  * ============================================================
  */
 
@@ -14,8 +14,8 @@ const SUDOKU_CONFIG = {
     boxSize: 3,
     emptyValue: 0,
     strategies: {
-        'non-mrv': 'Non-MRV (Simple Backtracking)',
-        'mrv': 'MRV (Minimum Remaining Values)'
+        'non-mrv': 'Non-MRV Simple Backtracking',
+        'mrv': 'MRV Minimum Remaining Values'
     }
 };
 
@@ -47,10 +47,9 @@ const SudokuState = {
 
 /**
  * ====== EVIL PUZZLE CONFIGURATIONS ======
- * 20+ pre-configured evil puzzles for testing
+ * Pre-configured evil puzzles for testing
  */
 const EVIL_PUZZLES = [
-    // Evil 1 - Very Hard
     [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -62,7 +61,6 @@ const EVIL_PUZZLES = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ],
-    // Evil 2 - Minimal clues
     [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -74,7 +72,6 @@ const EVIL_PUZZLES = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ],
-    // Evil 3
     [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -85,12 +82,12 @@ const EVIL_PUZZLES = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ],
-    // Add more evil puzzles...
-    // (Will populate with real puzzles in full implementation)
+    ]
 ];
 
-// Pre-seeded solved board for generation
+/**
+ * ====== PRE-SEEDED SOLVED BOARD ======
+ */
 const SEEDED_SOLVED = [
     [8, 1, 2, 3, 7, 4, 5, 6, 9],
     [9, 4, 3, 6, 2, 5, 1, 7, 8],
@@ -106,7 +103,7 @@ const SEEDED_SOLVED = [
 /**
  * ====== DOM REFERENCES ======
  */
-const DOM = {
+const sudokuDOM = {
     matrixContainer: document.getElementById('matrixContainer'),
     progressBody: document.getElementById('progressBody'),
     logsDisplay: document.getElementById('logsDisplay'),
@@ -127,42 +124,35 @@ const DOM = {
  * ====== INITIALIZATION ======
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🧩 Sudoku module initializing...');
+    console.log('Sudoku module initializing');
 
-    // Track visit
     if (window.AlgorithmVisualizer) {
         window.AlgorithmVisualizer.trackVisit('sodoku');
     }
 
-    // Set up event listeners
     setupEventListeners();
-
-    // Generate initial puzzle
     generatePuzzle();
 
-    addLog('✅ Sudoku module ready!', 'success');
-    console.log('✅ Sudoku module initialized');
+    addLog('Sudoku module ready', 'success');
+    console.log('Sudoku module initialized');
 });
 
 /**
  * ====== EVENT LISTENERS ======
  */
 function setupEventListeners() {
-    // Strategy change
-    DOM.strategySelect.addEventListener('change', function() {
+    sudokuDOM.strategySelect.addEventListener('change', function() {
         SudokuState.currentStrategy = this.value;
-        addLog(`🔄 Strategy changed to ${this.options[this.selectedIndex].text}`, 'info');
+        addLog('Strategy changed to ' + this.options[this.selectedIndex].text, 'info');
         resetVisualization();
     });
 
-    // Puzzle change
-    DOM.puzzleSelect.addEventListener('change', function() {
+    sudokuDOM.puzzleSelect.addEventListener('change', function() {
         generatePuzzle();
     });
 
-    // Speed slider
-    DOM.speedSlider.addEventListener('input', function() {
-        DOM.speedDisplay.textContent = `${this.value}ms`;
+    sudokuDOM.speedSlider.addEventListener('input', function() {
+        sudokuDOM.speedDisplay.textContent = this.value + 'ms';
     });
 }
 
@@ -171,11 +161,11 @@ function setupEventListeners() {
  */
 function generatePuzzle() {
     if (SudokuState.isSolving) {
-        addLog('⏳ Please wait for current solve to finish', 'warning');
+        addLog('Please wait for current solve to finish', 'warning');
         return;
     }
 
-    const puzzleType = DOM.puzzleSelect.value;
+    const puzzleType = sudokuDOM.puzzleSelect.value;
     let board = [];
 
     switch (puzzleType) {
@@ -213,19 +203,18 @@ function generatePuzzle() {
         endTime: null
     };
 
-    // Mark workable cells
     markWorkable(board);
-
-    // Render the board
     renderMatrix(board);
     updateStats();
     resetVisualization();
 
-    addLog(`🔄 Generated ${puzzleType} puzzle (${SudokuState.stats.emptyCells} empty cells)`, 'info');
+    addLog('Generated ' + puzzleType + ' puzzle (' + SudokuState.stats.emptyCells + ' empty cells)', 'info');
 }
 
 function generateRandomPuzzle() {
-    let board = SEEDED_SOLVED.map(row => [...row]);
+    let board = SEEDED_SOLVED.map(function(row) {
+        return row.slice();
+    });
     const probability = 0.5;
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -238,22 +227,30 @@ function generateRandomPuzzle() {
 }
 
 function generateEasyPuzzle() {
-    let board = SEEDED_SOLVED.map(row => [...row]);
+    let board = SEEDED_SOLVED.map(function(row) {
+        return row.slice();
+    });
     return removeCells(board, 81 - 45);
 }
 
 function generateMediumPuzzle() {
-    let board = SEEDED_SOLVED.map(row => [...row]);
+    let board = SEEDED_SOLVED.map(function(row) {
+        return row.slice();
+    });
     return removeCells(board, 81 - 35);
 }
 
 function generateHardPuzzle() {
-    let board = SEEDED_SOLVED.map(row => [...row]);
+    let board = SEEDED_SOLVED.map(function(row) {
+        return row.slice();
+    });
     return removeCells(board, 81 - 28);
 }
 
 function generateEvilPuzzle() {
-    let board = SEEDED_SOLVED.map(row => [...row]);
+    let board = SEEDED_SOLVED.map(function(row) {
+        return row.slice();
+    });
     return removeCells(board, 81 - 22);
 }
 
@@ -271,7 +268,6 @@ function removeCells(board, count) {
 }
 
 function getCustomPuzzle() {
-    // For now, return a medium puzzle
     return generateMediumPuzzle();
 }
 
@@ -286,7 +282,7 @@ function countEmpty(board) {
 }
 
 /**
- * ====== MRV (Minimum Remaining Values) ======
+ * ====== MRV MINIMUM REMAINING VALUES ======
  */
 function findMRV(board) {
     let minCandidates = Infinity;
@@ -326,17 +322,14 @@ function getValidCandidates(board, row, col) {
  * ====== VALIDITY CHECKS ======
  */
 function isValid(board, row, col, num) {
-    // Check row
     for (let j = 0; j < 9; j++) {
         if (board[row][j] === num) return false;
     }
 
-    // Check column
     for (let i = 0; i < 9; i++) {
         if (board[i][col] === num) return false;
     }
 
-    // Check 3x3 box
     const boxRow = Math.floor(row / 3) * 3;
     const boxCol = Math.floor(col / 3) * 3;
     for (let i = boxRow; i < boxRow + 3; i++) {
@@ -365,7 +358,7 @@ function markWorkable(board) {
  * ====== RENDER MATRIX ======
  */
 function renderMatrix(board) {
-    DOM.matrixContainer.innerHTML = '';
+    sudokuDOM.matrixContainer.innerHTML = '';
 
     const table = document.createElement('table');
     table.className = 'sudoku-grid';
@@ -374,7 +367,7 @@ function renderMatrix(board) {
         const row = document.createElement('tr');
         for (let j = 0; j < 9; j++) {
             const cell = document.createElement('td');
-            cell.id = `cell-${i}-${j}`;
+            cell.id = 'cell-' + i + '-' + j;
             cell.dataset.row = i;
             cell.dataset.col = j;
 
@@ -393,14 +386,15 @@ function renderMatrix(board) {
         table.appendChild(row);
     }
 
-    DOM.matrixContainer.appendChild(table);
+    sudokuDOM.matrixContainer.appendChild(table);
 }
 
 /**
  * ====== UPDATE CELL ======
  */
-function updateCell(row, col, value, className = '') {
-    const cell = document.getElementById(`cell-${row}-${col}`);
+function updateCell(row, col, value, className) {
+    className = className || '';
+    const cell = document.getElementById('cell-' + row + '-' + col);
     if (cell) {
         cell.textContent = value || '';
         cell.className = '';
@@ -413,34 +407,37 @@ function updateCell(row, col, value, className = '') {
  * ====== UPDATE STATS ======
  */
 function updateStats() {
-    DOM.emptyCount.textContent = SudokuState.stats.emptyCells;
-    DOM.solvedCount.textContent = SudokuState.stats.solvedCells;
-    DOM.backtrackCount.textContent = SudokuState.stats.backtracks;
+    sudokuDOM.emptyCount.textContent = SudokuState.stats.emptyCells;
+    sudokuDOM.solvedCount.textContent = SudokuState.stats.solvedCells;
+    sudokuDOM.backtrackCount.textContent = SudokuState.stats.backtracks;
 }
 
 /**
  * ====== PROGRESS TABLE ======
  */
-function updateProgress(row, col, candidates, status = 'active') {
-    const rowId = `progress-${row}-${col}`;
+function updateProgress(row, col, candidates, status) {
+    status = status || 'active';
+    const rowId = 'progress-' + row + '-' + col;
     let tr = document.getElementById(rowId);
 
     if (!tr) {
         tr = document.createElement('tr');
         tr.id = rowId;
-        tr.innerHTML = `
-            <td>(${row}, ${col})</td>
-            <td class="candidate-cell"></td>
-            <td class="status-cell">${status}</td>
-        `;
-        DOM.progressBody.appendChild(tr);
+        tr.innerHTML =
+            '<td>(' + row + ', ' + col + ')</td>' +
+            '<td class="candidate-cell"></td>' +
+            '<td class="status-cell">' + status + '</td>';
+        sudokuDOM.progressBody.appendChild(tr);
     }
 
     const candidateCell = tr.querySelector('.candidate-cell');
     if (candidateCell) {
-        candidateCell.innerHTML = candidates.map(num =>
-            `<span class="number-label" data-num="${num}">${num}</span>`
-        ).join('');
+        let html = '';
+        for (let i = 0; i < candidates.length; i++) {
+            const num = candidates[i];
+            html += '<span class="number-label" data-num="' + num + '">' + num + '</span>';
+        }
+        candidateCell.innerHTML = html;
     }
 
     const statusCell = tr.querySelector('.status-cell');
@@ -452,27 +449,28 @@ function updateProgress(row, col, candidates, status = 'active') {
         else if (status === 'solved') tr.classList.add('solved-row');
     }
 
-    DOM.progressBody.scrollTop = DOM.progressBody.scrollHeight;
+    sudokuDOM.progressBody.scrollTop = sudokuDOM.progressBody.scrollHeight;
 }
 
 function clearProgress() {
-    DOM.progressBody.innerHTML = '';
+    sudokuDOM.progressBody.innerHTML = '';
 }
 
 /**
  * ====== LOG SYSTEM ======
  */
-function addLog(message, type = 'info') {
+function addLog(message, type) {
+    type = type || 'info';
     const logEntry = document.createElement('div');
-    logEntry.className = `log-entry ${type}`;
+    logEntry.className = 'log-entry ' + type;
     const timestamp = new Date().toLocaleTimeString();
-    logEntry.textContent = `[${timestamp}] ${message}`;
-    DOM.logsDisplay.appendChild(logEntry);
-    DOM.logsDisplay.scrollTop = DOM.logsDisplay.scrollHeight;
+    logEntry.textContent = '[' + timestamp + '] ' + message;
+    sudokuDOM.logsDisplay.appendChild(logEntry);
+    sudokuDOM.logsDisplay.scrollTop = sudokuDOM.logsDisplay.scrollHeight;
 }
 
 function clearLogs() {
-    DOM.logsDisplay.innerHTML = '';
+    sudokuDOM.logsDisplay.innerHTML = '';
 }
 
 /**
@@ -480,7 +478,7 @@ function clearLogs() {
  */
 async function solveSudoku() {
     if (SudokuState.isSolving) {
-        addLog('⏳ Already solving...', 'warning');
+        addLog('Already solving', 'warning');
         return;
     }
 
@@ -497,13 +495,19 @@ async function solveSudoku() {
         endTime: null
     };
 
-    document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.btn').forEach(function(btn) {
+        btn.disabled = true;
+    });
 
     const strategy = SudokuState.currentStrategy;
-    addLog(`▶️ Starting solve with ${SUDOKU_CONFIG.strategies[strategy]}`, 'info');
+    addLog('Starting solve with ' + SUDOKU_CONFIG.strategies[strategy], 'info');
 
-    const board = SudokuState.board.map(row => [...row]);
-    const workable = SudokuState.workable.map(row => [...row]);
+    const board = SudokuState.board.map(function(row) {
+        return row.slice();
+    });
+    const workable = SudokuState.workable.map(function(row) {
+        return row.slice();
+    });
 
     clearProgress();
     clearLogs();
@@ -513,14 +517,16 @@ async function solveSudoku() {
     SudokuState.stats.endTime = performance.now();
 
     if (success) {
-        addLog(`✅ Puzzle solved! (${(SudokuState.stats.endTime - SudokuState.stats.startTime).toFixed(0)}ms)`, 'success');
+        addLog('Puzzle solved (' + (SudokuState.stats.endTime - SudokuState.stats.startTime).toFixed(0) + 'ms)', 'success');
         SudokuState.solution = board;
         renderMatrix(board);
     } else {
-        addLog('❌ No solution found!', 'error');
+        addLog('No solution found', 'error');
     }
 
-    document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.btn').forEach(function(btn) {
+        btn.disabled = false;
+    });
     SudokuState.isSolving = false;
 
     storeComparisonData(strategy, success);
@@ -551,11 +557,12 @@ async function solveWithStrategy(board, workable, strategy) {
 
         if (!cell) break;
 
-        const { row, col } = cell;
-        const speed = parseInt(DOM.speedSlider.value);
+        const row = cell.row;
+        const col = cell.col;
+        const speed = parseInt(sudokuDOM.speedSlider.value);
 
         updateCell(row, col, board[row][col] || '', 'scanning');
-        DOM.currentCell.textContent = `(${row}, ${col})`;
+        sudokuDOM.currentCell.textContent = '(' + row + ', ' + col + ')';
 
         let candidates;
         if (strategy === 'mrv') {
@@ -583,7 +590,7 @@ async function solveWithStrategy(board, workable, strategy) {
                 steps++;
                 SudokuState.stats.steps = steps;
 
-                const usedCandidates = candidates.filter((_, i) => i <= idx);
+                const usedCandidates = candidates.slice(0, idx + 1);
                 updateProgress(row, col, usedCandidates, 'solved');
 
                 if (countEmpty(board) === 0) {
@@ -605,7 +612,7 @@ async function solveWithStrategy(board, workable, strategy) {
             updateStats();
 
             updateProgress(row, col, candidates, 'backtrack');
-            DOM.currentCell.textContent = `↩️ Backtrack at (${row}, ${col})`;
+            sudokuDOM.currentCell.textContent = 'Backtrack at (' + row + ', ' + col + ')';
 
             await sleep(speed);
         }
@@ -615,7 +622,7 @@ async function solveWithStrategy(board, workable, strategy) {
 }
 
 /**
- * ====== FIND NEXT EMPTY CELL (Non-MRV) ======
+ * ====== FIND NEXT EMPTY CELL NON-MRV ======
  */
 function findNextEmpty(board) {
     for (let i = 0; i < 9; i++) {
@@ -633,9 +640,9 @@ function findNextEmpty(board) {
  */
 function togglePause() {
     SudokuState.isPaused = !SudokuState.isPaused;
-    addLog(SudokuState.isPaused ? '⏸️ Paused' : '▶️ Resumed', 'info');
+    addLog(SudokuState.isPaused ? 'Paused' : 'Resumed', 'info');
     document.querySelector('.btn-warning').textContent =
-        SudokuState.isPaused ? '▶️ Resume' : '⏸️ Pause';
+        SudokuState.isPaused ? 'Resume' : 'Pause';
 }
 
 /**
@@ -645,18 +652,20 @@ function resetAll() {
     SudokuState.shouldStop = true;
     SudokuState.isPaused = false;
     SudokuState.isSolving = false;
-    document.querySelector('.btn-warning').textContent = '⏸️ Pause';
-    document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
+    document.querySelector('.btn-warning').textContent = 'Pause';
+    document.querySelectorAll('.btn').forEach(function(btn) {
+        btn.disabled = false;
+    });
     generatePuzzle();
-    addLog('⏹ Reset complete', 'warning');
+    addLog('Reset complete', 'warning');
 }
 
 function resetVisualization() {
     renderMatrix(SudokuState.board);
     clearProgress();
     updateStats();
-    DOM.currentCell.textContent = '-';
-    DOM.mrvCount.textContent = '-';
+    sudokuDOM.currentCell.textContent = '-';
+    sudokuDOM.mrvCount.textContent = '-';
 }
 
 /**
@@ -664,19 +673,23 @@ function resetVisualization() {
  */
 async function compareStrategies() {
     if (SudokuState.isSolving) {
-        addLog('⏳ Please wait for current solve to finish', 'warning');
+        addLog('Please wait for current solve to finish', 'warning');
         return;
     }
 
-    addLog('📊 Starting strategy comparison...', 'info');
-    DOM.comparisonSection.style.display = 'block';
+    addLog('Starting strategy comparison', 'info');
+    sudokuDOM.comparisonSection.style.display = 'block';
 
     const strategies = ['non-mrv', 'mrv'];
     const results = {};
 
     for (const strategy of strategies) {
-        const board = SudokuState.board.map(row => [...row]);
-        const workable = SudokuState.workable.map(row => [...row]);
+        const board = SudokuState.board.map(function(row) {
+            return row.slice();
+        });
+        const workable = SudokuState.workable.map(function(row) {
+            return row.slice();
+        });
 
         SudokuState.currentStrategy = strategy;
         SudokuState.stats = {
@@ -702,16 +715,16 @@ async function compareStrategies() {
     }
 
     displayComparison(results);
-    addLog('📊 Comparison complete!', 'success');
+    addLog('Comparison complete', 'success');
 }
 
 function displayComparison(results) {
-    const grid = DOM.comparisonGrid;
+    const grid = sudokuDOM.comparisonGrid;
     grid.innerHTML = '';
 
     const strategyNames = {
-        'non-mrv': 'Non-MRV (Simple)',
-        'mrv': 'MRV (Smart)'
+        'non-mrv': 'Non-MRV Simple',
+        'mrv': 'MRV Smart'
     };
 
     let winner = 'mrv';
@@ -721,19 +734,19 @@ function displayComparison(results) {
         }
     }
 
-    for (const [key, data] of Object.entries(results)) {
+    for (const key of Object.keys(results)) {
+        const data = results[key];
         const item = document.createElement('div');
-        item.className = `comparison-item${key === winner ? ' winner' : ''}`;
-        item.innerHTML = `
-            <h4>${strategyNames[key]}</h4>
-            <div class="stats">
-                <p><strong>Status:</strong> ${data.success ? '✅ Solved' : '❌ Failed'}</p>
-                <p><strong>Time:</strong> ${data.time.toFixed(2)}ms</p>
-                <p><strong>Steps:</strong> ${data.steps.toLocaleString()}</p>
-                <p><strong>Backtracks:</strong> ${data.backtracks.toLocaleString()}</p>
-                ${key === winner ? '<p style="color: var(--color-success)">🏆 Winner!</p>' : ''}
-            </div>
-        `;
+        item.className = 'comparison-item' + (key === winner ? ' winner' : '');
+        item.innerHTML =
+            '<h4>' + strategyNames[key] + '</h4>' +
+            '<div class="stats">' +
+            '<p><strong>Status:</strong> ' + (data.success ? 'Solved' : 'Failed') + '</p>' +
+            '<p><strong>Time:</strong> ' + data.time.toFixed(2) + 'ms</p>' +
+            '<p><strong>Steps:</strong> ' + data.steps + '</p>' +
+            '<p><strong>Backtracks:</strong> ' + data.backtracks + '</p>' +
+            (key === winner ? '<p style="color: var(--color-success)">Winner</p>' : '') +
+            '</div>';
         grid.appendChild(item);
     }
 }
@@ -758,15 +771,19 @@ function storeComparisonData(strategy, success) {
  * ====== UTILITY FUNCTIONS ======
  */
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+    });
 }
 
-// Expose functions globally
+/**
+ * ====== EXPOSE GLOBALLY ======
+ */
 window.generatePuzzle = generatePuzzle;
 window.solveSudoku = solveSudoku;
 window.togglePause = togglePause;
 window.resetAll = resetAll;
 window.compareStrategies = compareStrategies;
 
-console.log('🧩 Sudoku module loaded');
-console.log('📊 Available: MRV & Non-MRV strategies with comparison');
+console.log('Sudoku module loaded');
+console.log('Available: MRV and Non-MRV strategies with comparison');
