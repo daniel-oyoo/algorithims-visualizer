@@ -419,92 +419,102 @@ async function startFasterDualWaveProcess() {
 
     maxDOM.zonesTableBody.innerHTML = '';
 
-    //look for  first cell of connected in every row
+    //look for  first
 
-    for (let i = 0, j = 0; i < CCState.rows; i++) {
-        //for (let j = 0; j < CCState.cols; j++) {
-        if (CCState.grid[i][j] !== 1) {
-            j++;
-            //continue; //j++
-        } else {
-            const cell = getCell(i, j);
-            if (cell) {
-                cell.className = '';
-                if (CCState.grid[i][j] > 0) {
-                    cell.style.backgroundColor = 'var(--color-bg)';
-                    cell.style.color = 'var(--color-text-light)';
+    for (let i = 0, j = 0; i < CCState.rows; i++
+
+    ) {
+        for (let j = 0; j < CCState.cols;
+            // j++
+
+        ) {
+            if (CCState.grid[i][j] !== 1) {
+                j++;
+                //continue; //j++
+            } else {
+                const cell = getCell(i, j);
+                if (cell) {
+                    cell.className = '';
+                    if (CCState.grid[i][j] > 0) {
+                        cell.style.backgroundColor = 'var(--color-bg)';
+                        cell.style.color = 'var(--color-text-light)';
+                    }
                 }
-            }
 
-            i++; //i jumps direct
+                i++; //i jumps direct
+            }
         }
-        //}
     }
 
     updateMetrics();
     addLog('Starting ' + (use8Dir ? '8-Way' : '4-Way') + ' search wave', 'info');
 
-    for (let i = 0, j = 0; i < CCState.rows; i++) {
-        // for (let j = 0; j < CCState.cols; j++) {
-        if (CCState.grid[i][j] !== 1) {
-            j++;
-            //continue;
-        } else {
-            if (!CCState.isRunning || CCState.shouldStop) {
-                addLog('Process stopped by user', 'warning');
-                finishProcess();
-                return;
+    for (let i = 0, j = 0; i < CCState.rows; i++
+
+    ) {
+        for (let j = 0; j < CCState.cols;
+            //j++
+
+        ) {
+            if (CCState.grid[i][j] !== 1) {
+                j++;
+                //continue;
+            } else {
+                if (!CCState.isRunning || CCState.shouldStop) {
+                    addLog('Process stopped by user', 'warning');
+                    finishProcess();
+                    return;
+                }
+
+                if (!await checkPause()) {
+                    addLog('Process stopped', 'warning');
+                    finishProcess();
+                    return;
+                }
+
+                const cellEl = getCell(i, j);
+                if (cellEl && CCState.grid[i][j] > 0) {
+                    cellEl.classList.add('scanning');
+                    await sleep(CCState.delayMs / 3);
+                    cellEl.classList.remove('scanning');
+                }
+
+                //main process
+
+                if (find(i, j)) {
+                    CCState.zoneIdCounter++;
+                    const color = ZONE_COLORS[(CCState.zoneIdCounter - 1) % ZONE_COLORS.length];
+
+                    addLog('Target found at [' + i + ', ' + j + ']. Handing torch to Infection Wave', 'success');
+
+                    const zoneObj = {
+                        id: CCState.zoneIdCounter,
+                        startR: i,
+                        startC: j,
+                        count: 0,
+                        color: color
+                    };
+                    CCState.zoneList.push(zoneObj);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML =
+                        '<td>' +
+                        '<span class="color-badge" style="background:' + color + '"></span>' +
+                        'Zone #' + zoneObj.id +
+                        '</td>' +
+                        '<td>[' + i + ', ' + j + ']</td>' +
+                        '<td id="zone-count-' + zoneObj.id + '">0</td>';
+                    maxDOM.zonesTableBody.appendChild(tr);
+                    updateMetrics();
+
+                    await runInfectionWave(i, j, zoneObj, directions);
+
+                    addLog('Infection wave finished Zone #' + zoneObj.id + ' (' + zoneObj.count + ' cells)', 'info');
+                }
+
+                i++;
             }
-
-            if (!await checkPause()) {
-                addLog('Process stopped', 'warning');
-                finishProcess();
-                return;
-            }
-
-            const cellEl = getCell(i, j);
-            if (cellEl && CCState.grid[i][j] > 0) {
-                cellEl.classList.add('scanning');
-                await sleep(CCState.delayMs / 3);
-                cellEl.classList.remove('scanning');
-            }
-
-            //main process
-
-            if (find(i, j)) {
-                CCState.zoneIdCounter++;
-                const color = ZONE_COLORS[(CCState.zoneIdCounter - 1) % ZONE_COLORS.length];
-
-                addLog('Target found at [' + i + ', ' + j + ']. Handing torch to Infection Wave', 'success');
-
-                const zoneObj = {
-                    id: CCState.zoneIdCounter,
-                    startR: i,
-                    startC: j,
-                    count: 0,
-                    color: color
-                };
-                CCState.zoneList.push(zoneObj);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML =
-                    '<td>' +
-                    '<span class="color-badge" style="background:' + color + '"></span>' +
-                    'Zone #' + zoneObj.id +
-                    '</td>' +
-                    '<td>[' + i + ', ' + j + ']</td>' +
-                    '<td id="zone-count-' + zoneObj.id + '">0</td>';
-                maxDOM.zonesTableBody.appendChild(tr);
-                updateMetrics();
-
-                await runInfectionWave(i, j, zoneObj, directions);
-
-                addLog('Infection wave finished Zone #' + zoneObj.id + ' (' + zoneObj.count + ' cells)', 'info');
-            }
-
-            i++;
         }
-        //}
     }
 
     addLog('Searching completed. Found ' + CCState.zoneIdCounter + ' connected components', 'success');
@@ -641,8 +651,8 @@ async function startWaves() {
         //await startDualWaveProcess();
         //this cotrols the algo we use
         // await startDualWaveProcess();
-        //await startFasterDualWaveProcess();
-        await startFastestDualWaveProcess();
+        await startFasterDualWaveProcess();
+        // await startFastestDualWaveProcess();
     } catch (error) {
         addLog('Error: ' + error.message, 'error');
         CCState.isRunning = false;
