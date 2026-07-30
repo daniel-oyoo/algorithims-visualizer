@@ -1,242 +1,310 @@
-import { randomBytes } from 'crypto';
+       /*all variables and states*/
+       //; //board
+       let map = [
+           [8, 1, 2, 3, 7, 4, 5, 6, 9],
+           [9, 4, 3, 6, 2, 5, 1, 7, 8],
+           [5, 7, 6, 8, 9, 1, 2, 4, 3],
+           [1, 5, 4, 2, 3, 7, 8, 9, 6],
+           [3, 6, 8, 4, 5, 9, 7, 1, 2],
+           [7, 2, 9, 1, 6, 8, 4, 3, 5],
+           [2, 3, 1, 7, 8, 6, 9, 5, 4],
+           [4, 8, 5, 9, 1, 3, 6, 2, 7],
+           [6, 9, 7, 5, 4, 2, 3, 8, 1]
+       ];
+       let allEmptycells = 0;
+       //pre-seeded to avoid re render overhead
+       let workable = []; //visited/workable/empty
+       const rows = 9;
+       const cols = 9;
+       const PROB = 0.75;
+       //hold valid cells
+       const validCellList = []; //store usbale for each cell
+       // 
+       /*
+        //anaimatiosna and all 
+        let empty = document.querySelector('.result-container .results #empty');
+        let logs = document.querySelector('.result-container .results #logs');
+        let solved = document.querySelector('.result-container .results #solved');
+        let pboards = document.querySelector('.result-container .results #p-boards');
+        let currentCell = document.querySelector('.result-container .results #current-cell');
 
-class SolveSodoku {
-    static PROB = 0.75;
-    static validCellList = [];
 
-    constructor(i, j) {
-        this.map = Array.from({ length: i }, () => Array(j).fill(0));
-        this.workable = Array.from({ length: i }, () => Array(j).fill(false));
-        // JavaScript doesn't have SecureRandom with seed, using crypto for equivalent
-        this.random = {
-            nextInt: (bound) => Math.floor(Math.random() * bound)
-        };
-        this.mapify();
-        this.marWorkable();
-    }
+        let progressTable = document.querySelector('#progress #status');
+        // 
+        //delay controls
+        let isPaused = false;
+        let stop = false;
+*/
 
-    display() {
-        for (let i = 0; i < this.map.length; i++) {
-            console.log(JSON.stringify(this.map[i]));
-        }
-    }
 
-    displayWork() {
-        for (let i = 0; i < this.workable.length; i++) {
-            console.log(JSON.stringify(this.workable[i]));
-        }
-    }
+       /**all initialzations and set up in order */
+       //1. zerofy----mark the board and vsited to default
 
-    mapify1() {
-        // empty method
-    }
+       //mark workable with alld efault
+       function zerofy() {
+           console.log("Working ");
+           for (let i = 0; i < rows; i++) {
+               //map.push([]);//if map was empty we would do this
+               workable.push([]);
+               for (let j = 0; j < cols; j++) {
+                   //map[i][j] = 0;
+                   workable[i][j] = false;
+               }
+           }
+           console.log("Finished Working ");
+       }
 
-    mapify() {
-        // most evil
-        this.map[1][2] = 3;
-        this.map[0][0] = 8;
-        this.map[1][3] = 6; // infinity=2
-        this.map[2][1] = 7;
-        this.map[2][4] = 9;
-        this.map[2][6] = 2;
-        this.map[3][1] = 5;
-        this.map[3][5] = 7;
-        this.map[4][3] = 4;
-        this.map[4][4] = 5;
-        this.map[5][3] = 1;
-        this.map[5][7] = 3;
-        // this.map[6][2]=1;
-        // this.map[6][7]=6;
-        // this.map[6][8]=8;
-        // this.map[7][2]=8;
-        // up to here works
-        // this.map[7][3]=5;
-        // this.map[7][6]=1;
-        // all these work
-        this.map[8][1] = 9;
-        // this works too
-        this.map[8][4] = 4;
-    }
+       //2. mark empyt and full in workbale
+       function markWorkable() {
+           for (let i = 0; i < rows; i++) {
+               //workable.push([]);
+               for (let j = 0; j < cols; j++) {
+                   //empty
+                   if (map[i][j] == 0) {
+                       workable[i][j] = true;
+                   } else {
+                       workable[i][j] = false;
+                   }
+               }
+           }
+       }
 
-    marWorkable() {
-        for (let i = 0; i < this.workable.length; i++) {
-            for (let j = 0; j < this.workable[i].length; j++) {
-                // empty
-                if (this.map[i][j] === 0) {
-                    this.workable[i][j] = true;
-                }
-            }
-        }
-    }
+       //3.delete random from map
+       //mapify
+       function deleteRandom() {
+           let choice = Math.floor(Math.random() * 2); //add some bad with good boards dynamically
+           if (choice === 1) {
+               //good board just delete any number--cant have duplicates
+               for (let i = 0; i < rows; i++) {
+                   for (let j = 0; j < Math.floor(cols * PROB); j++) {
+                       //set random to empty
+                       map[Math.floor(Math.random() * rows)][Math.floor(Math.random() * rows)] = 0;
+                       allEmptycells++;
+                   }
+               }
+           } else {
+               //replace numbers may have duplicates
+               for (let i = 0; i < rows; i++) {
+                   for (let j = 0; j < Math.floor(cols * PROB); j++) {
+                       //set random to empty
+                       map[Math.floor(Math.random() * rows)][Math.floor(Math.random() * rows)] = 0;
+                       map[Math.floor(Math.random() * rows)][Math.floor(Math.random() * rows)] = Math.floor(Math.random() * 10);
+                       allEmptycells++;
+                   }
+               }
+           }
+       }
 
-    rowAndColumnValid(a, b, number) {
-        let rowValid = true;
-        let columnValid = true;
-        let temp = b;
 
-        // row
-        for (b = 0; b < this.map.length; b++) {
-            if (this.map[a][b] === number) {
-                rowValid = false;
-                break;
-            }
-        }
+       /**displays and debugging */
+       //prints
+       function display() {
+           //for (let i = 0; i < map.length; i++) {
+           console.log(map);
+           //}
+       }
 
-        b = temp;
+       function displayWork() {
+           console.log(workable);
+       }
 
-        // column
-        for (a = 0; a < this.map.length; a++) {
-            if (this.map[a][b] === number) {
-                columnValid = false;
-                break;
-            }
-        }
 
-        return rowValid && columnValid;
-    }
 
-    threeByThreeZoneValid(a, b, num) {
-        let zoneValid = true;
-        const boundary = 3;
+       /**validiy checks and all row col box */
+       //checks for duplicat
+       //here we check if the current number already exists or is a duplicate
+       function rowValid(row, col, number) {
+           let rowValid = true;
+           //row
+           for (col = 0; col < rows; col++) {
+               if (map[row][col] === number) {
+                   rowValid = false;
+                   break;
+               }
+           }
+           return rowValid;
+       }
 
-        // boundary checks and guard
-        if (a < 3 && b < 3) {
-            a = 0;
-            b = 0;
-        } else if (a < 3 && (b >= 3 && b < 6)) {
-            a = 0;
-            b = 3;
-        } else if (a < 3 && (b >= 6 && b < 9)) {
-            a = 0;
-            b = 6;
-        } else if (a >= 3 && a < 6 && b < 3) {
-            a = 3;
-            b = 0;
-        } else if (a >= 3 && a < 6 && b >= 3 && b < 6) {
-            a = 3;
-            b = 3;
-        } else if (a >= 3 && a < 6 && b >= 6 && b < 9) {
-            a = 3;
-            b = 6;
-        } else if (a >= 6 && a < 9 && b < 3) {
-            a = 6;
-            b = 0;
-        } else if (a >= 6 && a < 9 && b >= 3 && b < 6) {
-            a = 6;
-            b = 3;
-        } else if (a >= 6 && a < 9 && b >= 6 && b < 9) {
-            a = 6;
-            b = 6;
-        }
+       function colValid(row, col, number) {
+           let colValid = true;
+           //column
+           for (row = 0; row < cols; row++) {
+               if (map[row][col] == number) {
+                   colValid = false;
+                   break;
+               }
+           }
+           return colValid;
+       }
 
-        // actual loops
-        for (let m = a; m < a + boundary; m++) {
-            for (let n = b; n < b + boundary; n++) {
-                if (this.map[m][n] === num) {
-                    zoneValid = false;
-                    break;
-                }
-            }
-        }
+       function ZoneValid(row, col, number) {
+           let zoneValid = true;
+           let zoneSize = 3;
+           //(int)Math.sqrt(map.length);
+           //boundary cecks and guard
+           if (row < 3 && col < 3) {
+               row = 0;
+               col = 0;
+           } else if ((row < 3 && (col >= 3 && col < 6))) {
+               row = 0;
+               col = 3;
+           } else if (row < 3 && (col >= 6 && col < 9)) {
+               row = 0;
+               col = 6;
+           } else if (row >= 3 && row < 6 && col < 3) {
+               row = 3;
+               col = 0;
+           } else if (row >= 3 && row < 6 && col >= 3 && col < 6) {
+               row = 3;
+               col = 3;
+           } else if (row >= 3 && row < 6 && col >= 6 && col < 9) {
+               row = 3;
+               col = 6;
+           } else if (row >= 6 && row < 9 && col < 3) {
+               row = 6;
+               col = 0;
+           } else if (row >= 6 && row < 9 && col >= 3 && col < 6) {
+               row = 6;
+               col = 3;
+           } else if (row >= 6 && row < 9 && col >= 6 && col < 9) {
+               row = 6;
+               col = 6;
+           }
+           //actaul loops
+           for (let m = row; m < row + zoneSize; m++) {
+               for (let n = col; n < col + zoneSize; n++) {
+                   //System.out.println(m + " " + n);
+                   if (map[m][n] === number) {
+                       //System.out.println(m + " " + n);
+                       zoneValid = false;
+                       break;
+                   }
+               }
+           }
+           return zoneValid;
+       }
 
-        return zoneValid;
-    }
+       //combine validity check
+       function isValid(row, col, number) {
+           return (rowValid(row, col, number) && colValid(row, col, number) && ZoneValid(row, col, number));
+       }
 
-    cellValid(i, j, num) {
-        return this.rowAndColumnValid(i, j, num) && this.threeByThreeZoneValid(i, j, num);
-    }
 
-    sodoku() {
-        let cellList = 0;
-        let compute = true;
+       /**Actual implementation */
 
-        outer:
-            for (let i = 0; i < this.map.length && i >= 0; i++) {
-                for (let j = 0; j < this.map[i].length;) {
-                    if (this.workable[i][j]) {
-                        if (compute) {
-                            console.log("Computing list");
-                            SolveSodoku.validCellList.push([]);
-                            for (let num = 1; num <= this.map.length; num++) {
-                                if (this.cellValid(i, j, num)) {
-                                    SolveSodoku.validCellList[cellList].push(num);
-                                }
-                            }
-                            console.log(SolveSodoku.validCellList[cellList]);
-                        }
+       function sodoku() {
+           zerofy();
+           deleteRandom();
+           markWorkable()
+               // deleteRandom();
+           let cellList = 0;
+           let compute = true;
+           outer:
+               for (let i = 0; i < rows && i >= 0; i++) {
+                   for (let j = 0; j < cols;) {
+                       if (workable[i][j]) {
+                           //console.log("in loop");
+                           if (compute) {
+                               console.log("Computing list");
+                               validCellList.push([]);
+                               for (let num = 1; num <= rows; num++) {
+                                   if (isValid(i, j, num)) {
+                                       validCellList[cellList].push(num);
+                                   }
+                               }
+                               console.log(validCellList[cellList]);
+                           }
+                           const current = validCellList[cellList];
+                           console.log("List empty : " + (current.length === 0));
+                           if (current.length > 0) {
+                               console.log("Processing  cell (" + i + "," + j + ")" + " with list " + cellList);
+                               map[i][j] = current[0];
+                               current.shift();
+                               cellList++;
+                               compute = true;
+                           } else {
+                               console.log("Stuck at (" + i + "," + j + ")");
+                               validCellList.pop();
+                               cellList--;
+                               compute = false;
+                               console.log("Going back to  cell (" + i + "," + j + ")" + " with list " + cellList);
+                           }
+                           //console.log("List length", validCellList.length);
+                           if (validCellList.length >= 0) { //why we remove always//.pop() side effect
+                               const firstCell = getFirstCellValid();
+                               const r = firstCell[0];
+                               const c = firstCell[1];
+                               if (cellList < 0 || (validCellList[0].length === 0 && map[r][c] === 0)) {
+                                   console.log("No solution");
+                                   break outer;
+                               }
+                           }
+                       }
+                       if (compute) {
+                           j++;
+                       } else {
+                           j--;
+                           if (j < 0) {
+                               j = map.length - 1;
+                               if (i > 0) {
+                                   i--;
+                               }
+                           }
+                           if (workable[i][j]) {
+                               map[i][j] = 0;
+                           }
+                       }
+                   }
+               }
+       }
 
-                        const current = SolveSodoku.validCellList[cellList];
-                        console.log("List empty : " + (current.length === 0));
+       /**helper functions and utilities */
 
-                        if (current.length > 0) {
-                            console.log("Processing  cell (" + i + "," + j + ")" + " with list " + cellList);
-                            this.map[i][j] = current[0];
-                            current.shift();
-                            cellList++;
-                            compute = true;
-                        } else {
-                            console.log("Stuck at (" + i + "," + j + ")");
-                            SolveSodoku.validCellList.pop();
-                            cellList--;
-                            compute = false;
-                            console.log("Going back to  cell (" + i + "," + j + ")" + " with list " + cellList);
-                        }
+       function getFirstCellValid() {
+           for (let i = 0; i < rows; i++) {
+               for (let j = 0; j < cols; j++) {
+                   if (workable[i][j] === true) {
+                       return [i,
+                           j
+                       ];
+                   }
+               }
+           }
+           return null;
+       }
 
-                        if (SolveSodoku.validCellList.length > 0) {
-                            const firstCell = this.getFirstCellValid();
-                            const r = firstCell[0];
-                            const c = firstCell[1];
-                            if (SolveSodoku.validCellList[0].length === 0 &&
-                                this.map[r][c] === 0) {
-                                console.log("No solution");
-                                break outer;
-                            }
-                        }
-                    }
+       // Test class equivalent
+       function main() {
+           map = [
+               [8, 1, 2, 3, 7, 4, 5, 6, 9],
+               [9, 4, 3, 6, 2, 5, 1, 7, 8],
+               [5, 7, 6, 8, 9, 1, 2, 4, 3],
+               [1, 5, 4, 2, 3, 7, 8, 9, 6],
+               [3, 6, 8, 4, 5, 9, 7, 1, 2],
+               [7, 2, 9, 1, 6, 8, 4, 3, 5],
+               [2, 3, 1, 7, 8, 6, 9, 5, 4],
+               [4, 8, 5, 9, 1, 3, 6, 2, 7],
+               [6, 9, 7, 5, 4, 2, 3, 8, 1]
+           ];
+           //all zeros
+           //zerofy();
+           //markWorkable();
+           //deleteRandom();
+           const s = Date.now();
+           sodoku();
+           display();
+           const e = Date.now();
+           console.log(validCellList);
+           console.log(`\nTime: ${
+               e - s
+           }ms`);
+       }
 
-                    if (compute) {
-                        j++;
-                    } else {
-                        j--;
-                        if (j < 0) {
-                            j = this.map.length - 1;
-                            if (i > 0) {
-                                i--;
-                            }
-                        }
+       // Run the test
+       // main();
 
-                        if (this.workable[i][j]) {
-                            this.map[i][j] = 0;
-                        }
-                    }
-                }
-            }
-    }
 
-    getFirstCellValid() {
-        for (let i = 0; i < this.map.length; i++) {
-            for (let j = 0; j < this.map.length; j++) {
-                if (this.workable[i][j] === true) {
-                    return [i, j];
-                }
-            }
-        }
-        return null;
-    }
-}
 
-// Test class equivalent
-class TestSolveSodoku {
-    static main() {
-        const sodoku = new SolveSodoku(9, 9);
-        const s = Date.now();
-        sodoku.sodoku();
-        sodoku.display();
-        const e = Date.now();
-        console.log(SolveSodoku.validCellList);
-        console.log(`\nTime : ${e - s} ms`);
-    }
-}
-
-// Run the test
-TestSolveSodoku.main();
+       //map should be reset everytime
+       sodoku();
+       display();
