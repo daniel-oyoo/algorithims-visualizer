@@ -20,7 +20,7 @@
 const ALGORITHM_MODULES = [{
         id: 'matrix',
         name: 'Matrix Operations',
-        icon: '📊',
+        //icon: '📊',
         description: 'Visualize matrix transformations, multiplication, and operations in real-time. Includes sub-modules for Sudoku, Basin Detection, Walk Centre, and Max Connected Elements.',
         path: 'matrix/index.html',
         tags: ['Linear Algebra', 'Math'],
@@ -31,7 +31,7 @@ const ALGORITHM_MODULES = [{
     {
         id: 'graph',
         name: 'Graph Algorithms',
-        icon: '🔗',
+        //icon: '🔗',
         description: 'Explore BFS, DFS, Dijkstra, and more with interactive node-edge visualizations',
         path: 'graph/index.html',
         tags: ['Traversal', 'Pathfinding'],
@@ -146,9 +146,9 @@ function createCardElement(module) {
     // Add a badge if module has children
     const childBadge = module.hasChildren ?
         `<span class="child-badge">${module.id === 'matrix' ? '4 Sub-Modules' : ''}</span>` : '';
-
+    //${module.icon}--removed from caard icon
     card.innerHTML = `
-        <div class="card-icon">${module.icon}</div>
+        <div class="card-icon"></div>
         <h3 class="card-title">${module.name}</h3>
         <p class="card-description">${module.description}</p>
         ${childBadge}
