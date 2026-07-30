@@ -110,10 +110,15 @@
                 <!-- table headers and table structure<p>Progress</p>-->
                 <table id="status" border="0">
                     <caption>Progress</caption>
-                    <tr class="headerRow">
-                        <th class="thead">Cell co-ordinate(x,y)</th>
-                        <th class="thead">List of usable numbers</th>
-                    </tr>
+                    <thead>
+                        <tr class="headerRow">
+                            <th class="thead">Cell co-ordinate(x,y)</th>
+                            <th class="thead">List of usable numbers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--dynamically injected by js-->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -177,7 +182,7 @@
         let currentCell = document.querySelector('.result-container .results #current-cell');
 
 
-        let progressTable = document.querySelector('#progress #status');
+        let progressTable = document.querySelector('#status tbody');
         // 
         //delay controls
         let isPaused = false;
@@ -540,26 +545,23 @@
             let currentRow = document.createElement('tr');
             currentRow.id = getRowId(i, j);
             //currentRow.className='list-${currenCellListIndex}'
-            let colOne = document.createElement('td');
-            let colTwo = document.createElement('td');
-            colTwo.id = `list-${i}-${j}`;
-            colOne.innerText = `[${
-                    i
-                }, ${
-                    j
-                }]`
-                //colOne.innerText = `<td> [${ i }, ${ j }]</td> `;
-            colTwo.innerText = `<td id = "list-${i}-${j}"></td>`;
-            currentRow.appendChild(colOne);
-            currentRow.appendChild(colTwo);
-            //currentRow.innerHTML = `<td> [${ i }, ${ j }]</td><td id = "list-${i}-${j}"></td>`;
+            //let colOne = document.createElement('td');
+            //let colTwo = document.createElement('td');
+            //colTwo.id = `list-${i}-${j}`;
+            // colOne.innerText = `[${i},${j}]`
+            //colOne.innerText = `<td> [${ i }, ${ j }]</td> `;
+            //colTwo.innerHTML = `<td id = "list-${i}-${j}"></td>`;
+            //currentRow.appendChild(colOne);
+            //currentRow.appendChild(colTwo);
+            currentRow.innerHTML = `<td> [${ i }, ${ j }]</td><td id = "list-${i}-${j}"></td>`;
             progressTable.appendChild(currentRow);
+
         }
 
 
         function addNumToTable(i, j, num) {
             //get current list
-            let currentList = document.getElementById(`lis-${i}-${j}`);
+            let currentList = document.getElementById(`list-${i}-${j}`);
             //check validity
             if (!currentList) return;
             let span = document.createElement("span");
@@ -572,6 +574,10 @@
             span.textContent = num;
 
             currentList.appendChild(span);
+
+
+            //firgit this 
+            progressTable.appendChild(currentList);
 
         }
 
