@@ -40,8 +40,8 @@
                 </nav>
 
                 <div class="header-links">
-                    <a href="https://github.com/yourusername" target="_blank" class="github-link">💻 GitHub</a>
-                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link">🎯 Portfolio</a>
+                    <a href="https://github.com/yourusername" target="_blank" class="github-link">GitHub</a>
+                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link">Portfolio</a>
                 </div>
             </div>
         </header>
@@ -51,20 +51,20 @@
 
             <!-- ====== ALGORITHM DESCRIPTION ====== -->
             <section class="algo-description">
-                <h2>🎯 How Sudoku Solver Works</h2>
+                <h2>How Sudoku Solver Works</h2>
                 <div class="description-grid">
                     <div class="desc-card">
-                        <h3>🔍 Non-MRV Strategy</h3>
+                        <h3>Non-MRV Strategy</h3>
                         <p>Simple row-by-row, column-by-column scanning. Takes the first valid number and backtracks when stuck.</p>
                         <span class="complexity">O(9^(n²)) worst case</span>
                     </div>
                     <div class="desc-card highlight">
-                        <h3>⚡ MRV Strategy (Minimum Remaining Values)</h3>
+                        <h3>MRV Strategy (Minimum Remaining Values)</h3>
                         <p>Chooses the cell with the fewest valid candidates first. Dramatically reduces search space.</p>
                         <span class="complexity">O(9^(n²)) but ~10-100x faster in practice</span>
                     </div>
                     <div class="desc-card">
-                        <h3>🧠 Why It's Challenging</h3>
+                        <h3>Why It's Challenging</h3>
                         <p>Sudoku is NP-complete. The challenge is minimizing backtracking through smart heuristics like MRV.</p>
                         <span class="complexity">"Evil" puzzles can take millions of iterations</span>
                     </div>
@@ -76,7 +76,7 @@
                 <div class="control-row">
                     <!-- Options Card -->
                     <div class="options-card">
-                        <h4>⚙️ Options</h4>
+                        <h4>Options</h4>
                         <div class="option-group">
                             <label>Strategy:
                                 <select id="strategySelect">
@@ -112,11 +112,11 @@
                     <div class="controls-card">
                         <h4>🎮 Controls</h4>
                         <div class="button-group">
-                            <button onclick="generatePuzzle()" class="btn btn-primary">🔄 Generate</button>
-                            <button onclick="solveSudoku()" class="btn btn-success">▶ Solve</button>
-                            <button onclick="togglePause()" class="btn btn-warning">⏸️ Pause/Resume</button>
-                            <button onclick="resetAll()" class="btn btn-danger">⏹ Reset</button>
-                            <button onclick="compareStrategies()" class="btn btn-info">📊 Compare</button>
+                            <button onclick="generatePuzzle()" class="btn btn-primary">Generate</button>
+                            <button onclick="solveSudoku()" class="btn btn-success">Solve</button>
+                            <button onclick="togglePause()" class="btn btn-warning">Pause/Resume</button>
+                            <button onclick="resetAll()" class="btn btn-danger">Reset</button>
+                            <button onclick="compareStrategies()" class="btn btn-info">Compare</button>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
             <section class="main-content-area">
                 <!-- Sudoku Matrix -->
                 <div class="matrix-wrapper">
-                    <h3>📊 Sudoku Board</h3>
+                    <h3>Sudoku Board</h3>
                     <div class="content-card" id="matrixContainer">
                         <!-- Matrix rendered by JavaScript -->
                     </div>
@@ -134,7 +134,7 @@
 
                 <!-- Progress Table (Main Learning Theme) -->
                 <div class="progress-wrapper">
-                    <h3>📋 Progress Log</h3>
+                    <h3>Progress Log</h3>
                     <div class="content-card" id="progressContainer">
                         <table id="statusTable">
                             <caption>Cell Candidates</caption>
@@ -157,34 +157,34 @@
             <section class="results-panel">
                 <div class="results-grid">
                     <div class="result-card">
-                        <h4>📝 Logs</h4>
+                        <h4>Logs</h4>
                         <div id="logsDisplay">Ready to solve...</div>
                     </div>
                     <div class="result-card">
-                        <h4>🔲 Empty Cells</h4>
+                        <h4>Empty Cells</h4>
                         <div id="emptyCount">0</div>
                     </div>
                     <div class="result-card">
-                        <h4>✅ Solved Cells</h4>
+                        <h4>Solved Cells</h4>
                         <div id="solvedCount">0</div>
                     </div>
                     <div class="result-card">
-                        <h4>📍 Current Cell</h4>
+                        <h4>Current Cell</h4>
                         <div id="currentCell">-</div>
                     </div>
                     <div class="result-card">
-                        <h4>🔄 Backtracks</h4>
+                        <h4>Backtracks</h4>
                         <div id="backtrackCount">0</div>
                     </div>
                     <div class="result-card">
-                        <h4>⚡ MRV Candidates</h4>
+                        <h4>MRV Candidates</h4>
                         <div id="mrvCount">-</div>
                     </div>
                 </div>
 
                 <!-- Comparison Results -->
                 <div class="comparison-section" id="comparisonSection" style="display:none;">
-                    <h3>📊 Strategy Comparison</h3>
+                    <h3>Strategy Comparison</h3>
                     <div class="comparison-grid" id="comparisonGrid">
                         <!-- Populated by JavaScript -->
                     </div>
@@ -196,10 +196,10 @@
                 <div class="footer-content">
                     <p>&copy; 2026 Algorithm Visualizer | Sudoku Module</p>
                     <p class="footer-acknowledgment">
-                        💡 "The beauty of Sudoku lies in the elegance of backtracking."
+                        "The beauty of Sudoku lies in the elegance of backtracking."
                     </p>
                     <div class="footer-links">
-                        <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+                        <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
                         <span class="divider">|</span>
                         <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
                         <span class="divider">|</span>

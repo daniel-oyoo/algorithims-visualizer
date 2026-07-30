@@ -2,7 +2,7 @@
 <html lang="en">
 <!-- ============================================================
      MAX CONNECTED ELEMENTS MODULE - index.html
-     Location: /front-end/matrix/max-connected-elements/index.html
+     Location: /docs/matrix/max-connected-elements/index.html
      Purpose: Connected component flood fill visualizer with dual-wave search
      ============================================================ -->
 
@@ -30,7 +30,7 @@
         <header class="app-header">
             <div class="header-content">
                 <div class="brand">
-                    <h1>🔲 Max Connected Elements</h1>
+                    <h1>Max Connected Elements</h1>
                     <span class="tagline">Flood Fill & Connected Component Detection</span>
                 </div>
 
@@ -39,8 +39,8 @@
                 </nav>
 
                 <div class="header-links">
-                    <a href="https://github.com/yourusername" target="_blank" class="github-link">💻 GitHub</a>
-                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link">🎯 Portfolio</a>
+                    <a href="https://github.com/daniel-oyoo" target="_blank" class="github-link" GitHub>Github</a>
+                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link">Portfolio</a>
                 </div>
             </div>
         </header>
@@ -50,20 +50,20 @@
 
             <!-- ====== ALGORITHM DESCRIPTION ====== -->
             <section class="algo-description">
-                <h2>🎯 How Connected Component Detection Works</h2>
+                <h2>How Connected Component Detection Works</h2>
                 <div class="description-grid">
                     <div class="desc-card">
-                        <h3>🔍 Search Wave</h3>
+                        <h3>Search Wave</h3>
                         <p>Scans the grid row by row looking for unvisited positive cells. When found, it triggers the infection wave.</p>
                         <span class="complexity">O(n × m) Scan</span>
                     </div>
                     <div class="desc-card highlight">
-                        <h3>🦠 Infection Wave (Flood Fill)</h3>
+                        <h3>Infection Wave (Flood Fill)</h3>
                         <p>Recursively spreads to all connected neighbors (4-way or 8-way), marking and counting the entire component.</p>
                         <span class="complexity">O(n × m) Flood Fill</span>
                     </div>
                     <div class="desc-card">
-                        <h3>📊 Component Analysis</h3>
+                        <h3>Component Analysis</h3>
                         <p>Each component is assigned a unique color and tracked with its starting cell and total cell count.</p>
                         <span class="complexity">Zones Discovered</span>
                     </div>
@@ -75,7 +75,7 @@
                 <div class="control-row">
                     <!-- Options Card -->
                     <div class="options-card">
-                        <h4>⚙️ Options</h4>
+                        <h4>Options</h4>
                         <div class="option-group">
                             <label>Connect Strategy:
                                 <select id="directionSelect">
@@ -110,9 +110,9 @@
                     <div class="controls-card">
                         <h4>🎮 Controls</h4>
                         <div class="button-group">
-                            <button id="btnStart" class="btn btn-success">🌊 Start Waves</button>
-                            <button id="btnPause" class="btn btn-warning" disabled>⏸️ Pause</button>
-                            <button id="btnReset" class="btn btn-danger">⏹ Reset</button>
+                            <button id="btnStart" class="btn btn-success">Start Waves</button>
+                            <button id="btnPause" class="btn btn-warning" disabled>Pause</button>
+                            <button id="btnReset" class="btn btn-danger">Reset</button>
                         </div>
 
                         <!-- Legend -->
@@ -129,7 +129,7 @@
             <section class="display-zone">
                 <!-- Left Panel: Grid Matrix -->
                 <div class="matrix-card">
-                    <h3>📊 Matrix Board</h3>
+                    <h3>Matrix Board</h3>
                     <div class="grid-wrapper">
                         <table class="grid-table" id="gridTable">
                             <!-- Rendered by JavaScript -->
@@ -139,7 +139,7 @@
 
                 <!-- Right Panel: Zone/Component Summary -->
                 <div class="zones-card">
-                    <h3>📋 Discovered Zones</h3>
+                    <h3>Discovered Zones</h3>
                     <div class="zones-table-wrapper">
                         <table class="zones-table">
                             <thead>
@@ -160,14 +160,14 @@
             <!-- ====== RESULTS & LOGS AREA ====== -->
             <section class="results-zone">
                 <div class="log-wrapper">
-                    <h4>📝 Status Log</h4>
+                    <h4>Status Log</h4>
                     <div class="log-box" id="statusLog">
                         Ready to search...
                     </div>
                 </div>
 
                 <div class="metrics-wrapper">
-                    <h4>📊 Execution Metrics</h4>
+                    <h4>Execution Metrics</h4>
                     <div class="metrics-container">
                         <div class="metric-card">
                             <div class="val" id="metricTotalZones">0</div>
@@ -194,10 +194,10 @@
                 <div class="footer-content">
                     <p>&copy; 2026 Algorithm Visualizer | Max Connected Elements Module</p>
                     <p class="footer-acknowledgment">
-                        💡 "Connected components reveal the hidden structure within."
+                        "Connected components reveal the hidden structure within. Finding a single cell of max connected zones means finding all others"
                     </p>
                     <div class="footer-links">
-                        <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+                        <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
                         <span class="divider">|</span>
                         <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
                         <span class="divider">|</span>

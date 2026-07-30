@@ -1,7 +1,7 @@
 /**
  * ============================================================
  * ROOT SCRIPT.JS - Shared Application Logic
- * Location: /front-end/script.js
+ * Location: /docs/script.js
  * Purpose: Centralized configuration, card generation, and
  *          shared utilities for all visualization modules
  * 

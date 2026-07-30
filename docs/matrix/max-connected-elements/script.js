@@ -325,7 +325,7 @@ async function startDualWaveProcess() {
 
     maxDOM.zonesTableBody.innerHTML = '';
 
-    for (let i = 0; i < CCState.rows; i++) {
+    for (let i = 0, j = 0; i < CCState.rows; i++) {
         for (let j = 0; j < CCState.cols; j++) {
             const cell = getCell(i, j);
             if (cell) {
