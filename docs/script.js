@@ -86,12 +86,13 @@ function generateNavigation() {
 
     DOM.nav.innerHTML = '';
 
-    const homeLink = createNavLink('Home', 'index.html', 'home');
+    const homeLink = createNavLink('Home', 'docs/index.html', 'home');
     DOM.nav.appendChild(homeLink);
 
     ALGORITHM_MODULES.forEach(module => {
+        //`${module.icon}
         const link = createNavLink(
-            `${module.icon} ${module.name}`,
+            `${module.name}`,
             module.path,
             module.id
         );
