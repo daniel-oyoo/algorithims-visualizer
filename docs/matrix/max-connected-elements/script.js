@@ -150,7 +150,8 @@ function initGrid() {
         CCState.grid[i] = [];
         for (let j = 0; j < size; j++) {
             if (Math.random() < density) {
-                CCState.grid[i][j] = Math.floor(Math.random() * 9) + 1;
+                CCState.grid[i][j] = 1; //here controls if its a 1 or any other
+                // Math.floor(Math.random() * 9) + 1;
             } else {
                 CCState.grid[i][j] = 0;
             }
