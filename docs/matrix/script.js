@@ -1,7 +1,7 @@
 /**
  * ============================================================
  * MATRIX MODULE - script.js
- * Location: /front-end/matrix/script.js
+ * Location: /docs/matrix/script.js
  * Purpose: Complete matrix visualization logic
  * Depends on: ../script.js (root shared utilities)
  * ============================================================
@@ -89,7 +89,7 @@ const ChildModules = {
  * ====== INITIALIZATION ======
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🧮 Matrix module initializing...');
+    console.log('Matrix module initializing...');
 
     // Track visit to matrix module
     if (window.AlgorithmVisualizer) {
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (stored) {
             const parsed = JSON.parse(stored);
             Object.assign(ChildModules, parsed);
-            console.log('📚 Restored child module visits:', ChildModules);
+            console.log('Restored child module visits:', ChildModules);
         }
     } catch (e) {
         // Ignore
@@ -118,10 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update operation symbol
     updateOperationSymbol();
 
-    addLogEntry('✅ Matrix module ready', 'success');
-    setStatus('💡 Ready! Generate matrices or start an operation.');
+    addLogEntry('Matrix module ready', 'success');
+    setStatus('Ready! Generate matrices or start an operation.');
 
-    console.log('✅ Matrix module initialized');
+    console.log('Matrix module initialized');
 });
 
 /**
@@ -134,8 +134,8 @@ function setupEventListeners() {
         generateRandomMatrices();
         renderMatrices();
         clearResult();
-        addLogEntry(`📐 Matrix size changed to ${MatrixState.size}×${MatrixState.size}`, 'info');
-        setStatus(`📐 Size: ${MatrixState.size}×${MatrixState.size}. Matrices regenerated.`);
+        addLogEntry(`Matrix size changed to ${MatrixState.size}×${MatrixState.size}`, 'info');
+        setStatus(`Size: ${MatrixState.size}×${MatrixState.size}. Matrices regenerated.`);
     });
 
     // Operation type change
@@ -143,8 +143,8 @@ function setupEventListeners() {
         MatrixState.currentOperation = this.value;
         updateOperationSymbol();
         clearResult();
-        addLogEntry(`🔄 Operation changed to ${this.value}`, 'info');
-        setStatus(`🔄 Operation: ${this.value}. Ready to visualize.`);
+        addLogEntry(` Operation changed to ${this.value}`, 'info');
+        setStatus(` Operation: ${this.value}. Ready to visualize.`);
 
         // Show/hide matrix B based on operation
         const matrixBWrapper = MatrixDOM.matrixB.closest('.matrix-wrapper');
@@ -159,7 +159,7 @@ function setupEventListeners() {
     MatrixDOM.speedSlider.addEventListener('input', function() {
         MatrixState.speed = parseFloat(this.value);
         MatrixDOM.speedDisplay.textContent = MatrixState.speed.toFixed(1) + 'x';
-        addLogEntry(`⚡ Speed set to ${MatrixState.speed.toFixed(1)}x`, 'info');
+        addLogEntry(` Speed set to ${MatrixState.speed.toFixed(1)}x`, 'info');
     });
 
     // Generate button
@@ -167,14 +167,14 @@ function setupEventListeners() {
         generateRandomMatrices();
         renderMatrices();
         clearResult();
-        addLogEntry('🔄 Generated new random matrices', 'success');
-        setStatus('🔄 New random matrices generated.');
+        addLogEntry('Generated new random matrices', 'success');
+        setStatus('New random matrices generated.');
     });
 
     // Visualize button
     MatrixDOM.visualizeBtn.addEventListener('click', function() {
         if (MatrixState.isAnimating) {
-            setStatus('⏳ Animation already in progress...');
+            setStatus('Animation already in progress...');
             return;
         }
         startVisualization();
@@ -183,7 +183,7 @@ function setupEventListeners() {
     // Step button
     MatrixDOM.stepBtn.addEventListener('click', function() {
         if (MatrixState.isAnimating) {
-            setStatus('⏳ Please wait for current animation to finish');
+            setStatus(' Please wait for current animation to finish');
             return;
         }
         stepThroughOperation();
@@ -192,16 +192,16 @@ function setupEventListeners() {
     // Reset button
     MatrixDOM.resetBtn.addEventListener('click', function() {
         resetVisualization();
-        addLogEntry('⏹ Reset visualization', 'warning');
-        setStatus('⏹ Reset complete. Ready to go again.');
+        addLogEntry(' Reset visualization', 'warning');
+        setStatus(' Reset complete. Ready to go again.');
     });
 
     // Clear button
     MatrixDOM.clearBtn.addEventListener('click', function() {
         clearResult();
-        MatrixDOM.logEntries.innerHTML = '<div class="log-entry">🗑️ Log cleared</div>';
-        addLogEntry('🧹 Cleared all data', 'warning');
-        setStatus('🧹 All cleared. Fresh start.');
+        MatrixDOM.logEntries.innerHTML = '<div class="log-entry"> Log cleared</div>';
+        addLogEntry(' Cleared all data', 'warning');
+        setStatus(' All cleared. Fresh start.');
     });
 }
 
@@ -466,14 +466,14 @@ function startVisualization() {
         MatrixDOM.visualizeBtn.disabled = true;
         MatrixDOM.stepBtn.disabled = true;
 
-        addLogEntry(`▶️ Starting ${MatrixState.currentOperation} visualization`, 'info');
-        setStatus(`▶️ Visualizing ${MatrixState.currentOperation}...`);
+        addLogEntry(` Starting ${MatrixState.currentOperation} visualization`, 'info');
+        setStatus(`  Visualizing ${MatrixState.currentOperation}...`);
 
         animateSteps();
 
     } catch (error) {
-        setStatus(`❌ Error: ${error.message}`);
-        addLogEntry(`❌ ${error.message}`, 'error');
+        setStatus(` Error: ${error.message}`);
+        addLogEntry(` ${error.message}`, 'error');
         MatrixState.isAnimating = false;
         MatrixDOM.visualizeBtn.disabled = false;
         MatrixDOM.stepBtn.disabled = false;
@@ -507,7 +507,7 @@ async function animateSteps() {
         MatrixState.isAnimating = false;
         MatrixDOM.visualizeBtn.disabled = false;
         MatrixDOM.stepBtn.disabled = false;
-        setStatus('✅ No steps to visualize');
+        setStatus(' No steps to visualize');
         return;
     }
 
@@ -521,7 +521,7 @@ async function animateSteps() {
         setStatus(`Step ${i+1}/${totalSteps}: ${step.message}`);
 
         if (i % Math.max(1, Math.floor(totalSteps / 10)) === 0) {
-            addLogEntry(`📊 Step ${i+1}/${totalSteps}`, 'info');
+            addLogEntry(` Step ${i+1}/${totalSteps}`, 'info');
         }
 
         renderMatrices();
@@ -530,7 +530,7 @@ async function animateSteps() {
         await sleep(delay);
 
         if (!MatrixState.isAnimating) {
-            addLogEntry('⏸️ Animation paused', 'warning');
+            addLogEntry(' Animation paused', 'warning');
             break;
         }
     }
@@ -547,8 +547,8 @@ async function animateSteps() {
         '[' + row.join(', ') + ']'
     ).join(' ');
 
-    addLogEntry(`✅ ${MatrixState.currentOperation} complete! Result: ${resultStr}`, 'success');
-    setStatus(`✅ ${MatrixState.currentOperation} complete! Result displayed.`);
+    addLogEntry(` ${MatrixState.currentOperation} complete! Result: ${resultStr}`, 'success');
+    setStatus(` ${MatrixState.currentOperation} complete! Result displayed.`);
 
     renderMatrices();
 }
@@ -566,16 +566,16 @@ function stepThroughOperation() {
             MatrixState.stepIndex = 0;
             renderMatrices();
 
-            addLogEntry(`📋 Generated ${result.steps.length} steps for ${MatrixState.currentOperation}`, 'info');
+            addLogEntry(` Generated ${result.steps.length} steps for ${MatrixState.currentOperation}`, 'info');
         } catch (error) {
-            setStatus(`❌ Error: ${error.message}`);
-            addLogEntry(`❌ ${error.message}`, 'error');
+            setStatus(` Error: ${error.message}`);
+            addLogEntry(` ${error.message}`, 'error');
             return;
         }
     }
 
     if (MatrixState.stepIndex >= MatrixState.operationSteps.length) {
-        setStatus('✅ All steps complete. Click "Reset" to start over.');
+        setStatus(' All steps complete. Click "Reset" to start over.');
         return;
     }
 
@@ -584,7 +584,7 @@ function stepThroughOperation() {
     highlightCells(step.cells);
 
     setStatus(`Step ${MatrixState.stepIndex+1}/${MatrixState.operationSteps.length}: ${step.message}`);
-    addLogEntry(`👣 Step ${MatrixState.stepIndex+1}: ${step.message}`, 'info');
+    addLogEntry(` Step ${MatrixState.stepIndex+1}: ${step.message}`, 'info');
 
     renderMatrices();
     MatrixState.stepIndex++;
@@ -602,8 +602,8 @@ function resetVisualization() {
     clearHighlights();
     renderMatrices();
 
-    setStatus('⏹ Reset complete. Generate matrices or start again.');
-    addLogEntry('⏹ Visualization reset', 'warning');
+    setStatus(' Reset complete. Generate matrices or start again.');
+    addLogEntry(' Visualization reset', 'warning');
 }
 
 function clearResult() {
@@ -727,4 +727,4 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-console.log('🎮 Keyboard shortcuts: Space=Visualize, Enter=Step, R=Reset, G=Generate');
+console.log(' Keyboard shortcuts: Space=Visualize, Enter=Step, R=Reset, G=Generate');

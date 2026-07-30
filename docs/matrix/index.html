@@ -30,7 +30,7 @@
         <header class="app-header">
             <div class="header-content">
                 <div class="brand">
-                    <h1>📊 Matrix Visualizer</h1>
+                    <h1>Matrix Visualizer</h1>
                     <span class="tagline">Linear Algebra & Matrix Algorithms</span>
                 </div>
 
@@ -41,8 +41,8 @@
 
                 <!-- GitHub & Portfolio Links -->
                 <div class="header-links">
-                    <a href="https://github.com/daniel-oyoo" target="_blank" class="github-link" title="View my GitHub">💻 GitHub</a>
-                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link" title="Visit my portfolio">🎯 Portfolio</a>
+                    <a href="https://github.com/daniel-oyoo" target="_blank" class="github-link" title="View my GitHub">GitHub</a>
+                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link" title="Visit my portfolio">Portfolio</a>
                 </div>
             </div>
         </header>
@@ -53,7 +53,7 @@
             <!-- ====== HERO SECTION ====== -->
             <section class="hero-section matrix-hero">
                 <div class="hero-text">
-                    <h2>🧮 Matrix Operations</h2>
+                    <h2>Matrix Operations</h2>
                     <p class="hero-subtitle">
                         From theory to visualization — watch matrices transform in real-time
                     </p>
@@ -65,13 +65,13 @@
 
             <!-- ====== CHILD MODULE NAVIGATION ====== -->
             <section class="child-modules-section">
-                <h2>📂 Matrix Sub-Modules</h2>
+                <h2>Matrix Sub-Modules</h2>
                 <p class="section-subtitle">Explore advanced matrix-related algorithms and visualizations</p>
 
                 <div class="child-modules-grid">
                     <!-- Sudoku Module Card -->
                     <a href="sodoku/index.html" class="child-module-card">
-                        <div class="module-icon">🧩</div>
+                        <div class="module-icon"></div>
                         <h3>Sudoku Solver</h3>
                         <p>Backtracking with MRV & Non-MRV strategies</p>
                         <span class="module-tag">Puzzle Solver</span>
@@ -79,7 +79,7 @@
 
                     <!-- Basin Module Card -->
                     <a href="basin/index.html" class="child-module-card">
-                        <div class="module-icon">🏞️</div>
+                        <div class="module-icon"></div>
                         <h3>Basin Finder</h3>
                         <p>Local minima detection in terrain grids</p>
                         <span class="module-tag">Topography</span>
@@ -87,7 +87,7 @@
 
                     <!-- Walk Centre Module Card -->
                     <a href="walk-centre/index.html" class="child-module-card">
-                        <div class="module-icon">🚶</div>
+                        <div class="module-icon"></div>
                         <h3>Walk Centre</h3>
                         <p>Grid traversal with Greedy & A* strategies</p>
                         <span class="module-tag">Pathfinding</span>
@@ -95,7 +95,7 @@
 
                     <!-- Max Connected Elements Module Card -->
                     <a href="max-connected-elements/index.html" class="child-module-card">
-                        <div class="module-icon">🔲</div>
+                        <div class="module-icon"></div>
                         <h3>Max Connected Elements</h3>
                         <p>Flood fill & connected component detection</p>
                         <span class="module-tag">Graph Theory</span>
@@ -108,7 +108,7 @@
                 <div class="info-grid">
                     <!-- Complexity Card -->
                     <div class="info-card">
-                        <h3>⏱️ Runtime Complexity</h3>
+                        <h3>Runtime Complexity</h3>
                         <div class="complexity-details">
                             <p><strong>Addition:</strong> O(n × m)</p>
                             <p><strong>Multiplication:</strong> O(n × m × p)</p>
@@ -122,19 +122,19 @@
 
                     <!-- Challenge Card -->
                     <div class="info-card">
-                        <h3>⚡ The Challenge</h3>
+                        <h3>The Challenge</h3>
                         <p>
                             Matrix multiplication is computationally intensive — O(n³) for square matrices. The real challenge lies in <strong>cache efficiency</strong> and
                             <strong>memory access patterns</strong>. Strassen's algorithm improves this to O(n^2.81), but with higher constant factors.
                         </p>
                         <p class="info-note">
-                            🎯 My approach: Minimize cache misses through <strong>block processing</strong> and <strong>loop tiling</strong>.
+                            My approach: Minimize cache misses through <strong>block processing</strong> and <strong>loop tiling</strong>.
                         </p>
                     </div>
 
                     <!-- Approach Card -->
                     <div class="info-card">
-                        <h3>🧠 My Approach</h3>
+                        <h3>My Approach</h3>
                         <p>
                             Instead of naive multiplication, I use:
                         </p>
@@ -148,7 +148,7 @@
 
                     <!-- Strategies Card -->
                     <div class="info-card">
-                        <h3>🔄 Different Strategies</h3>
+                        <h3>Different Strategies</h3>
                         <div class="strategy-list">
                             <div class="strategy-item">
                                 <span class="strategy-name">Naive</span>
@@ -211,11 +211,11 @@
 
                 <!-- Action Buttons -->
                 <div class="action-group">
-                    <button id="generateBtn" class="btn btn-primary">🔄 Generate Random</button>
-                    <button id="visualizeBtn" class="btn btn-success">▶ Visualize</button>
-                    <button id="stepBtn" class="btn btn-info">⏭ Step</button>
-                    <button id="resetBtn" class="btn btn-danger">⏹ Reset</button>
-                    <button id="clearBtn" class="btn btn-warning">🧹 Clear</button>
+                    <button id="generateBtn" class="btn btn-primary">Generate Random</button>
+                    <button id="visualizeBtn" class="btn btn-success">Visualize</button>
+                    <button id="stepBtn" class="btn btn-info">Step</button>
+                    <button id="resetBtn" class="btn btn-danger">Reset</button>
+                    <button id="clearBtn" class="btn btn-warning">Clear</button>
                 </div>
             </section>
 
@@ -246,12 +246,12 @@
                     <!-- Status / Log Area -->
                     <div class="status-area">
                         <div class="status-message" id="statusMessage">
-                            💡 Ready to visualize. Generate a matrix or start an operation.
+                            Ready to visualize. Generate a matrix or start an operation.
                         </div>
                         <div class="operation-log" id="operationLog">
-                            <h4>📝 Operation Log</h4>
+                            <h4>Operation Log</h4>
                             <div id="logEntries">
-                                <div class="log-entry">🚀 Module initialized</div>
+                                <div class="log-entry">Module initialized</div>
                             </div>
                         </div>
                     </div>
@@ -261,9 +261,9 @@
             <!-- ====== FOOTER ====== -->
             <footer class="app-footer">
                 <div class="footer-content">
-                    <p>&copy; 2026 Algorithm Visualizer | Built with ❤️ and lots of ☕</p>
+                    <p>&copy; 2026 Algorithm Visualizer | Built with love and lots of coffee</p>
                     <p class="footer-acknowledgment">
-                        💡 "In mathematics, the matrix is a rectangular array of numbers, symbols, or expressions."
+                        "In mathematics, the matrix is a rectangular array of numbers, symbols, or expressions."
                     </p>
                     <div class="footer-links">
                         <a href="https://github.com/daniel" target="_blank">GitHub</a>
