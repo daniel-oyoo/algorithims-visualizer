@@ -10,11 +10,11 @@
  * ====== SUDOKU CONFIGURATION ======
  */
 const SUDOKU_CONFIG = {
-    size: 9,
+    size: 9, //defualt
     boxSize: 3,
     emptyValue: 0,
     strategies: {
-        'non-mrv': 'Non-MRV Simple Backtracking',
+        'non-mrv': 'Non-MRV Simple row by row Backtracking',
         'mrv': 'MRV Minimum Remaining Values'
     }
 };
@@ -27,7 +27,7 @@ const SudokuState = {
     solution: [],
     workable: [],
     validCellList: [],
-    currentStrategy: 'mrv',
+    currentStrategy: 'mrv', //default
     isSolving: false,
     isPaused: false,
     shouldStop: false,
@@ -104,19 +104,33 @@ const SEEDED_SOLVED = [
  * ====== DOM REFERENCES ======
  */
 const sudokuDOM = {
+    //for board
     matrixContainer: document.getElementById('matrixContainer'),
+    //table rows for prgress
     progressBody: document.getElementById('progressBody'),
+    //log
     logsDisplay: document.getElementById('logsDisplay'),
+    //empty
     emptyCount: document.getElementById('emptyCount'),
+    //solved
     solvedCount: document.getElementById('solvedCount'),
+    //current
     currentCell: document.getElementById('currentCell'),
+    //partial boards
     backtrackCount: document.getElementById('backtrackCount'),
+    //mrv
     mrvCount: document.getElementById('mrvCount'),
+    //algorithim
     strategySelect: document.getElementById('strategySelect'),
+    //puzzle type
     puzzleSelect: document.getElementById('puzzleSelect'),
+    //spedd
     speedSlider: document.getElementById('speedSlider'),
+    //speed
     speedDisplay: document.getElementById('speedDisplay'),
+    //comparison
     comparisonSection: document.getElementById('comparisonSection'),
+    //comparison space
     comparisonGrid: document.getElementById('comparisonGrid')
 };
 
@@ -141,12 +155,15 @@ document.addEventListener('DOMContentLoaded', function() {
  * ====== EVENT LISTENERS ======
  */
 function setupEventListeners() {
+    //get strategy
     sudokuDOM.strategySelect.addEventListener('change', function() {
+        //set to sodoku state
         SudokuState.currentStrategy = this.value;
         addLog('Strategy changed to ' + this.options[this.selectedIndex].text, 'info');
+        //visulas
         resetVisualization();
     });
-
+    //puzzle type
     sudokuDOM.puzzleSelect.addEventListener('change', function() {
         generatePuzzle();
     });
