@@ -86,7 +86,7 @@ function generateNavigation() {
 
     DOM.nav.innerHTML = '';
 
-    const homeLink = createNavLink('Home', 'docs/index.html', 'home');
+    const homeLink = createNavLink('Home', 'index.html', 'home');
     DOM.nav.appendChild(homeLink);
 
     ALGORITHM_MODULES.forEach(module => {
