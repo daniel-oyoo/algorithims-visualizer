@@ -291,6 +291,8 @@
     text-align: center;
     font-size: 0.85rem;
     font-weight: 700;
+    /*from original only these worked with the scanning wave -this means that
+    the restinlcude the blocking feature */
 }
 
 
@@ -324,8 +326,7 @@ td.scanning {
     /*
     outline: 2px solid var(--scanner-color);
     box-shadow: 0 0 10px var(--scanner-color);
-    z-index: 5;
-    */
+    z-index: 5;*/
     box-shadow: blue 3px 3px 6px 2px, blue -3px -3px 6px 2px;
 }
 
