@@ -480,47 +480,140 @@
 
             // Searching Wave: Scans row by row across matrix
             for (let i = 0, j = 0; i < rows; i++, j++) {
-                //for (let j = 0; j < cols; j++) {
-                if (!isRunning) return;
-                await checkPause();
+                if (map[i][j] == 1) {
+                    if (!isRunning) return;
+                    await checkPause();
 
-                const cellEl = getCell(i, j);
-                cellEl.classList.add('scanning');
-                await sleep(delayMs / 2);
-                cellEl.classList.remove('scanning');
+                    const cellEl = getCell(i, j);
+                    cellEl.classList.add('scanning');
+                    await sleep(delayMs / 2);
+                    cellEl.classList.remove('scanning');
 
-                // If searching wave hits an unvisited component start point
-                if (find(i, j)) {
-                    zoneIdCounter++;
-                    const color = ZONE_COLORS[(zoneIdCounter - 1) % ZONE_COLORS.length];
+                    // If searching wave hits an unvisited component start point
+                    if (find(i, j)) {
+                        zoneIdCounter++;
+                        const color = ZONE_COLORS[(zoneIdCounter - 1) % ZONE_COLORS.length];
 
-                    log(`Target found at [${i},${j}]! Handing torch to Infection Wave...`);
+                        log(`Target found at [${i},${j}]! Handing torch to Infection Wave...`);
 
-                    const zoneObj = {
-                        id: zoneIdCounter,
-                        startR: i,
-                        startC: j,
-                        count: 0,
-                        color: color
-                    };
-                    zoneList.push(zoneObj);
+                        const zoneObj = {
+                            id: zoneIdCounter,
+                            startR: i,
+                            startC: j,
+                            count: 0,
+                            color: color
+                        };
+                        zoneList.push(zoneObj);
 
-                    // Append new zone to side table
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
+                        // Append new zone to side table
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
                             <td><span class="color-badge" style="background:${color}"></span>Zone #${zoneObj.id}</td>
                             <td>[${i}, ${j}]</td>
                             <td id="zone-count-${zoneObj.id}">0</td>
                         `;
-                    zonesTableBody.appendChild(tr);
-                    metricTotalZones.innerText = zoneIdCounter;
+                        zonesTableBody.appendChild(tr);
+                        metricTotalZones.innerText = zoneIdCounter;
 
-                    // Trigger Infection Spreading Wave
-                    await runInfectionSpread(i, j, zoneObj, directions);
+                        // Trigger Infection Spreading Wave
+                        await runInfectionSpread(i, j, zoneObj, directions);
 
-                    log(`Infection wave finished Zone #${zoneObj.id} (${zoneObj.count} cells). Resuming search line.`);
+                        log(`Infection wave finished Zone #${zoneObj.id} (${zoneObj.count} cells). Resuming search line.`);
+                    }
+                    i++, j++;
+                } else if (map[i][j] == -1) {
+                    i++;
+                    j++;
+                } else {
+                    //left
+                    for (let left = j - 1; left >= 0; left--) {
+                        if (!isRunning) return;
+                        await checkPause();
+
+                        const cellEl = getCell(i, left);
+                        cellEl.classList.add('scanning');
+                        await sleep(delayMs / 2);
+                        cellEl.classList.remove('scanning');
+
+                        // If searching wave hits an unvisited component start point
+                        if (find(i, left)) {
+                            zoneIdCounter++;
+                            const color = ZONE_COLORS[(zoneIdCounter - 1) % ZONE_COLORS.length];
+
+                            log(`Target found at [${i},${left}]! Handing torch to Infection Wave...`);
+
+                            const zoneObj = {
+                                id: zoneIdCounter,
+                                startR: i,
+                                startC: left,
+                                count: 0,
+                                color: color
+                            };
+                            zoneList.push(zoneObj);
+
+                            // Append new zone to side table
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                            <td><span class="color-badge" style="background:${color}"></span>Zone #${zoneObj.id}</td>
+                            <td>[${i}, ${left}]</td>
+                            <td id="zone-count-${zoneObj.id}">0</td>
+                        `;
+                            zonesTableBody.appendChild(tr);
+                            metricTotalZones.innerText = zoneIdCounter;
+
+                            // Trigger Infection Spreading Wave
+                            await runInfectionSpread(i, left, zoneObj, directions);
+
+
+                            log(`Infection wave finished Zone #${zoneObj.id} (${zoneObj.count} cells). Resuming search line.`);
+                            break;
+                        }
+
+                    }
+                    //right
+                    for (let right = j + 1; right < cols; right++) {
+                        if (!isRunning) return;
+                        await checkPause();
+
+                        const cellEl = getCell(i, right);
+                        cellEl.classList.add('scanning');
+                        await sleep(delayMs / 2);
+                        cellEl.classList.remove('scanning');
+
+                        // If searching wave hits an unvisited component start point
+                        if (find(i, right)) {
+                            zoneIdCounter++;
+                            const color = ZONE_COLORS[(zoneIdCounter - 1) % ZONE_COLORS.length];
+
+                            log(`Target found at [${i},${j}]! Handing torch to Infection Wave...`);
+
+                            const zoneObj = {
+                                id: zoneIdCounter,
+                                startR: i,
+                                startC: right,
+                                count: 0,
+                                color: color
+                            };
+                            zoneList.push(zoneObj);
+
+                            // Append new zone to side table
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                            <td><span class="color-badge" style="background:${color}"></span>Zone #${zoneObj.id}</td>
+                            <td>[${i}, ${right}]</td>
+                            <td id="zone-count-${zoneObj.id}">0</td>
+                        `;
+                            zonesTableBody.appendChild(tr);
+                            metricTotalZones.innerText = zoneIdCounter;
+
+                            // Trigger Infection Spreading Wave
+                            await runInfectionSpread(i, right, zoneObj, directions);
+
+                            log(`Infection wave finished Zone #${zoneObj.id} (${zoneObj.count} cells). Resuming search line.`);
+                            break;
+                        }
+                    }
                 }
-                //}
             }
 
             log(`Searching completed. Found ${zoneIdCounter} connected components!`);

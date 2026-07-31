@@ -655,6 +655,8 @@ function finishProcess() {
  * ====== START WAVES ======
  */
 async function startWaves() {
+
+    console.log(CCState.grid);
     if (CCState.isRunning) return;
 
     CCState.isRunning = true;
@@ -810,7 +812,9 @@ async function teststartDualWaveProcess() {
 // Dual Wave Search Loop (Adapted from Java `findConnected` / `checkOncePerRow`)
 async function startHybridDualWaveProcess() {
 
+    console.log(CCState.grid);
 
+    console.log("hynrid working");
 
     const use8Dir = maxDOM.directionSelect.value === '8';
     const directions = use8Dir ? DIRECTION_SETS[8] : DIRECTION_SETS[4];
@@ -820,14 +824,16 @@ async function startHybridDualWaveProcess() {
     CCState.maxComponentSize = 0;
     CCState.zoneList = [];
 
+    console.log(CCState.grid);
+
     addLog('Starting ' + (use8Dir ? '8-Way' : '4-Way') + ' search wave', 'info');
 
     // Searching Wave: Scans row by row across matrix
-    for (let i = 0, j = 0; i < CCState.rows; i++, j++) {
+    for (let i = 0, j = 0; i < CCState.rows && j < CCState.cols; i++, j++) {
 
 
-        if (CCState.grid[i][j] == 1) {
-
+        if (CCState.grid[i][j] === 1) { //its a one
+            console.log("optimal path");
             //pause/resume/reset
             if (!CCState.isRunning || CCState.shouldStop) {
                 addLog('Process stopped by user', 'warning');
@@ -895,12 +901,17 @@ async function startHybridDualWaveProcess() {
             }
             i++;
             j++;
-        } else if (CCState.grid[i][j] == 1) {
+        } else if (CCState.grid[i][j] === -1) { //visited
             i++;
             j++;
-        } else {
+        } else { //its a 0
+
+            console.log("branch");
             //left
-            for (let left = i - 1; left >= 0; left--) {
+            for (let left = j - 1; left >= 0; left--) {
+
+
+                console.log("left");
 
                 //pause/resume/reset
                 if (!CCState.isRunning || CCState.shouldStop) {
@@ -918,7 +929,7 @@ async function startHybridDualWaveProcess() {
 
                 //search wave through all elemnets 0 and all
 
-                const cellEl = document.getElementById(`cell-${i}-${j}`);
+                const cellEl = document.getElementById(`cell-${i}-${left}`);
 
                 document.querySelectorAll("cell").forEach(c => {
                     c.classList.remove("scanning");
@@ -937,16 +948,16 @@ async function startHybridDualWaveProcess() {
                 // If searching wave hits an unvisited component start point
                 //main process
 
-                if (find(i, j)) {
+                if (find(i, left)) {
                     CCState.zoneIdCounter++;
                     const color = ZONE_COLORS[(CCState.zoneIdCounter - 1) % ZONE_COLORS.length];
 
-                    addLog('Target found at [' + i + ', ' + j + ']. Handing torch to Infection Wave', 'success');
+                    addLog('Target found at [' + i + ', ' + left + ']. Handing torch to Infection Wave', 'success');
 
                     const zoneObj = {
                         id: CCState.zoneIdCounter,
                         startR: i,
-                        startC: j,
+                        startC: left,
                         count: 0,
                         color: color
                     };
@@ -958,20 +969,23 @@ async function startHybridDualWaveProcess() {
                         '<span class="color-badge" style="background:' + color + '"></span>' +
                         'Zone #' + zoneObj.id +
                         '</td>' +
-                        '<td>[' + i + ', ' + j + ']</td>' +
+                        '<td>[' + i + ', ' + left + ']</td>' +
                         '<td id="zone-count-' + zoneObj.id + '">0</td>';
                     maxDOM.zonesTableBody.appendChild(tr);
                     updateMetrics();
 
-                    await runInfectionWave(i, j, zoneObj, directions);
+                    await runInfectionWave(i, left, zoneObj, directions);
 
                     addLog('Infection wave finished Zone #' + zoneObj.id + ' (' + zoneObj.count + ' cells)', 'info');
+                    break; //important
                 }
 
-                break; //important
+                //break; //important
             }
             //right
-            for (let right = i + 1; right < CCState.cols; rigth++) {
+            for (let right = j + 1; right < CCState.cols; right++) {
+
+                console.log("right");
 
                 //pause/resume/reset
                 if (!CCState.isRunning || CCState.shouldStop) {
@@ -989,7 +1003,7 @@ async function startHybridDualWaveProcess() {
 
                 //search wave through all elemnets 0 and all
 
-                const cellEl = document.getElementById(`cell-${i}-${j}`);
+                const cellEl = document.getElementById(`cell-${i}-${right}`);
 
                 document.querySelectorAll("cell").forEach(c => {
                     c.classList.remove("scanning");
@@ -1008,16 +1022,16 @@ async function startHybridDualWaveProcess() {
                 // If searching wave hits an unvisited component start point
                 //main process
 
-                if (find(i, j)) {
+                if (find(i, right)) {
                     CCState.zoneIdCounter++;
                     const color = ZONE_COLORS[(CCState.zoneIdCounter - 1) % ZONE_COLORS.length];
 
-                    addLog('Target found at [' + i + ', ' + j + ']. Handing torch to Infection Wave', 'success');
+                    addLog('Target found at [' + i + ', ' + right + ']. Handing torch to Infection Wave', 'success');
 
                     const zoneObj = {
                         id: CCState.zoneIdCounter,
                         startR: i,
-                        startC: j,
+                        startC: right,
                         count: 0,
                         color: color
                     };
@@ -1029,22 +1043,22 @@ async function startHybridDualWaveProcess() {
                         '<span class="color-badge" style="background:' + color + '"></span>' +
                         'Zone #' + zoneObj.id +
                         '</td>' +
-                        '<td>[' + i + ', ' + j + ']</td>' +
+                        '<td>[' + i + ', ' + right + ']</td>' +
                         '<td id="zone-count-' + zoneObj.id + '">0</td>';
                     maxDOM.zonesTableBody.appendChild(tr);
                     updateMetrics();
 
-                    await runInfectionWave(i, j, zoneObj, directions);
+                    await runInfectionWave(i, right, zoneObj, directions);
 
                     addLog('Infection wave finished Zone #' + zoneObj.id + ' (' + zoneObj.count + ' cells)', 'info');
-
+                    break; //important
                 }
 
-                break; //important
+                //break; //important
             }
         }
-    }
 
+    }
     addLog('Searching completed. Found ' + CCState.zoneIdCounter + ' connected components', 'success');
     addLog('Largest component: ' + CCState.maxComponentSize + ' cells', 'info');
 
@@ -1060,3 +1074,4 @@ window.resetSimulation = resetSimulation;
 
 console.log('Max Connected Elements module loaded');
 console.log('Features: Dual-wave search, 4 and 8-way connectivity, component tracking');
+console.log(CCState.grid);
