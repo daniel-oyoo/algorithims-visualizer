@@ -526,7 +526,7 @@
                     j++;
                 } else {
                     //left
-                    for (let left = j - 1; left >= 0; left--) {
+                    for (let left = j; left >= 0; left--) {
                         if (!isRunning) return;
                         await checkPause();
 
