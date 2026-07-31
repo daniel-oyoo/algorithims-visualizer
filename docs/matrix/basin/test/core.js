@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     setupEventListeners();
-    generateGrid();
+    //renderGrid();
+    //generateGrid();
 
     addLog('Basin module ready', 'success');
     console.log('Basin module initialized');
@@ -84,11 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function setupEventListeners() {
     basinDOM.sizeSelect.addEventListener('change', function() {
-        generateGrid();
+        renderGrid();
     });
 
     basinDOM.valueRange.addEventListener('change', function() {
-        generateGrid();
+        renderGrid();
     });
 
     basinDOM.speedSlider.addEventListener('input', function() {
@@ -98,6 +99,8 @@ function setupEventListeners() {
 
 /**
  * ====== GRID GENERATION ======
+ * 
+ * only builds up the grid
  */
 function generateGrid() {
     if (BasinState.isRunning) {
@@ -137,10 +140,6 @@ function generateGrid() {
         }
     }
 
-    renderGrid();
-    updateStats();
-    updateAnalysis();
-
     basinDOM.comparisonSpace.innerHTML = 'New grid generated. Click Find Basins to begin analysis.';
     addLog('Generated ' + size + 'x' + size + ' grid (values 0-' + maxVal + ')', 'info');
 }
@@ -149,6 +148,7 @@ function generateGrid() {
  * ====== RENDER GRID ======
  */
 function renderGrid() {
+    //generateGrid();
     //clear to re-load instead of re-create
     basinDOM.matrixContainer.innerHTML = '';
 
@@ -161,13 +161,13 @@ function renderGrid() {
             const cell = document.createElement('td');
             cell.id = 'cell-' + i + '-' + j;
             cell.className = "cell";
-            cell.dataset.row = i;
-            cell.dataset.col = j;
+            //cell.dataset.row = i;
+            //cell.dataset.col = j;
 
             const value = BasinState.grid[i][j];
             cell.textContent = value;
 
-            const valClass = 'value-' + Math.min(value, 9);
+            //const valClass = 'value-' + Math.min(value, 9);
 
             //asign each value a color
             //cell.classList.add(valClass);
@@ -178,6 +178,8 @@ function renderGrid() {
     }
 
     basinDOM.matrixContainer.appendChild(table);
+    updateStats();
+    updateAnalysis();
 }
 
 /**
@@ -209,12 +211,13 @@ function updateCellBasic(row, col, className) {
         cell.classList.add("scanning");
         // await sleep(100);
     }
-    /*
+
     //3.add all classes for basins
-    if (isBasin(i, j)) {
-        document.getElementById(`cell-${i}-${j}`).classList.add("basin");
+    if (isBasin(row, col)) {
+        cell.classList.remove("scanning");
+        document.getElementById(`cell-${row}-${col}`).classList.add("basin");
     }
-    */
+
 
 }
 
@@ -335,7 +338,7 @@ function findBasins() {
 
     for (let i = 0; i < BasinState.rows; i++) {
         for (let j = 0; j < BasinState.cols; j++) {
-            //updateCellBasic(i, j);
+            updateCellBasic(i, j);
             //updateCell(i, j, '');
         }
     }
@@ -561,6 +564,7 @@ function sleep(ms) {
         setTimeout(resolve, ms);
     });
 }
+
 
 /**
  * ====== EXPOSE GLOBALLY ======
