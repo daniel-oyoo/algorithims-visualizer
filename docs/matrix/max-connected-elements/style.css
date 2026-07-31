@@ -1,6 +1,6 @@
 /* ============================================================
    MAX CONNECTED ELEMENTS MODULE - style.css
-   Location: /front-end/matrix/max-connected-elements/style.css
+   Location: /docs/matrix/max-connected-elements/style.css
    Purpose: Connected component flood fill specific styles
    ============================================================ */
 
@@ -278,6 +278,17 @@
     user-select: none;
 }
 
+.cell {
+    /*
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-border);
+    border-radius: 5px;
+    */
+}
+
+
+/*
 .grid-table td {
     width: 40px;
     height: 40px;
@@ -290,6 +301,7 @@
     transition: all 0.2s ease;
     position: relative;
 }
+*/
 
 
 /* Cell States */
@@ -297,7 +309,7 @@
 
 /* Scanner line glow */
 
-.scanning {
+td.scanning {
     /*
     outline: 2px solid var(--scanner-color);
     box-shadow: 0 0 10px var(--scanner-color);
