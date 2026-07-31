@@ -3,7 +3,7 @@
 /**
  * ============================================================
  * BASIN MODULE - script.js
- * Location: /front-end/matrix/basin/script.js
+ * Location: /docs/matrix/basin/script.js
  * Purpose: Complete basin detection (local minima) visualizer
  * ============================================================
  */
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setupEventListeners();
     //renderGrid();
-    //generateGrid();
+    generateGrid();
 
     addLog('Basin module ready', 'success');
     console.log('Basin module initialized');
@@ -85,11 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function setupEventListeners() {
     basinDOM.sizeSelect.addEventListener('change', function() {
-        renderGrid();
+        generateGrid();
     });
 
     basinDOM.valueRange.addEventListener('change', function() {
-        renderGrid();
+        generateGrid();
     });
 
     basinDOM.speedSlider.addEventListener('input', function() {
@@ -140,6 +140,9 @@ function generateGrid() {
         }
     }
 
+    renderGrid();
+    updateStats();
+    updateAnalysis();
     basinDOM.comparisonSpace.innerHTML = 'New grid generated. Click Find Basins to begin analysis.';
     addLog('Generated ' + size + 'x' + size + ' grid (values 0-' + maxVal + ')', 'info');
 }
@@ -178,8 +181,6 @@ function renderGrid() {
     }
 
     basinDOM.matrixContainer.appendChild(table);
-    updateStats();
-    updateAnalysis();
 }
 
 /**
@@ -338,7 +339,7 @@ function findBasins() {
 
     for (let i = 0; i < BasinState.rows; i++) {
         for (let j = 0; j < BasinState.cols; j++) {
-            updateCellBasic(i, j);
+            //updateCellBasic(i, j);
             //updateCell(i, j, '');
         }
     }
@@ -382,7 +383,18 @@ async function scanGrid() {
 
             //add scan classes here
             //updateCell(i, j, 'scanning');
-            updateCellBasic(i, j);
+            //updateCellBasic(i, j);
+            const cell = document.getElementById('cell-' + i + '-' + j);
+
+            //1.remove all clases for scanning
+            document.querySelectorAll("cell").forEach(c => {
+                c.classList.remove("scanning");
+            });
+            //2.add it 
+            if (cell) {
+                cell.classList.add("scanning");
+                await sleep(100);
+            }
 
             let neighborDisplay = neighbors.map(function(n) {
                 return n.val + ' ' + (n.val < currentVal ? 'down' : n.val > currentVal ? 'up' : 'equal');
@@ -401,7 +413,7 @@ async function scanGrid() {
                 '</div>';
 
             for (const neighbor of neighbors) {
-                updateCell(neighbor.r, neighbor.c, 'neighbor-highlight');
+                //updateCell(neighbor.r, neighbor.c, 'neighbor-highlight');
             }
 
             const basin = isBasin(i, j);
@@ -410,7 +422,17 @@ async function scanGrid() {
                 //run it here //maye make a functin for it
 
                 //updateCell(i, j, 'basin');
-                document.getElementById(`cell-${i}-${j}`).classList.add("basin");
+                //document.getElementById(`cell-${i}-${j}`).classList.add("basin");
+
+                //document.querySelectorAll("cell").forEach(c => {
+                //  c.classList.remove("basin");
+                //});
+
+                if (cell) {
+                    cell.classList.remove("scanning");
+                    cell.classList.add("basin");
+                    await sleep(100);
+                }
 
                 BasinState.foundBasins.push({ row: i, col: j, value: currentVal });
                 BasinState.stats.totalBasins++;
@@ -424,7 +446,7 @@ async function scanGrid() {
             } else {
 
                 //here too
-                updateCell(i, j, '');
+                //updateCell(i, j, '');
 
                 const basinFound = BasinState.foundBasins.some(function(b) {
                     return b.row === i && b.col === j;

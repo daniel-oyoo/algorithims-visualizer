@@ -294,12 +294,30 @@
 
 /* Cell States */
 
-.grid-table td.scanning {
+
+/* Scanner line glow */
+
+.scanning {
+    /*
+    outline: 2px solid var(--scanner-color);
+    box-shadow: 0 0 10px var(--scanner-color);
+    z-index: 5;
+    */
+    box-shadow: blue 3px 3px 6px 2px, blue -3px -3px 6px 2px;
+}
+
+
+/*.grid-table*/
+
+
+/*
+td.scanning {
     outline: 3px solid var(--color-info);
     box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
     z-index: 5;
     transform: scale(1.05);
 }
+*/
 
 .grid-table td.infecting {
     transform: scale(1.15);

@@ -186,6 +186,7 @@ function renderGrid() {
         const tr = document.createElement('tr');
         for (let j = 0; j < CCState.cols; j++) {
             const td = document.createElement('td');
+            td.className = "cell";
             td.id = 'cell-' + i + '-' + j;
             td.dataset.row = i;
             td.dataset.col = j;
@@ -326,11 +327,12 @@ async function startDualWaveProcess() {
 
     maxDOM.zonesTableBody.innerHTML = '';
 
-    for (let i = 0, j = 0; i < CCState.rows; i++) {
+    //mark max connected and non zones 
+    for (let i = 0; i < CCState.rows; i++) {
         for (let j = 0; j < CCState.cols; j++) {
             const cell = getCell(i, j);
             if (cell) {
-                cell.className = '';
+                //cell.className = 'cell';
                 if (CCState.grid[i][j] > 0) {
                     cell.style.backgroundColor = 'var(--color-bg)';
                     cell.style.color = 'var(--color-text-light)';
@@ -338,9 +340,10 @@ async function startDualWaveProcess() {
             }
         }
     }
-
     updateMetrics();
     addLog('Starting ' + (use8Dir ? '8-Way' : '4-Way') + ' search wave', 'info');
+
+    //the actaul processing wave
 
     for (let i = 0; i < CCState.rows; i++) {
         for (let j = 0; j < CCState.cols; j++) {
@@ -357,16 +360,23 @@ async function startDualWaveProcess() {
             }
 
             const cellEl = getCell(i, j);
+            document.querySelectorAll("cell").forEach(c => {
+                c.classList.remove("scanning");
+            });
+
+            if (cellEl) {
+                cellEl.classList.add('scanning');
+            }
+            /*
             if (cellEl && CCState.grid[i][j] > 0) {
                 cellEl.classList.add('scanning');
                 await sleep(CCState.delayMs / 3);
                 cellEl.classList.remove('scanning');
             }
-
+           */
             if (find(i, j)) {
                 CCState.zoneIdCounter++;
                 const color = ZONE_COLORS[(CCState.zoneIdCounter - 1) % ZONE_COLORS.length];
-
                 addLog('Target found at [' + i + ', ' + j + ']. Handing torch to Infection Wave', 'success');
 
                 const zoneObj = {
@@ -438,7 +448,7 @@ async function startFasterDualWaveProcess() {
                 }
             }
 
-            i++; //i jumps direct
+            i++; //jumps direct
         }
         //}
     }
@@ -643,10 +653,10 @@ async function startWaves() {
     maxDOM.btnPause.textContent = 'Pause';
 
     try {
-        //await startDualWaveProcess();
+        await startDualWaveProcess();
         //this cotrols the algo we use
         // await startDualWaveProcess();
-        await startFasterDualWaveProcess();
+        //await startFasterDualWaveProcess();
         // await startFastestDualWaveProcess();
     } catch (error) {
         addLog('Error: ' + error.message, 'error');
