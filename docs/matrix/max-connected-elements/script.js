@@ -730,21 +730,21 @@ async function teststartDualWaveProcess() {
     maxDOM.zonesTableBody.innerHTML = '';
 
     //look for  first cell of connected in every row
-
-    for (let i = 0; i < CCState.rows; i++) {
-        for (let j = 0; j < CCState.cols; j++) {
-            const cell = getCell(i, j);
-            if (cell) {
-                cell.className = '';
-                if (CCState.grid[i][j] > 0) {
-                    cell.style.backgroundColor = 'var(--color-bg)';
-                    cell.style.color = 'var(--color-text-light)';
+    /*
+        for (let i = 0; i < CCState.rows; i++) {
+            for (let j = 0; j < CCState.cols; j++) {
+                const cell = getCell(i, j);
+                if (cell) {
+                    cell.className = 'cell';
+                    if (CCState.grid[i][j] > 0) {
+                        cell.style.backgroundColor = 'var(--color-bg)';
+                        cell.style.color = 'var(--color-text-light)';
+                    }
                 }
             }
         }
-    }
 
-
+    */
 
     updateMetrics();
     addLog('Starting ' + (use8Dir ? '8-Way' : '4-Way') + ' search wave', 'info');
@@ -776,12 +776,13 @@ async function teststartDualWaveProcess() {
                 c.classList.remove("scanning");
             });
             //getCell(i, j);
+            //now its complete
             if (cellEl
                 // && CCState.grid[i][j] > 0
             ) {
                 cellEl.classList.add('scanning');
                 await sleep(CCState.delayMs / 2);
-                //cellEl.classList.remove('scanning');
+                cellEl.classList.remove('scanning');
                 console.log("Scan logic working");
             }
 
