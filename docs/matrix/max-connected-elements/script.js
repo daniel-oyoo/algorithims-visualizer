@@ -948,7 +948,8 @@ async function startHybridDualWaveProcess() {
                 }
 
 
-                //check if viited if so break
+                //check if viited if so break--
+                //comment this for interesting behaviour
                 if (CCState.grid[i][left] === -1) {
                     break;
                 }

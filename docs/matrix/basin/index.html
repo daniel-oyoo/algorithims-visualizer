@@ -32,6 +32,13 @@
                 <div class="brand">
                     <h1>Basin Finder</h1>
                     <span class="tagline">Local Minima Detection in Grids</span>
+                    <div class="intro-content">
+                        <h2>Definition</h2>
+                        <p>Basin , a cell in a matrix that is smaller than all four/eight neighbours .</p>
+
+                        <p>Lowest work : O(BASIN_COUNT)</p>
+
+                    </div>
                 </div>
 
                 <nav class="main-nav" id="mainNav">
@@ -50,24 +57,50 @@
 
             <!-- ====== ALGORITHM DESCRIPTION ====== -->
             <section class="algo-description">
-                <h2>How Basin Detection Works</h2>
-                <div class="description-grid">
-                    <div class="desc-card">
-                        <h3>What is a Basin?</h3>
-                        <p>A basin (local minimum) is a cell whose value is strictly smaller than all its valid orthogonal neighbors (up, down, left, right).</p>
-                        <span class="complexity">Local Minimum Detection</span>
+
+                <div class="approaches">
+                    <h2>Approaches</h2>
+                    <div class="approaches-container">
+                        <div class="approach-card">
+                            <h3>Full scan</h3>
+                            <p>Scan everything cell by cell and mark basins</p>
+                            <!--
+                    complexity goes here as a list
+                    -->
+                        </div>
+                        <div class="approach-card">
+                            <h3>Semi scan</h3>
+                            <p>Basins cant be adjacent by definition - which implies full scan does some unnecessary work.</p>
+                            <p>We scan cell by cell but jump/skip every consecutive cell if we find a basin.</p>
+                            <!--
+                    complexity goes here as a list
+                    also pseudocode
+                    -->
+                        </div>
+                        <div class="approach-card">
+
+                        </div>
+                        <div class="approach-card">
+                        </div>
                     </div>
-                    <div class="desc-card highlight">
-                        <h3>Algorithm Approach</h3>
-                        <p>Full grid scan comparing each cell against its neighbors. Linear time complexity O(n×m) making it highly efficient.</p>
-                        <span class="complexity">O(n × m) Runtime</span>
+                    <h2>How Basin Detection Works</h2>
+                    <div class="description-grid">
+                        <div class="desc-card">
+                            <h3>What is a Basin?</h3>
+                            <p>A basin (local minimum) is a cell whose value is strictly smaller than all its valid orthogonal neighbors (up, down, left, right).</p>
+                            <span class="complexity">Local Minimum Detection</span>
+                        </div>
+                        <div class="desc-card highlight">
+                            <h3>Algorithm Approach</h3>
+                            <p>Full grid scan comparing each cell against its neighbors. Linear time complexity O(n×m) making it highly efficient.</p>
+                            <span class="complexity">O(n × m) Runtime</span>
+                        </div>
+                        <div class="desc-card">
+                            <h3>Real-World Applications</h3>
+                            <p>Used in topography, watershed analysis, terrain modeling, and geographic information systems (GIS).</p>
+                            <span class="complexity">Terrain Analysis</span>
+                        </div>
                     </div>
-                    <div class="desc-card">
-                        <h3>Real-World Applications</h3>
-                        <p>Used in topography, watershed analysis, terrain modeling, and geographic information systems (GIS).</p>
-                        <span class="complexity">Terrain Analysis</span>
-                    </div>
-                </div>
             </section>
 
             <!-- ====== CONTROLS & OPTIONS ====== -->
@@ -209,12 +242,12 @@
                 </div>
             </footer>
         </main>
-    </div>
+        </div>
 
-    <!-- ====== JAVASCRIPT ====== -->
-    <script type="text/javascript" src="../../script.js"></script>
-    <!--<script type="text/javascript" src="script.js"></script>-->
-    <script type="text/javascript" src="test/core.js"></script>
+        <!-- ====== JAVASCRIPT ====== -->
+        <script type="text/javascript" src="../../script.js"></script>
+        <!--<script type="text/javascript" src="script.js"></script>-->
+        <script type="text/javascript" src="test/core.js"></script>
 
 </body>
 
