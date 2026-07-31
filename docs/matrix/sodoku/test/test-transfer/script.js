@@ -252,7 +252,7 @@ async function sodoku() {
                 if (cell) {
                     cell.classList.add('scan');
                     //await sleep here to avoid insta magic
-                    await sleep(500);
+                    await sleep(10);
                 }
 
 
@@ -266,7 +266,7 @@ async function sodoku() {
                     if (cell) {
                         cell.classList.remove('scan');
                         cell.classList.add('empty-cell');
-                        await sleep(500);
+                        await sleep(10);
                     }
 
                     //console.log("in loop");
@@ -275,7 +275,7 @@ async function sodoku() {
                         validCellList.push([]);
 
                         createEmptyTableRow(i, j);
-                        await sleep(50);
+                        await sleep(10);
 
 
                         for (let num = 1; num <= rows; num++) {
@@ -284,7 +284,7 @@ async function sodoku() {
 
                                 addNumToTable(i, j, num);
 
-                                await sleep(50);
+                                await sleep(10);
                             }
                         }
                         LOG(validCellList[cellList]);
@@ -301,7 +301,7 @@ async function sodoku() {
 
                         removeNumFromTable(i, j, chosen);
 
-                        await sleep(500);
+                        await sleep(10);
 
 
                         cell.innerText = chosen;
@@ -325,7 +325,7 @@ async function sodoku() {
 
                         removeRow(i, j);
                         //document.getElementById(getRowId(i, j)).classList.add('scan');
-                        await sleep(200);
+                        await sleep(10);
                         cell.classList.remove("solved");
 
 
@@ -369,7 +369,8 @@ async function sodoku() {
                         map[i][j] = 0;
                         //update map too
                         document.getElementById(`${i}-${j}`).innerText = '0';
-                        await sleep(200);
+                        document.getElementById(`${i}-${j}`).classList.remove("solved");
+                        await sleep(10);
                     }
                 }
             }
