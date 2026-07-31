@@ -1,7 +1,9 @@
+/**My own traversal logic */
+
 /**
  * ============================================================
  * BASIN MODULE - script.js
- * Location: /docs/matrix/basin/script.js
+ * Location: /front-end/matrix/basin/script.js
  * Purpose: Complete basin detection (local minima) visualizer
  * ============================================================
  */
