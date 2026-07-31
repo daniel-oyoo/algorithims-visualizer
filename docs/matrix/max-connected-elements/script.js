@@ -807,6 +807,7 @@ async function teststartDualWaveProcess() {
 
 /**
  * hybrid -fast and accurate
+ * goal maximize optimal or visited path;
  * 
  */
 // Dual Wave Search Loop (Adapted from Java `findConnected` / `checkOncePerRow`)
@@ -902,6 +903,7 @@ async function startHybridDualWaveProcess() {
             i++;
             j++;
         } else if (CCState.grid[i][j] === -1) { //visited
+            console.log("visited");
             i++;
             j++;
         } else { //its a 0
@@ -944,6 +946,13 @@ async function startHybridDualWaveProcess() {
                     cellEl.classList.remove('scanning');
                     //console.log("Scan logic working");
                 }
+
+
+                //check if viited if so break
+                if (CCState.grid[i][left] === -1) {
+                    break;
+                }
+
 
                 // If searching wave hits an unvisited component start point
                 //main process
@@ -1017,6 +1026,11 @@ async function startHybridDualWaveProcess() {
                     await sleep(CCState.delayMs / 2);
                     cellEl.classList.remove('scanning');
                     //console.log("Scan logic working");
+                }
+
+                //check if viited if so break
+                if (CCState.grid[i][right] === -1) {
+                    break;
                 }
 
                 // If searching wave hits an unvisited component start point
