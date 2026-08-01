@@ -34,10 +34,8 @@
                     <span class="tagline">Local Minima Detection in Grids</span>
                     <div class="intro-content">
                         <h2>Definition</h2>
-                        <p>Basin , a cell in a matrix that is smaller than all four/eight neighbours .</p>
-
+                        <p>Basin, a cell in a matrix that is smaller than all four/eight neighbours.</p>
                         <p>Lowest work : O(BASIN_COUNT)</p>
-
                     </div>
                 </div>
 
@@ -57,32 +55,27 @@
 
             <!-- ====== ALGORITHM DESCRIPTION ====== -->
             <section class="algo-description">
-
                 <div class="approaches">
                     <h2>Approaches</h2>
                     <div class="approaches-container">
                         <div class="approach-card">
                             <h3>Full scan</h3>
                             <p>Scan everything cell by cell and mark basins</p>
-                            <!--
-                    complexity goes here as a list
-                    -->
+                            <!-- complexity goes here as a list -->
                         </div>
                         <div class="approach-card">
                             <h3>Semi scan</h3>
                             <p>Basins cant be adjacent by definition - which implies full scan does some unnecessary work.</p>
                             <p>We scan cell by cell but jump/skip every consecutive cell if we find a basin.</p>
-                            <!--
-                    complexity goes here as a list
-                    also pseudocode
-                    -->
+                            <!-- 
+                                complexity goes here as a list
+                                also pseudocode
+                            -->
                         </div>
-                        <div class="approach-card">
-
-                        </div>
-                        <div class="approach-card">
-                        </div>
+                        <div class="approach-card"></div>
+                        <div class="approach-card"></div>
                     </div>
+
                     <h2>How Basin Detection Works</h2>
                     <div class="description-grid">
                         <div class="desc-card">
@@ -101,6 +94,7 @@
                             <span class="complexity">Terrain Analysis</span>
                         </div>
                     </div>
+                </div>
             </section>
 
             <!-- ====== CONTROLS & OPTIONS ====== -->
@@ -237,18 +231,17 @@
                         <span class="divider">|</span>
                         <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
                         <span class="divider">|</span>
-                        <a href="../../index.html">← Back to Home</a>
+                        <a href="../../index.html">&larr; Back to Home</a>
                     </div>
                 </div>
             </footer>
         </main>
-        </div>
+    </div>
 
-        <!-- ====== JAVASCRIPT ====== -->
-        <script type="text/javascript" src="../../script.js"></script>
-        <!--<script type="text/javascript" src="script.js"></script>-->
-        <script type="text/javascript" src="test/core.js"></script>
-
+    <!-- ====== JAVASCRIPT ====== -->
+    <script type="text/javascript" src="../../script.js"></script>
+    <!--<script type="text/javascript" src="script.js"></script>-->
+    <script type="text/javascript" src="test/core.js"></script>
 </body>
 
 </html>

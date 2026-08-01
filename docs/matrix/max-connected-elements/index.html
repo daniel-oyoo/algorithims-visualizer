@@ -1,32 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- ============================================================
-     MAX CONNECTED ELEMENTS MODULE - index.html
-     Location: /docs/matrix/max-connected-elements/index.html
-     Purpose: Connected component flood fill visualizer with dual-wave search
-     ============================================================ -->
+<!--
+    ============================================================
+    MAX CONNECTED ELEMENTS MODULE
+    File: /docs/matrix/max-connected-elements/index.html
+    Purpose: Connected component flood fill visualizer with 
+             dual-wave search algorithms for finding the 
+             maximum connected component in a grid
+    ============================================================
+    
+    TABLE OF CONTENTS:
+    1. Meta & Document Setup
+    2. Stylesheets
+    3. Main Application Container
+       3.1 Header
+       3.2 Main Content
+           3.2.1 Introduction / Preview
+           3.2.2 How It Works (Core Concepts)
+           3.2.3 Algorithm Approaches
+           3.2.4 Controls & Options
+           3.2.5 Side-by-Side Display
+           3.2.6 Results & Logs Area
+       3.3 Footer
+    4. JavaScript
+-->
 
 <head>
+    <!--
+        ============================================================
+        SECTION 1: META & DOCUMENT SETUP
+        ============================================================
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Max Connected Elements | Algorithm Visualizer</title>
 
-    <!-- ====== STYLESHEETS ====== -->
-    <!-- 1. Root shared styles (../../style.css) -->
+    <!--
+        ============================================================
+        SECTION 2: STYLESHEETS
+        ============================================================
+    -->
     <link rel="stylesheet" href="../../style.css">
-    <!-- 2. Matrix parent styles (../style.css) -->
     <link rel="stylesheet" href="../style.css">
-    <!-- 3. Module-specific styles (./style.css) -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- ============================================================
-         MAIN APPLICATION CONTAINER
-         ============================================================ -->
+    <!--
+        ============================================================
+        SECTION 3: MAIN APPLICATION CONTAINER
+        ============================================================
+    -->
     <div class="app-container">
 
-        <!-- ====== HEADER ====== -->
+        <!--
+            ============================================================
+            SECTION 3.1: HEADER
+            ============================================================
+        -->
         <header class="app-header">
             <div class="header-content">
                 <div class="brand">
@@ -39,360 +70,423 @@
                 </nav>
 
                 <div class="header-links">
-                    <a href="https://github.com/daniel-oyoo" target="_blank" class="github-link" GitHub>Github</a>
+                    <a href="https://github.com/daniel-oyoo" target="_blank" class="github-link">GitHub</a>
                     <a href="https://yourportfolio.com" target="_blank" class="portfolio-link">Portfolio</a>
                 </div>
             </div>
         </header>
 
-        <!-- ====== MAIN CONTENT ====== -->
+        <!--
+            ============================================================
+            SECTION 3.2: MAIN CONTENT
+            ============================================================
+        -->
         <main class="main-content">
 
-            <!-- ====== ALGORITHM DESCRIPTION ====== -->
-            <section class="algo-description">
-                <h2>How Connected Component Detection Works</h2>
-                <div class="description-grid">
-                    <div class="desc-card">
+            <!--
+                ============================================================
+                SECTION 3.2.1: INTRODUCTION / PREVIEW
+                ============================================================
+                Background story and motivation behind the project
+            -->
+            <section class="intro-section">
+                <h2>Introduction</h2>
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>
+                            After struggling for weeks to find the largest basin (impossible since no two basins can be adjacent), I stumbled across flood fill. But it was no easy ride to get the right mental model.
+                        </p>
+                        <div class="challenges">
+                            <h4>Major Culprits</h4>
+                            <ul>
+                                <li><strong>Cycles due to repetitions</strong> - mark visited to solve it</li>
+                                <li><strong>Bounds and index errors</strong> - enforce tight bounds check</li>
+                            </ul>
+                        </div>
+                        <p>
+                            The major question that kept haunting me: <em>"Is quadratic time setup the least effort to do this work?"</em> Turns out not always. Here I show you approaches from direct/basic to Las Vegas/Monte Carlo style approximations
+                            that are up to <strong>10x faster</strong> than direct and still somehow accurate.
+                        </p>
+                    </div>
+                    <div class="intro-highlight">
+                        <div class="highlight-box">
+                            <span class="highlight-number">10x</span>
+                            <span class="highlight-label">Faster than direct approach</span>
+                        </div>
+                        <div class="highlight-box">
+                            <span class="highlight-number">4</span>
+                            <span class="highlight-label">Different algorithms to explore</span>
+                        </div>
+                        <div class="highlight-box">
+                            <span class="highlight-number">8-Way</span>
+                            <span class="highlight-label">Connectivity options</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!--
+                ============================================================
+                SECTION 3.2.2: HOW IT WORKS (CORE CONCEPTS)
+                ============================================================
+                Three-column layout explaining the core concepts
+            -->
+            <section class="how-it-works-section">
+                <h2>How It Works</h2>
+                <p class="section-subtitle">Understanding the dual-wave search process</p>
+                <div class="how-it-works-grid">
+                    <!-- Search Wave Card -->
+                    <div class="how-card">
+                        <div class="card-icon">🔍</div>
                         <h3>Search Wave</h3>
                         <p>Scans the grid row by row looking for unvisited positive cells. When found, it triggers the infection wave.</p>
                         <span class="complexity">O(n × m) Scan</span>
                     </div>
-                    <div class="desc-card highlight">
+
+                    <!-- Infection Wave Card -->
+                    <div class="how-card highlight">
+                        <div class="card-icon">🌊</div>
                         <h3>Infection Wave (Flood Fill)</h3>
                         <p>Recursively spreads to all connected neighbors (4-way or 8-way), marking and counting the entire component.</p>
                         <span class="complexity">O(n × m) Flood Fill</span>
                     </div>
-                    <div class="desc-card">
+
+                    <!-- Component Analysis Card -->
+                    <div class="how-card">
+                        <div class="card-icon">📊</div>
                         <h3>Component Analysis</h3>
                         <p>Each component is assigned a unique color and tracked with its starting cell and total cell count.</p>
                         <span class="complexity">Zones Discovered</span>
                     </div>
-                    <div id="introduction">
-                        <div class="introduction-content">
-                            <h2>Preview</h2>
-                            <p>
-                                After stuggling for weeks to find the largest basin(imposible since no two basins can be adjacent). <br> I stumbled across flood fill(ask you neighbour to ask their neighbour bubble).<br> But it was no easy ride to get
-                                the right mental model.
-                                <br></br>
-                                <b>Major culprits</b><br>
-                                <ul>
-                                    <li>Cycles due to repetions - mark visited to solve it</li>
-                                    <li>Bounds and index errors - enforce tight bounds check</li>
-                                </ul>
-                            </p>
+                </div>
 
-                            <p>
-                                The major question that kept haunting me is the smallest possible work is O(MAX_CONNECTED).<br> Is quadratic time set up the least effort to do this work - well turns out not always and here i show you from<br> from direct
-                                and basic approach to las vegas/monte carlo kind of approximation that are upto 10 x faster than direct and still somehow<br> accurate .
-                            </p>
-                            <!--content goes here-->
-                        </div>
-                        <div id="approaches">
-                            <h3>Approaches</h3>
-                            <div class="approach-cards-container">
-                                <div class="approach-card">
-                                    <h4>Direct/Basic-Absolute Accuracy</h4>
-                                    <p>
-                                        Scan every cell ,and if its a member of any zone initiate flood fill.<br>
-                                        <ul>
-                                            <li>
-                                                quadratic plus work done
-                                            </li>
-                                            <li>
-                                                quadratic plus work done
-                                            </li>
-                                            <li>
-                                                quadratic plus work done
-                                            </li>
-                                        </ul>
-                                        <br></br>
-                                        View pseudocode below
-                                        <pre>
-                            Loop : i = 0 to n-1 
-                                 Loop : j = 0 to n-1
-                                    if cell(i,j) valid //found a start cell
-                                       process//this marks all cells within the same zone
-                                    end if
-                                 end Loop
-                            end Loop
-                        </pre>
-                                    </p>
-                                </div>
-                                <div class="approach-card">
-                                    <h4>Improved basic - mostly accurate</h4>
-                                    <p>
-                                        For every row only look for the first occurence of a start of zone cell.<br>
-                                        <ul>
-                                            <li>
-                                                Best case : linear plus work done - We found a cell of max connected and the beggining of row(any).
-                                            </li>
+                <!-- Visual Flow Diagram -->
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Scan Grid</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Found Cell?</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Flood Fill</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Track Component</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="step-number">5</span>
+                        <span class="step-label">Continue Scan</span>
+                    </div>
+                </div>
+            </section>
 
-                                            <li>
-                                                Avarage case : quadratic plus work done-We mostly scan two to 3 cells in every row
-                                            </li>
-                                            <li>
-                                                Wost case : quadratic plus work done-Scan everything
-                                            </li>
-                                        </ul>
-                                        <br></br>
-                                        View pseudocode below
-                                        <pre>
-                            Loop : i = 0 to n-1 
-                                 Loop : j = 0 to n-1//we dont increment j up here
-                                    if cell(i,j) valid //found a start cell
-                                       process//this marks all cells within the same zone
-                                       i++//move to next row
-                                    else
-                                       j++//look for first occurence in row
-                                    end if
-                                 end Loop
-                            end Loop
-                        </pre>
-                                    </p>
-                                </div>
-                                <div class="approach-card">
-                                    <h4>Accuracy - whats that?</h4>
-                                    <p>
-                                        This works by scanning a single linear path ,mostly the main diagonal<br> At first it seems just like a fast useless move untill you have a desnse grapgh?.<br> Make sure to test it out.
-                                        <ul>
-                                            <li>
-                                                Best case : linear plus work done
-                                            </li>
+            <!--
+                ============================================================
+                SECTION 3.2.3: ALGORITHM APPROACHES
+                ============================================================
+                Collapsible cards showing each algorithm with pseudocode
+            -->
+            <section class="approaches-section">
+                <h2>Algorithm Approaches</h2>
+                <p class="section-subtitle">Click on any approach to expand and view details</p>
 
-                                            <li>
-                                                Avarage case : linear plus work done-We mostly scan two to 3 cells in every row
-                                            </li>
-                                            <li>
-                                                Wost case : linear plus work done-Scan everything
-                                            </li>
-                                        </ul>
-                                        <br></br>
-                                        View pseudocode below
-                                        <pre>
-                            Loop : i = 0 , j = 0 to n-1 //i++,j++//main diagonal
-                                    if cell(i,j) valid //found a start cell
-                                       process//this marks all cells within the same zone
-                                    end if
-                            end Loop
-                        </pre>
-                                    </p>
-                                </div>
-                                <div class="approach-card">
-                                    <h4>Hybrid -fast and accurate</h4>
-                                    <p>
-                                        Well with the above options i asked myself quadratic time set up is a pain and inaccuracy on sparse graphs is unacceptable,<br> why not combine all the above methods into one - and thats what i did.<br> This hybrid
-                                        versions main strategy is
-                                        <!--step 3  link to third one -->where we mainly scan down the main diagonal as log as we find a start cell of any zone.<br> (This handles dense graphs with elagant time) But things dont alwyas go this well so if we dont find a start cell of sany
-                                        zone in our diagonal path, we fall back to left and right scan withn the row and proces the first cell of any zone within the row <br> Then proceed with our diaagonal path. Note : without breaks in the left right
-                                        row search (its will behave like basic
-                                        <!--Lik to basic-->) and degrade to quadratic time<br>This has the most iterstig patten and actually try it out comment or disbale the rule for eft right search and compare your results.
-                                        <ul>
-                                            <li>
-                                                Best case : linear plus work done-foound max start cell in the main diagonal .
-                                            </li>
-
-                                            <li>
-                                                Avarage case : linear plus work done-We mostly scan two to 3 cells in every row .
-                                            </li>
-                                            <li>
-                                                Wost case : quardratic plus work done zones near edges so we scan almost everything .
-                                            </li>
-                                        </ul>
-                                        <br></br>
-                                        View pseudocode below
-                                        <pre>
-                            Loop : i = 0 to n-1 
-                                 Loop : j = 0 to n-1
-                                    if cell(i,j) valid //found a start cell
-                                       process//this marks all cells within the same zone
-                                       i++,j++//continue through main diagonal
-                                    else if cell(i,j) is Visited //optional remove it and test
-                                       i++,j++
-                                    else{
-                                        //left 
-                                        Loop : left = i - 1 to 0
-                                           if cell(i,j) valid
-                                             procees//
-                                             exit//remove this for experimntation and variied behaviour
-                                            end if
-                                        end Loop
-
-                                        //right
-                                        Loop : right = i + 1 to n- 1 
-                                            if cell(i,j) valid
-                                               process
-                                               exit
-                                            end if
-                                        end Loop
-                                    }
-                                    end if
-                                 end Loop
-                            end Loop
-
-                            //this degrades to practical worse time thna naive without the exits int rows (left ,right)
-                        </pre>
-                                    </p>
-                                </div>
+                <div class="approach-cards-container">
+                    <!-- Approach 1: Basic/Direct -->
+                    <div class="approach-card">
+                        <h4>Basic/Direct - Absolute Accuracy</h4>
+                        <div class="card-content">
+                            <p>Scan every cell, and if it's a member of any zone, initiate flood fill.</p>
+                            <div class="complexity-info">
+                                <span class="badge best">Best: O(n²)</span>
+                                <span class="badge avg">Average: O(n²)</span>
+                                <span class="badge worst">Worst: O(n²)</span>
                             </div>
+                            <pre>
+Loop : i = 0 to n-1 
+    Loop : j = 0 to n-1
+        if cell(i,j) valid
+            process
+        end if
+    end Loop
+end Loop
+                            </pre>
+                        </div>
+                    </div>
+
+                    <!-- Approach 2: Improved Basic -->
+                    <div class="approach-card">
+                        <h4>Improved Basic - Mostly Accurate</h4>
+                        <div class="card-content">
+                            <p>For every row only look for the first occurrence of a start of zone cell.</p>
+                            <div class="complexity-info">
+                                <span class="badge best">Best: O(n)</span>
+                                <span class="badge avg">Average: O(n²)</span>
+                                <span class="badge worst">Worst: O(n²)</span>
+                            </div>
+                            <pre>
+Loop : i = 0 to n-1 
+    Loop : j = 0 to n-1
+        if cell(i,j) valid
+            process
+            i++
+        else
+            j++
+        end if
+    end Loop
+end Loop
+                            </pre>
+                        </div>
+                    </div>
+
+                    <!-- Approach 3: Accuracy (Diagonal) -->
+                    <div class="approach-card">
+                        <h4>Accuracy - What's That?</h4>
+                        <div class="card-content">
+                            <p>This works by scanning a single linear path, mostly the main diagonal.</p>
+                            <div class="complexity-info">
+                                <span class="badge best">Best: O(n)</span>
+                                <span class="badge avg">Average: O(n)</span>
+                                <span class="badge worst">Worst: O(n)</span>
+                            </div>
+                            <pre>
+Loop : i = 0, j = 0 to n-1
+    if cell(i,j) valid
+        process
+    end if
+end Loop
+                            </pre>
+                        </div>
+                    </div>
+
+                    <!-- Approach 4: Hybrid -->
+                    <div class="approach-card">
+                        <h4>Hybrid - Fast and Accurate</h4>
+                        <div class="card-content">
+                            <p>Combines all methods: scan main diagonal, fall back to left-right scan within row.</p>
+                            <div class="complexity-info">
+                                <span class="badge best">Best: O(n)</span>
+                                <span class="badge avg">Average: O(n)</span>
+                                <span class="badge worst">Worst: O(n²)</span>
+                            </div>
+                            <pre>
+Loop : i = 0 to n-1 
+    Loop : j = 0 to n-1
+        if cell(i,j) valid
+            process
+            i++, j++
+        else if cell(i,j) is Visited
+            i++, j++
+        else
+            Loop : left = i - 1 to 0
+                if cell(i,j) valid
+                    process
+                    exit
+                end if
+            end Loop
+            Loop : right = i + 1 to n - 1 
+                if cell(i,j) valid
+                    process
+                    exit
+                end if
+            end Loop
+        end if
+    end Loop
+end Loop
+                            </pre>
                         </div>
                     </div>
                 </div>
-    </div>
-    </section>
+            </section>
 
-    <!-- ====== CONTROLS & OPTIONS ====== -->
-    <section class="controls-section">
-        <div class="control-row">
-            <!-- Options Card -->
-            <div class="options-card">
-                <h4>Options</h4>
-                <div class="option-group">
-                    <label>Algorithim type:
-                                <select id="algorithimSelect">
-                                    <option value="8">basic/direct</option>
-                                    <option value="4">improved basic</option>
-                                    <option value="4">accuracy - whats that?</option>
-                                    <option value="4">hybrid version - elite</option>
+            <!--
+                ============================================================
+                SECTION 3.2.4: CONTROLS & OPTIONS
+                ============================================================
+            -->
+            <section class="controls-section">
+                <div class="control-row">
+                    <!-- Options Card -->
+                    <div class="options-card">
+                        <h4>Options</h4>
+                        <div class="option-group">
+                            <label>
+                                Algorithm type:
+                                <select id="algorithmSelect">
+                                    <option value="basic">Basic/Direct</option>
+                                    <option value="improved">Improved Basic</option>
+                                    <option value="accuracy">Accuracy - What's That?</option>
+                                    <option value="hybrid" selected>Hybrid Version - Elite</option>
                                 </select>
                             </label>
-                    <label>Connect Strategy:
+
+                            <label>
+                                Connect Strategy:
                                 <select id="directionSelect">
                                     <option value="8">8-Way (Incl. Diagonals)</option>
-                                    <option value="4">4-Way (Orthogonal)</option>
+                                    <option value="4" selected>4-Way (Orthogonal)</option>
                                 </select>
                             </label>
-                    <label>Fill Coverage:
+
+                            <label>
+                                Fill Coverage:
                                 <select id="densitySelect">
                                     <option value="0.3">30% Coverage</option>
                                     <option value="0.5" selected>50% Coverage</option>
                                     <option value="0.7">70% Coverage</option>
                                 </select>
                             </label>
-                    <label>Grid Size:
+
+                            <label>
+                                Grid Size:
                                 <select id="sizeSelect">
                                     <option value="5">5 × 5</option>
                                     <option value="8" selected>8 × 8</option>
                                     <option value="10">10 × 10</option>
                                     <option value="12">12 × 12</option>
                                     <option value="15">15 × 15</option>
-                                    <option value="15">30 × 30</option>
-                                    <option value="15">50 × 50</option>
+                                    <option value="30">30 × 30</option>
+                                    <option value="50">50 × 50</option>
                                 </select>
                             </label>
-                    <label>Speed:
+
+                            <label>
+                                Speed:
                                 <input type="range" id="speedSlider" min="20" max="500" value="150" step="10">
                                 <span id="speedDisplay">150ms</span>
                             </label>
-                </div>
-            </div>
+                        </div>
+                    </div>
 
-            <!-- Controls Card -->
-            <div class="controls-card">
-                <h4>Controls</h4>
-                <div class="button-group">
-                    <button id="btnStart" class="btn btn-success">Start Waves</button>
-                    <button id="btnPause" class="btn btn-warning" disabled>Pause</button>
-                    <button id="btnReset" class="btn btn-danger">Reset</button>
+                    <!-- Controls Card -->
+                    <div class="controls-card">
+                        <h4>Controls</h4>
+                        <div class="button-group">
+                            <button id="btnStart" class="btn btn-success">Start Waves</button>
+                            <button id="btnPause" class="btn btn-warning" disabled>Pause</button>
+                            <button id="btnReset" class="btn btn-danger">Reset</button>
+                        </div>
+
+                        <div class="legend">
+                            <span class="legend-box scanning"></span>
+                            <label>Search Scanning</label>
+                            <span class="legend-box infecting"></span>
+                            <label>Infection Wave</label>
+                            <span class="legend-box visited"></span>
+                            <label>Visited/Infected</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!--
+                ============================================================
+                SECTION 3.2.5: SIDE-BY-SIDE DISPLAY
+                ============================================================
+            -->
+            <section class="display-zone">
+                <div class="matrix-card">
+                    <h3>Matrix Board</h3>
+                    <div class="grid-wrapper">
+                        <table class="grid-table" id="gridTable">
+                            <!-- Rendered dynamically by JavaScript -->
+                        </table>
+                    </div>
                 </div>
 
-                <!-- Legend -->
-                <div class="legend">
-                    <span class="legend-box scanning"></span> <label>Search Scanning</label>
-                    <span class="legend-box infecting"></span> <label>Infection Wave</label>
-                    <span class="legend-box visited"></span> <label>Visited/Infected</label>
+                <div class="zones-card">
+                    <h3>Discovered Zones</h3>
+                    <div class="zones-table-wrapper">
+                        <table class="zones-table">
+                            <thead>
+                                <tr>
+                                    <th>Zone ID</th>
+                                    <th>Start Cell</th>
+                                    <th>Total Cells</th>
+                                </tr>
+                            </thead>
+                            <tbody id="zonesTableBody">
+                                <!-- Populated dynamically by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <!-- ====== SIDE-BY-SIDE DISPLAY ====== -->
-    <section class="display-zone">
-        <!-- Left Panel: Grid Matrix -->
-        <div class="matrix-card">
-            <h3>Matrix Board</h3>
-            <div class="grid-wrapper">
-                <table class="grid-table" id="gridTable">
-                    <!-- Rendered by JavaScript -->
-                </table>
-            </div>
-        </div>
-
-        <!-- Right Panel: Zone/Component Summary -->
-        <div class="zones-card">
-            <h3>Discovered Zones</h3>
-            <div class="zones-table-wrapper">
-                <table class="zones-table">
-                    <thead>
-                        <tr>
-                            <th>Zone ID</th>
-                            <th>Start Cell</th>
-                            <th>Total Cells</th>
-                        </tr>
-                    </thead>
-                    <tbody id="zonesTableBody">
-                        <!-- Populated dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====== RESULTS & LOGS AREA ====== -->
-    <section class="results-zone">
-        <div class="log-wrapper">
-            <h4>Status Log</h4>
-            <div class="log-box" id="statusLog">
-                Ready to search...
-            </div>
-        </div>
-
-        <div class="metrics-wrapper">
-            <h4>Execution Metrics</h4>
-            <div class="metrics-container">
-                <div class="metric-card">
-                    <div class="val" id="metricTotalZones">0</div>
-                    <div class="lbl">Zones Discovered</div>
+            <!--
+                ============================================================
+                SECTION 3.2.6: RESULTS & LOGS AREA
+                ============================================================
+            -->
+            <section class="results-zone">
+                <div class="log-wrapper">
+                    <h4>Status Log</h4>
+                    <div class="log-box" id="statusLog">
+                        Ready to search...
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <div class="val" id="metricMaxConnected">0</div>
-                    <div class="lbl">Max Connected Cells</div>
-                </div>
-                <div class="metric-card">
-                    <div class="val" id="metricVisitedCells">0</div>
-                    <div class="lbl">Infected Cells</div>
-                </div>
-                <div class="metric-card">
-                    <div class="val" id="metricTotalCells">0</div>
-                    <div class="lbl">Total Cells</div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- ====== FOOTER ====== -->
-    <footer class="app-footer">
-        <div class="footer-content">
-            <p>&copy; 2026 Algorithm Visualizer | Max Connected Elements Module</p>
-            <p class="footer-acknowledgment">
-                "Connected components reveal the hidden structure within. Finding a single cell of max connected zones means finding all others"
-            </p>
-            <div class="footer-links">
-                <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
-                <span class="divider">|</span>
-                <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
-                <span class="divider">|</span>
-                <a href="../../index.html">← Back to Home</a>
-            </div>
-        </div>
-    </footer>
-    </main>
+                <div class="metrics-wrapper">
+                    <h4>Execution Metrics</h4>
+                    <div class="metrics-container">
+                        <div class="metric-card">
+                            <div class="val" id="metricTotalZones">0</div>
+                            <div class="lbl">Zones Discovered</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val" id="metricMaxConnected">0</div>
+                            <div class="lbl">Max Connected Cells</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val" id="metricVisitedCells">0</div>
+                            <div class="lbl">Infected Cells</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="val" id="metricTotalCells">0</div>
+                            <div class="lbl">Total Cells</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!--
+                ============================================================
+                SECTION 3.3: FOOTER
+                ============================================================
+            -->
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <p>&copy; 2026 Algorithm Visualizer | Max Connected Elements Module</p>
+                    <p class="footer-acknowledgment">
+                        "Connected components reveal the hidden structure within. Finding a single cell of max connected zones means finding all others"
+                    </p>
+                    <div class="footer-links">
+                        <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
+                        <span class="divider">|</span>
+                        <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
+                        <span class="divider">|</span>
+                        <a href="../../index.html">← Back to Home</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
     </div>
 
-    <!-- ====== JAVASCRIPT ====== -->
+    <!--
+        ============================================================
+        SECTION 4: JAVASCRIPT
+        ============================================================
+    -->
     <script type="text/javascript" src="../../script.js"></script>
     <script type="text/javascript" src="script.js"></script>
-    <!--<script type="text/javascript" src="core.js"></script>-->
-    <!--<script type="text/javascript" src="scanningVariations.js"></script>-->
 </body>
 
 </html>

@@ -5,51 +5,168 @@
    ============================================================ */
 
 
-/* ====== ALGORITHM DESCRIPTION ====== */
+/* ============================================================
+   SECTION 1: INTRODUCTION / PREVIEW
+   ============================================================ */
 
-.algo-description {
+.intro-section {
     padding: var(--spacing-lg) 0;
 }
 
-.algo-description h2 {
+.intro-section h2 {
     color: var(--color-text-light);
-    margin-bottom: var(--spacing-lg);
     text-align: center;
+    margin-bottom: var(--spacing-lg);
 }
 
-.description-grid {
+.intro-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 2fr 1fr;
     gap: var(--spacing-lg);
-}
-
-.desc-card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: var(--spacing-lg);
+}
+
+.intro-text p {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.intro-text p:last-child {
+    margin-bottom: 0;
+}
+
+.challenges {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background: var(--color-bg);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--color-warning);
+}
+
+.challenges h4 {
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1rem;
+}
+
+.challenges ul {
+    padding-left: var(--spacing-lg);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.challenges ul li {
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.challenges ul li strong {
+    color: var(--color-text-light);
+}
+
+.intro-highlight {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    justify-content: center;
+}
+
+.highlight-box {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.highlight-box:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+}
+
+.highlight-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary-light);
+    line-height: 1.2;
+}
+
+.highlight-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-xs);
+}
+
+
+/* ============================================================
+   SECTION 2: HOW IT WORKS
+   ============================================================ */
+
+.how-it-works-section {
+    padding: var(--spacing-lg) 0;
+}
+
+.how-it-works-section h2 {
+    color: var(--color-text-light);
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.95rem;
+}
+
+.how-it-works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.how-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
     transition: all var(--transition-med);
 }
 
-.desc-card:hover {
+.how-card:hover {
     transform: translateY(-4px);
     border-color: var(--color-primary-light);
 }
 
-.desc-card.highlight {
+.how-card.highlight {
     border-color: var(--color-secondary);
     background: rgba(255, 101, 132, 0.05);
 }
 
-.desc-card h3 {
+.how-card .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.how-card h3 {
     color: var(--color-text-light);
     margin-bottom: var(--spacing-sm);
     font-size: 1.1rem;
 }
 
-.desc-card p {
+.how-card p {
     color: var(--color-text-muted);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.6;
 }
 
@@ -65,7 +182,269 @@
 }
 
 
-/* ====== CONTROLS ====== */
+/* Flow Diagram */
+
+.flow-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.flow-step {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--color-bg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.step-label {
+    color: var(--color-text-light);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.flow-arrow {
+    color: var(--color-primary-light);
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+
+/* ============================================================
+   SECTION 3: APPROACHES SECTION - FIXED
+   ============================================================ */
+
+.approaches-section {
+    padding: var(--spacing-lg) 0;
+}
+
+.approaches-section h2 {
+    color: var(--color-text-light);
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.approach-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    align-items: start;
+    /* Prevents cards from stretching to match height */
+}
+
+
+/* Collapsible Cards */
+
+.approach-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-med);
+    overflow: hidden;
+    height: fit-content;
+    /* Ensures card only takes needed height */
+}
+
+.approach-card:hover {
+    border-color: var(--color-primary-light);
+}
+
+
+/* Card Header - Always Visible */
+
+.approach-card h4 {
+    color: var(--color-text-light);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.05rem;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    transition: background var(--transition-fast);
+    user-select: none;
+}
+
+.approach-card h4:hover {
+    background: rgba(108, 99, 255, 0.05);
+}
+
+
+/* Toggle Indicator */
+
+.approach-card h4::after {
+    content: "▶";
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    transition: transform var(--transition-fast);
+}
+
+.approach-card.expanded h4::after {
+    transform: rotate(90deg);
+}
+
+
+/* Card Content - Collapsed by Default */
+
+.approach-card .card-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 var(--spacing-lg);
+}
+
+
+/* Card Content - Expanded with scroll */
+
+.approach-card.expanded .card-content {
+    max-height: 600px;
+    /* Reasonable max height */
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+    overflow-y: auto;
+    /* Enables scrolling for long content */
+}
+
+
+/* Custom scrollbar for expanded content */
+
+.approach-card.expanded .card-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.approach-card.expanded .card-content::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border-radius: 3px;
+}
+
+.approach-card.expanded .card-content::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+.approach-card.expanded .card-content::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
+}
+
+
+/* Card Content Styling */
+
+.approach-card .card-content p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    font-size: 0.92rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.complexity-info {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-sm) 0 var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 3px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+.badge.best {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge.avg {
+    background: rgba(251, 191, 36, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.badge.worst {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+
+/* Pre blocks inside cards - with height limit and scroll */
+
+.approach-card .card-content pre {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm) 0;
+    overflow: auto;
+    /* Both horizontal and vertical scroll */
+    max-height: 250px;
+    /* Limits pre block height */
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+/* Custom scrollbar for pre blocks */
+
+.approach-card .card-content pre::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.approach-card .card-content pre::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border-radius: 3px;
+}
+
+.approach-card .card-content pre::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+.approach-card .card-content pre::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
+}
+
+.approach-card .card-content pre code {
+    font-family: var(--font-mono);
+    color: var(--color-text-light);
+}
+
+
+/* ============================================================
+   SECTION 4: CONTROLS
+   ============================================================ */
 
 .controls-section {
     padding: var(--spacing-lg) 0;
@@ -117,6 +496,15 @@
     cursor: pointer;
 }
 
+.option-group select:hover {
+    border-color: var(--color-primary-light);
+}
+
+.option-group select:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 .option-group input[type="range"] {
     flex: 1;
     min-width: 80px;
@@ -134,6 +522,19 @@
     border-radius: 50%;
     background: var(--color-primary);
     cursor: pointer;
+}
+
+.option-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.option-group input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: none;
 }
 
 #speedDisplay {
@@ -198,7 +599,9 @@
 }
 
 
-/* ====== LEGEND ====== */
+/* ============================================================
+   SECTION 5: LEGEND
+   ============================================================ */
 
 .legend {
     display: flex;
@@ -238,7 +641,9 @@
 }
 
 
-/* ====== DISPLAY ZONE ====== */
+/* ============================================================
+   SECTION 6: DISPLAY ZONE
+   ============================================================ */
 
 .display-zone {
     display: grid;
@@ -271,7 +676,9 @@
 }
 
 
-/* ====== GRID TABLE ====== */
+/* ============================================================
+   SECTION 7: GRID TABLE
+   ============================================================ */
 
 .grid-table {
     border-collapse: collapse;
@@ -279,69 +686,24 @@
 }
 
 .cell {
-    /*
-    width: 40px;
-    height: 40px;
-    border: 1px solid white;
-    border-radius: 5px;
-    */
     width: 40px;
     height: 40px;
     border: 2px solid var(--color-border);
     text-align: center;
     font-size: 0.85rem;
     font-weight: 700;
-    /*from original only these worked with the scanning wave -this means that
-    the restinlcude the blocking feature */
-}
-
-
-/*This too is a culprit
-prevents proper scanning
-*/
-
-
-/*
-.grid-table td {
-    width: 40px;
-    height: 40px;
-    border: 2px solid var(--color-border);
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: 700;
-    background-color: var(--color-bg);
+    background: var(--color-bg);
     color: var(--color-text-light);
     transition: all 0.2s ease;
-    position: relative;
 }
-*/
-
-
-/* Cell States */
 
 
 /* Scanner line glow */
 
 td.scanning {
-    /*
-    outline: 2px solid var(--scanner-color);
-    box-shadow: 0 0 10px var(--scanner-color);
-    z-index: 5;*/
     box-shadow: blue 3px 3px 6px 2px, blue -3px -3px 6px 2px;
-}
-
-
-/*.grid-table*/
-
-
-/*
-td.scanning {
-    outline: 3px solid var(--color-info);
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
     z-index: 5;
-    transform: scale(1.05);
 }
-*/
 
 .grid-table td.infecting {
     transform: scale(1.15);
@@ -368,7 +730,9 @@ td.scanning {
 }
 
 
-/* ====== ZONES TABLE ====== */
+/* ============================================================
+   SECTION 8: ZONES TABLE
+   ============================================================ */
 
 .zones-table-wrapper {
     max-height: 350px;
@@ -389,6 +753,10 @@ td.scanning {
 .zones-table-wrapper::-webkit-scrollbar-thumb {
     background: var(--color-border);
     border-radius: 3px;
+}
+
+.zones-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
 }
 
 .zones-table {
@@ -416,6 +784,10 @@ td.scanning {
     letter-spacing: 0.5px;
 }
 
+.zones-table tr:hover td {
+    background: rgba(108, 99, 255, 0.05);
+}
+
 .color-badge {
     display: inline-block;
     width: 14px;
@@ -427,7 +799,9 @@ td.scanning {
 }
 
 
-/* ====== RESULTS ZONE ====== */
+/* ============================================================
+   SECTION 9: RESULTS ZONE
+   ============================================================ */
 
 .results-zone {
     display: grid;
@@ -478,8 +852,35 @@ td.scanning {
     border-radius: 3px;
 }
 
+.log-box::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
+}
 
-/* ====== METRICS ====== */
+.log-entry {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.log-entry.info {
+    color: var(--color-text-muted);
+}
+
+.log-entry.success {
+    color: var(--color-success);
+}
+
+.log-entry.warning {
+    color: var(--color-warning);
+}
+
+.log-entry.error {
+    color: var(--color-error);
+}
+
+
+/* ============================================================
+   SECTION 10: METRICS
+   ============================================================ */
 
 .metrics-container {
     display: grid;
@@ -493,12 +894,19 @@ td.scanning {
     border-radius: var(--radius-sm);
     text-align: center;
     border: 1px solid var(--color-border);
+    transition: all var(--transition-fast);
+}
+
+.metric-card:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
 }
 
 .metric-card .val {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-primary-light);
+    transition: all var(--transition-fast);
 }
 
 .metric-card .lbl {
@@ -510,7 +918,9 @@ td.scanning {
 }
 
 
-/* ====== HEADER LINKS ====== */
+/* ============================================================
+   SECTION 11: HEADER LINKS
+   ============================================================ */
 
 .header-links {
     display: flex;
@@ -539,25 +949,54 @@ td.scanning {
 }
 
 
-/* ====== RESPONSIVE ====== */
+/* ============================================================
+   SECTION 12: RESPONSIVE
+   ============================================================ */
 
 @media (max-width: 1024px) {
+    .intro-content {
+        grid-template-columns: 1fr;
+    }
+    .intro-highlight {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .highlight-box {
+        flex: 1;
+        min-width: 120px;
+    }
+    .how-it-works-grid {
+        grid-template-columns: 1fr 1fr;
+    }
     .display-zone {
         grid-template-columns: 1fr;
     }
     .control-row {
         grid-template-columns: 1fr;
     }
-    .description-grid {
-        grid-template-columns: 1fr;
-    }
     .results-zone {
         grid-template-columns: 1fr;
+    }
+    .approach-cards-container {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .grid-table td {
+    .how-it-works-grid {
+        grid-template-columns: 1fr;
+    }
+    .approach-cards-container {
+        grid-template-columns: 1fr;
+    }
+    .flow-diagram {
+        flex-direction: column;
+        padding: var(--spacing-md);
+    }
+    .flow-arrow {
+        transform: rotate(90deg);
+    }
+    .grid-table td.cell {
         width: 32px;
         height: 32px;
         font-size: 0.7rem;
@@ -572,15 +1011,39 @@ td.scanning {
         font-size: 0.75rem;
         padding: var(--spacing-sm);
     }
+    .complexity-info {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    .highlight-box {
+        min-width: 100px;
+    }
 }
 
 @media (max-width: 480px) {
-    .grid-table td {
+    .grid-table td.cell {
         width: 28px;
         height: 28px;
         font-size: 0.6rem;
     }
     .metrics-container {
         grid-template-columns: 1fr;
+    }
+    .option-group label {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .option-group select {
+        min-width: unset;
+    }
+    .legend {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    .highlight-number {
+        font-size: 2rem;
+    }
+    .intro-content {
+        padding: var(--spacing-md);
     }
 }
