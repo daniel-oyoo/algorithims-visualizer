@@ -491,7 +491,7 @@ async function startAccuracyAlgorithm() {
     addLog('Starting Accuracy (Diagonal) algorithm with ' + (use8Dir ? '8-Way' : '4-Way') + ' connectivity', 'info');
 
     const size = Math.min(CCState.rows, CCState.cols);
-    for (let i = 0; i < size; i++) {
+    for (let i = 0, j = 0; i < size; i++, j++) {
         if (!CCState.isRunning || CCState.shouldStop) {
             addLog('Process stopped by user', 'warning');
             finishProcess();
