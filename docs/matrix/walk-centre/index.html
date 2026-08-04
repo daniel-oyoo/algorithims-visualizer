@@ -47,71 +47,71 @@
 
         <!-- ====== MAIN CONTENT ====== -->
         <main class="main-content">
-
-            <!-- ====== ALGORITHM DESCRIPTION ====== -->
-            <section class="algo-description">
-                <h2>How Walk Centre Works</h2>
-                <div class="description-grid">
-                    <div class="desc-card">
-                        <h3>Greedy Strategy</h3>
-                        <p>Always moves to the unvisited neighbor with the highest value. Simple but effective for local optimization.</p>
-                        <span class="complexity">O(n × m) Worst Case</span>
-                    </div>
-                    <div class="desc-card highlight">
-                        <h3>A* Search Strategy</h3>
-                        <p>Uses heuristic to find the global maximum cell. Balances exploration and exploitation.</p>
-                        <span class="complexity">O(n × m) with Heuristic</span>
-                    </div>
-                    <div class="desc-card">
-                        <h3>Move Sets</h3>
-                        <p>4-Way (up/down/left/right) or 8-Way (includes diagonals) movement options.</p>
-                        <span class="complexity">4 or 8 Directions</span>
-                    </div>
+            <div class="intro">
+                <div class="intro-content">
+                    <h2>Defintion</h2>
+                    <p>From the middle of a matrix collect maximum sum to edges .</p>
+                    <p>Lowest work : O(PATH)</p>
                 </div>
-                <div class="intro">
-                    <div class="intro-content">
-                        <h2>Defintion</h2>
-                        <p>From the middle of a matrix collect maximum sum to edges .</p>
-                        <p>Lowest work : O(PATH)</p>
-                    </div>
-                    <div class="approaches">
-                        <h2>Approaches</h2>
-                        <div class="approaches-container">
-                            <!--Add time and space complexity to all these-->
-                            <div class="approach-card">
-                                <h3>Greedy</h3>
-                                <p>Alwyas pick the next largest neighbour</p>
-                                <p>Works most of the time but for the edge cases it can loop forever or give inaccurate results</p>
-                            </div>
-                            <div class="approach-card">
-                                <h3>A *</h3>
-                                <p>Use dp ,heuristics to maximize cumulative sum</p>
-                                <p>Alwyas optimal ,predictable and correct when implemented correctly</p>
-                            </div>
+                <div class="approaches">
+                    <h2>Approaches</h2>
+                    <div class="approaches-container">
+                        <!--Add time and space complexity to all these-->
+                        <div class="approach-card">
+                            <h3>Greedy</h3>
+                            <p>Alwyas pick the next largest neighbour</p>
+                            <p>Works most of the time but for the edge cases it can loop forever or give inaccurate results</p>
+                        </div>
+                        <div class="approach-card">
+                            <h3>A *</h3>
+                            <p>Use dp ,heuristics to maximize cumulative sum</p>
+                            <p>Alwyas optimal ,predictable and correct when implemented correctly</p>
                         </div>
                     </div>
-            </section>
+                </div>
 
-            <!-- ====== CONTROLS & OPTIONS ====== -->
-            <section class="controls-section">
-                <div class="control-row">
-                    <!-- Options Card -->
-                    <div class="options-card">
-                        <h4>Options</h4>
-                        <div class="option-group">
-                            <label>Strategy:
+                <!-- ====== ALGORITHM DESCRIPTION ====== -->
+                <section class="algo-description">
+                    <h2>How Walk Centre Works</h2>
+                    <div class="description-grid">
+                        <div class="desc-card">
+                            <h3>Greedy Strategy</h3>
+                            <p>Always moves to the unvisited neighbor with the highest value. Simple but effective for local optimization.</p>
+                            <span class="complexity">O(n × m) Worst Case</span>
+                        </div>
+                        <div class="desc-card highlight">
+                            <h3>A* Search Strategy</h3>
+                            <p>Uses heuristic to find the global maximum cell. Balances exploration and exploitation.</p>
+                            <span class="complexity">O(n × m) with Heuristic</span>
+                        </div>
+                        <div class="desc-card">
+                            <h3>Move Sets</h3>
+                            <p>4-Way (up/down/left/right) or 8-Way (includes diagonals) movement options.</p>
+                            <span class="complexity">4 or 8 Directions</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ====== CONTROLS & OPTIONS ====== -->
+                <section class="controls-section">
+                    <div class="control-row">
+                        <!-- Options Card -->
+                        <div class="options-card">
+                            <h4>Options</h4>
+                            <div class="option-group">
+                                <label>Strategy:
                                 <select id="strategySelect">
                                     <option value="greedy">Greedy (Max Neighbor)</option>
                                     <option value="astar">A* Search (To Highest Cell)</option>
                                 </select>
                             </label>
-                            <label>Move Set:
+                                <label>Move Set:
                                 <select id="directionSelect">
                                     <option value="4">4-Way</option>
                                     <option value="8">8-Way</option>
                                 </select>
                             </label>
-                            <label>Grid Size:
+                                <label>Grid Size:
                                 <select id="sizeSelect">
                                     <option value="5">5 × 5</option>
                                     <option value="7" selected>7 × 7</option>
@@ -120,94 +120,94 @@
                                     <option value="15">15 × 15</option>
                                 </select>
                             </label>
-                            <label>Speed:
+                                <label>Speed:
                                 <input type="range" id="speedSlider" min="50" max="1000" value="300" step="50">
                                 <span id="speedDisplay">300ms</span>
                             </label>
-                        </div>
-                    </div>
-
-                    <!-- Controls Card -->
-                    <div class="controls-card">
-                        <h4>Controls</h4>
-                        <div class="button-group">
-                            <button id="btnStart" class="btn btn-success">Walk</button>
-                            <button id="btnPause" class="btn btn-warning" disabled>Pause</button>
-                            <button id="btnReset" class="btn btn-danger">Reset</button>
-                        </div>
-
-                        <!-- Legend -->
-                        <div class="legend">
-                            <span class="legend-box active"></span> <label>Current Cell</label>
-                            <span class="legend-box evaluating"></span> <label>Evaluating</label>
-                            <span class="legend-box visited"></span> <label>Visited</label>
-                            <span class="legend-box chosen"></span> <label>Chosen Path</label>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ====== MAIN CONTENT: Matrix + Status/Results ====== -->
-            <section class="main-content-area">
-                <!-- Matrix Grid -->
-                <div class="grid-wrapper">
-                    <h3>Grid Map</h3>
-                    <div class="content-card" id="matrixContainer">
-                        <!-- Grid rendered by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Status & Results -->
-                <div class="info-wrapper">
-                    <!-- Status Zone -->
-                    <div class="status-zone">
-                        <h3>Live Status</h3>
-                        <div class="log-box" id="statusLog">
-                            Ready to start...
-                        </div>
-                    </div>
-
-                    <!-- Results Zone -->
-                    <div class="results-zone">
-                        <h3>Progress Metrics</h3>
-                        <div class="metrics-grid">
-                            <div class="metric-card">
-                                <div class="val" id="metricSteps">0</div>
-                                <div class="lbl">Steps Walked</div>
                             </div>
-                            <div class="metric-card">
-                                <div class="val" id="metricScore">0</div>
-                                <div class="lbl">Current Value</div>
+                        </div>
+
+                        <!-- Controls Card -->
+                        <div class="controls-card">
+                            <h4>Controls</h4>
+                            <div class="button-group">
+                                <button id="btnStart" class="btn btn-success">Walk</button>
+                                <button id="btnPause" class="btn btn-warning" disabled>Pause</button>
+                                <button id="btnReset" class="btn btn-danger">Reset</button>
                             </div>
-                            <div class="metric-card">
-                                <div class="val" id="metricMax">0</div>
-                                <div class="lbl">Global Max</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="val" id="metricPath">0</div>
-                                <div class="lbl">Path Length</div>
+
+                            <!-- Legend -->
+                            <div class="legend">
+                                <span class="legend-box active"></span> <label>Current Cell</label>
+                                <span class="legend-box evaluating"></span> <label>Evaluating</label>
+                                <span class="legend-box visited"></span> <label>Visited</label>
+                                <span class="legend-box chosen"></span> <label>Chosen Path</label>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- ====== FOOTER ====== -->
-            <footer class="app-footer">
-                <div class="footer-content">
-                    <p>&copy; 2026 Algorithm Visualizer | Walk Centre Module</p>
-                    <p class="footer-acknowledgment">
-                        "Every step is a choice. Choose wisely."
-                    </p>
-                    <div class="footer-links">
-                        <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
-                        <span class="divider">|</span>
-                        <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
-                        <span class="divider">|</span>
-                        <a href="../../index.html">← Back to Home</a>
+                <!-- ====== MAIN CONTENT: Matrix + Status/Results ====== -->
+                <section class="main-content-area">
+                    <!-- Matrix Grid -->
+                    <div class="grid-wrapper">
+                        <h3>Grid Map</h3>
+                        <div class="content-card" id="matrixContainer">
+                            <!-- Grid rendered by JavaScript -->
+                        </div>
                     </div>
-                </div>
-            </footer>
+
+                    <!-- Status & Results -->
+                    <div class="info-wrapper">
+                        <!-- Status Zone -->
+                        <div class="status-zone">
+                            <h3>Live Status</h3>
+                            <div class="log-box" id="statusLog">
+                                Ready to start...
+                            </div>
+                        </div>
+
+                        <!-- Results Zone -->
+                        <div class="results-zone">
+                            <h3>Progress Metrics</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="val" id="metricSteps">0</div>
+                                    <div class="lbl">Steps Walked</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="val" id="metricScore">0</div>
+                                    <div class="lbl">Current Value</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="val" id="metricMax">0</div>
+                                    <div class="lbl">Global Max</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="val" id="metricPath">0</div>
+                                    <div class="lbl">Path Length</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ====== FOOTER ====== -->
+                <footer class="app-footer">
+                    <div class="footer-content">
+                        <p>&copy; 2026 Algorithm Visualizer | Walk Centre Module</p>
+                        <p class="footer-acknowledgment">
+                            "Every step is a choice. Choose wisely."
+                        </p>
+                        <div class="footer-links">
+                            <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
+                            <span class="divider">|</span>
+                            <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
+                            <span class="divider">|</span>
+                            <a href="../../index.html">← Back to Home</a>
+                        </div>
+                    </div>
+                </footer>
         </main>
         </div>
 
