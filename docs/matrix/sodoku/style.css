@@ -252,6 +252,7 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--spacing-lg);
     align-items: start;
+    /* Prevents cards from stretching to match height */
 }
 
 
@@ -264,6 +265,7 @@
     transition: all var(--transition-med);
     overflow: hidden;
     height: fit-content;
+    /* Ensures card only takes needed height */
 }
 
 .approach-card:hover {
@@ -321,8 +323,10 @@
 
 .approach-card.expanded .card-content {
     max-height: 600px;
+    /* Reasonable max height */
     padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
     overflow-y: auto;
+    /* Enables scrolling for long content */
 }
 
 
