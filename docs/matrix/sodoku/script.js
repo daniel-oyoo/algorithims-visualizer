@@ -457,7 +457,7 @@ function createProgressRow(row, col) {
     sudokuDOM.progressBody.appendChild(currentRow);
 
     // Highlight and scroll to the new row
-    highlightCurrentRow('row-' + row + '-' + col, 'current-row');
+    /*highlightCurrentRow('row-' + row + '-' + col, 'current-row');*/
 
     return currentRow;
 }
