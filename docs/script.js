@@ -40,7 +40,7 @@ const ALGORITHM_MODULES = [{
         runtime: 'O(V + E)',
         difficulty: 'Advanced',
         color: '#4ADE80'
-    }*/
+    }
     ,
     {
         id: 'string',
@@ -52,7 +52,10 @@ const ALGORITHM_MODULES = [{
         runtime: 'O(Characters) or O(matched)',
         difficulty: 'Advanced',
         color: '#4ADE90'
-    },
+    }
+    */
+    ,
+
     {
         id: 'geometric',
         name: 'Geometric Algorithms',
