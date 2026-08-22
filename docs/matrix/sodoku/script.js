@@ -444,7 +444,8 @@ function highlightCurrentRow(rowId, className) {
     if (rowElement) {
         rowElement.classList.add(className);
         // Scroll to the row
-        scrollToCurrentRow(rowId);
+        //currently makes the screen glitch
+        /*scrollToCurrentRow(rowId);*/
     }
 }
 
@@ -457,6 +458,7 @@ function createProgressRow(row, col) {
     sudokuDOM.progressBody.appendChild(currentRow);
 
     // Highlight and scroll to the new row
+    //this too makes the screen glitch
     /*highlightCurrentRow('row-' + row + '-' + col, 'current-row');*/
 
     return currentRow;

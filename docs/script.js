@@ -40,7 +40,8 @@ const ALGORITHM_MODULES = [{
         runtime: 'O(V + E)',
         difficulty: 'Advanced',
         color: '#4ADE80'
-    },
+    }*/
+    ,
     {
         id: 'string',
         name: 'String Algorithms',
@@ -51,8 +52,19 @@ const ALGORITHM_MODULES = [{
         runtime: 'O(Characters) or O(matched)',
         difficulty: 'Advanced',
         color: '#4ADE90'
+    },
+    {
+        id: 'geometric',
+        name: 'Geometric Algorithms',
+        //icon: '🔗',
+        description: 'From basic drawings on graph books for proofs to elegant proven  algorthims for finding boundary(convex hull),polygon,closest pairs and enclosing circle for a given set of points',
+        path: 'geometric/index.html',
+        tags: ['ascension', 'centroid'],
+        runtime: 'O(nlogn) or O(n)',
+        difficulty: 'medium',
+        color: '#4ADE90'
     }
-        */
+
 ];
 
 /**
