@@ -86,8 +86,9 @@ ALGORITHIM-VISUALIZER/
     │       ├── style.css
     │       └── script.js
     │
-    └── graph/                              # GRAPH Module
-        └── (Coming Soon)
+    └── geometric/                              # GEOMETRIC module
+        └── index.html                             link to geometric website
+            style.css
 ```
 
 ---
@@ -113,16 +114,16 @@ Visualize fundamental matrix operations with step-by-step execution and cell hig
 
 ---
 
-### Graph Algorithms 
-**Location:** `/docs/graph/` *(Coming Soon)*
+### Geometric Algorithms 
+**Location:** `/docs/geometrics/`
 
-Explore graph traversal and pathfinding algorithms with interactive node-edge visualization.
+Explore geometric and spatial algorithims for navaigating multi dimesnional space.
 
-**Planned Algorithms:**
--  BFS (Breadth-First Search)
--  DFS (Depth-First Search)
--  Dijkstra's Algorithm
--  A* Search Algorithm
+**Algorithms:**
+-  Diameter
+-  Closest Pair
+-  Enclosing Circle
+-  Convex/Boundary/Polygon
 
 ---
 
@@ -386,7 +387,7 @@ SOFTWARE.
 
 **Your Name** - [Your Portfolio](https://yourportfolio.com) - [GitHub](https://github.com/daniel-oyoo)
 
-**Project Link:** [https://github.com/yourusername/algorithm-visualizer](https://github.com/daniel-oyoo/algorithm-visualizer)
+**Project Link:** [https://github.com/daniel-oyoo/algorithm-visualizer](https://github.com/daniel-oyoo/algorithm-visualizer)
 
 ---
 
