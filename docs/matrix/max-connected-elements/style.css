@@ -702,7 +702,7 @@
 
 td.scanning {
     box-shadow: blue 3px 3px 6px 2px, blue -3px -3px 6px 2px;
-    /*z-index: 5;*/
+    z-index: 5;
 }
 
 .grid-table td.infecting {
