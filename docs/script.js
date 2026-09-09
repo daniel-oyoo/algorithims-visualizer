@@ -27,35 +27,7 @@ const ALGORITHM_MODULES = [{
         runtime: 'O(n³)',
         difficulty: 'Intermediate',
         color: '#6C63FF'
-    }
-    /*
-    ,
-    {
-        id: 'graph',
-        name: 'Graph Algorithms',
-        //icon: '🔗',
-        description: 'Explore BFS, DFS, Dijkstra, and more with interactive node-edge visualizations',
-        path: 'graph/index.html',
-        tags: ['Traversal', 'Pathfinding'],
-        runtime: 'O(V + E)',
-        difficulty: 'Advanced',
-        color: '#4ADE80'
-    }
-    ,
-    {
-        id: 'string',
-        name: 'String Algorithms',
-        //icon: '🔗',
-        description: 'From basic string searching algorthims to advanced pointer and window algorithims used for maipulating large text ',
-        path: 'string/index.html',
-        tags: ['Four Pointer', 'Window Slider'],
-        runtime: 'O(Characters) or O(matched)',
-        difficulty: 'Advanced',
-        color: '#4ADE90'
-    }
-    */
-    ,
-
+    },
     {
         id: 'geometric',
         name: 'Geometric Algorithms',
