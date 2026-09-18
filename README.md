@@ -47,7 +47,7 @@
 
 ##  Live Demo
 
-**[Coming Soon]** Deploy to GitHub Pages or Vercel for a live demo.
+**(https://daniel-oyoo.github.io/algorithims-visualizer/)** 
 
 ---
 
