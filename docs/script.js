@@ -5,42 +5,34 @@
  * Purpose: Centralized configuration, card generation, and
  *          shared utilities for all visualization modules
  * 
- * NOTE: Root only shows DIRECT children: Matrix and Graph
- *       All other modules are nested under Matrix
+ * NOTE: The dashboard links to the Matrix and Geometric sections.
  * ============================================================
  */
 
 /**
  * ====== ALGORITHM MODULE CONFIGURATION ======
- * These are the DIRECT children of the root level.
- * Root only shows: Matrix and Graph
+ * These are the sections linked from the dashboard.
  */
 
-//to-do add better icons for graph and matrix 
 const ALGORITHM_MODULES = [{
         id: 'matrix',
         name: 'Matrix Operations',
-        //icon: '📊',
-        description: 'Visualize matrix transformations, multiplication, and operations in real-time. Includes sub-modules for Sudoku, Basin Detection, Walk Centre, and Max Connected Elements.',
+        description: 'Explore matrix operations, plus Sudoku, basin detection, grid traversal, and connected-component visualizations.',
         path: 'matrix/index.html',
-        tags: ['Linear Algebra', 'Math'],
-        runtime: 'O(n³)',
-        difficulty: 'Intermediate',
-        color: '#6C63FF'
+        tags: ['Linear Algebra', 'Grid Algorithms'],
+        runtime: 'Varies by operation'
     },
     {
         id: 'geometric',
         name: 'Geometric Algorithms',
-        //icon: '🔗',
-        description: 'From basic drawings on graph books for proofs to elegant proven  algorthims for finding boundary(convex hull),polygon,closest pairs and enclosing circle for a given set of points',
+        description: 'Learn geometric algorithms for point sets, including closest pairs, enclosing circles, and convex hulls.',
         path: 'geometric/index.html',
-        tags: ['ascension', 'centroid'],
-        runtime: 'O(nlogn) or O(n)',
-        difficulty: 'medium',
-        color: '#4ADE90'
+        tags: ['Computational Geometry', 'Point Sets'],
+        runtime: 'Varies by algorithm'
     }
-
 ];
+
+const APP_ROOT = new URL('./', document.currentScript.src);
 
 /**
  * ====== DOM REFERENCE CACHE ======
@@ -68,10 +60,11 @@ const AppState = {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Algorithm Visualizer initializing...');
 
+    detectCurrentModule();
+    addAccessibilityHelpers();
     generateNavigation();
     generateAlgorithmCards();
-    trackVisit('home');
-    detectCurrentModule();
+    trackVisit(AppState.currentModule);
 
     console.log('Initialization complete');
 });
@@ -85,16 +78,16 @@ function generateNavigation() {
         return;
     }
 
-    DOM.nav.innerHTML = '';
+    DOM.nav.replaceChildren();
+    DOM.nav.setAttribute('aria-label', 'Primary navigation');
 
-    const homeLink = createNavLink('Home', 'index.html', 'home');
+    const homeLink = createNavLink('Home', new URL('index.html', APP_ROOT).href, 'home');
     DOM.nav.appendChild(homeLink);
 
     ALGORITHM_MODULES.forEach(module => {
-        //`${module.icon}
         const link = createNavLink(
-            `${module.name}`,
-            module.path,
+            module.name,
+            new URL(module.path, APP_ROOT).href,
             module.id
         );
         DOM.nav.appendChild(link);
@@ -111,6 +104,7 @@ function createNavLink(text, href, id) {
 
     if (id === AppState.currentModule) {
         link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
     }
 
     link.addEventListener('click', function(e) {
@@ -124,10 +118,7 @@ function createNavLink(text, href, id) {
  * ====== ALGORITHM CARDS GENERATION ======
  */
 function generateAlgorithmCards() {
-    if (!DOM.cardsGrid) {
-        console.warn('Cards grid container not found');
-        return;
-    }
+    if (!DOM.cardsGrid) return;
 
     DOM.cardsGrid.innerHTML = '';
 
@@ -141,19 +132,14 @@ function generateAlgorithmCards() {
 
 function createCardElement(module) {
     const card = document.createElement('a');
-    card.href = module.path;
+    card.href = new URL(module.path, APP_ROOT).href;
     card.className = 'algorithm-card';
     card.dataset.moduleId = module.id;
 
-    // Add a badge if module has children
-    const childBadge = module.hasChildren ?
-        `<span class="child-badge">${module.id === 'matrix' ? '4 Sub-Modules' : ''}</span>` : '';
-    //${module.icon}--removed from caard icon
     card.innerHTML = `
         <div class="card-icon"></div>
         <h3 class="card-title">${module.name}</h3>
         <p class="card-description">${module.description}</p>
-        ${childBadge}
         <div class="card-meta">
             <span class="card-tag">${module.tags[0]}</span>
             <span class="card-runtime">${module.runtime}</span>
@@ -171,6 +157,8 @@ function createCardElement(module) {
  * ====== VISIT TRACKING ======
  */
 function trackVisit(moduleId) {
+    if (!moduleId) return;
+
     if (!AppState.visitedModules.includes(moduleId)) {
         AppState.visitedModules.push(moduleId);
         console.log(`Visited: ${moduleId} (${AppState.visitedModules.length} total visits)`);
@@ -181,8 +169,8 @@ function trackVisit(moduleId) {
             'visitedModules',
             JSON.stringify(AppState.visitedModules)
         );
-    } catch (e) {
-        // Ignore
+    } catch (error) {
+        console.warn('Could not save visited modules for this session.', error);
     }
 }
 
@@ -193,32 +181,52 @@ function detectCurrentModule() {
     const currentPath = window.location.pathname;
 
     for (const module of ALGORITHM_MODULES) {
-        if (currentPath.includes(module.path.replace('/', ''))) {
+        const modulePath = new URL(module.path, APP_ROOT).pathname;
+        const moduleDirectory = modulePath.slice(0, modulePath.lastIndexOf('/') + 1);
+        if (currentPath === modulePath || currentPath.startsWith(moduleDirectory)) {
             AppState.currentModule = module.id;
-            console.log(`Current module: ${module.name}`);
-            document.title = `Algorithm Visualizer | ${module.name}`;
             break;
         }
     }
 
     if (!AppState.currentModule) {
         AppState.currentModule = 'home';
-        document.title = 'Algorithm Visualizer | Home';
     }
+
+    const currentModule = ALGORITHM_MODULES.find(module => module.id === AppState.currentModule);
+    document.title = `Algorithm Visualizer | ${currentModule ? currentModule.name : 'Home'}`;
 
     try {
         const stored = sessionStorage.getItem('visitedModules');
         if (stored) {
             const parsed = JSON.parse(stored);
-            parsed.forEach(id => {
-                if (!AppState.visitedModules.includes(id)) {
-                    AppState.visitedModules.push(id);
-                }
-            });
+            if (Array.isArray(parsed)) {
+                parsed.filter(id => typeof id === 'string').forEach(id => {
+                    if (!AppState.visitedModules.includes(id)) {
+                        AppState.visitedModules.push(id);
+                    }
+                });
+            }
             console.log(`Restored ${AppState.visitedModules.length} visits from session`);
         }
-    } catch (e) {
-        // Ignore
+    } catch (error) {
+        console.warn('Could not restore visited modules for this session.', error);
+    }
+}
+
+function addAccessibilityHelpers() {
+    const main = document.querySelector('main');
+    if (main) {
+        if (!main.id) main.id = 'mainContent';
+        const skipLink = document.createElement('a');
+        skipLink.className = 'skip-link';
+        skipLink.href = `#${main.id}`;
+        skipLink.textContent = 'Skip to main content';
+        document.body.prepend(skipLink);
+    }
+
+    if (DOM.nav && !DOM.nav.hasAttribute('aria-label')) {
+        DOM.nav.setAttribute('aria-label', 'Primary navigation');
     }
 }
 
@@ -274,5 +282,4 @@ window.AlgorithmVisualizer = {
     detectCurrentModule
 };
 
-console.log('Algorithm Visualizer API exposed to window');
 console.log('Algorithm Visualizer API exposed to window');

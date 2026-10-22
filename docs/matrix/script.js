@@ -278,9 +278,10 @@ function renderMatrix(container, matrix, matrixId) {
  */
 function updateOperationSymbol() {
     const op = MatrixState.currentOperation;
-    //const symbol = MATRIX_CONFIG.operations[op] ? symbol || '?';
-    const symbol = MATRIX_CONFIG.operations[op] || '?';
-    MatrixDOM.operationSymbol.textContent = symbol;
+    const operation = MATRIX_CONFIG.operations[op];
+    if (MatrixDOM.operationSymbol) {
+        MatrixDOM.operationSymbol.textContent = operation ? operation.symbol : '?';
+    }
 }
 
 /**
@@ -707,6 +708,11 @@ function sleep(ms) {
  * ====== KEYBOARD SHORTCUTS ======
  */
 document.addEventListener('keydown', function(e) {
+    const target = e.target;
+    const isEditable = target instanceof Element &&
+        target.closest('input, textarea, select, button, a, [contenteditable="true"]');
+    if (isEditable || e.altKey || e.ctrlKey || e.metaKey) return;
+
     if (e.key === ' ' && e.target === document.body) {
         e.preventDefault();
         if (!MatrixState.isAnimating) {
@@ -714,7 +720,7 @@ document.addEventListener('keydown', function(e) {
         }
     }
 
-    if (e.key === 'Enter' && !MatrixState.isAnimating) {
+    if (e.key === 'Enter' && e.target === document.body && !MatrixState.isAnimating) {
         MatrixDOM.stepBtn.click();
     }
 
@@ -727,4 +733,4 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-console.log(' Keyboard shortcuts: Space=Visualize, Enter=Step, R=Reset, G=Generate');
+console.log('Keyboard shortcuts (when focus is not in a control): Space=Visualize, Enter=Step, R=Reset, G=Generate');

@@ -3,7 +3,7 @@
 /**
  * ============================================================
  * BASIN MODULE - script.js
- * Location: /docs/matrix/basin/script.js
+ * Location: /docs/matrix/basin/visualizer.js
  * Purpose: Complete basin detection (local minima) visualizer
  * ============================================================
  */

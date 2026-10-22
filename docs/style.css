@@ -67,6 +67,27 @@ html {
     scroll-behavior: smooth;
 }
 
+*:focus-visible {
+    outline: 3px solid var(--color-warning);
+    outline-offset: 3px;
+}
+
+.skip-link {
+    position: fixed;
+    z-index: 1000;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text-light);
+    background: var(--color-primary-dark);
+    border-radius: var(--radius-md);
+    transform: translateY(-200%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
 body {
     font-family: var(--font-primary);
     background: var(--color-bg);
@@ -153,6 +174,12 @@ body {
 .main-nav a.active {
     color: var(--color-text-light);
     background: rgba(108, 99, 255, 0.15);
+}
+
+.main-nav a:focus-visible,
+.github-link:focus-visible,
+.algorithm-card:focus-visible {
+    outline-offset: 4px;
 }
 
 .main-nav a.active::after {
@@ -498,6 +525,17 @@ body {
 @media (max-width: 480px) {
     .hero-text h2 {
         font-size: 1.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            scroll-behavior: auto !important;
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
     }
     .hero-subtitle {
         font-size: 1rem;

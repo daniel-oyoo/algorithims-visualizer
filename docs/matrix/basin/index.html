@@ -30,10 +30,9 @@
                     <h1>Basin Finder</h1>
                     <span class="tagline">Local Minima Detection in Grids</span>
                 </div>
-                <nav class="main-nav" id="mainNav"></nav>
+                <nav class="main-nav" id="mainNav" aria-label="Primary navigation"></nav>
                 <div class="header-links">
-                    <a href="https://github.com/daniel-oyoo" target="_blank" class="github-link">GitHub</a>
-                    <a href="https://yourportfolio.com" target="_blank" class="portfolio-link">Portfolio</a>
+                    <a href="https://github.com/daniel-oyoo/algorithims-visualizer" target="_blank" rel="noopener noreferrer" class="github-link">GitHub</a>
                 </div>
             </div>
         </header>
@@ -56,7 +55,7 @@
                         </p>
                         <p class="complexity-badge">
                             <span class="badge">Time: O(n × m)</span>
-                            <span class="badge">Space: O(1)</span>
+                            <span class="badge">Output space: O(b) for b detected basins</span>
                         </p>
                     </div>
 
@@ -184,7 +183,7 @@
                 <div class="results-grid">
                     <div class="result-card">
                         <h4>Logs</h4>
-                        <div id="logsDisplay">Ready to analyze terrain...</div>
+                        <div id="logsDisplay" role="log" aria-live="polite" aria-relevant="additions">Ready to analyze terrain...</div>
                     </div>
                     <div class="result-card">
                         <h4>Avg Cell Value</h4>
@@ -217,9 +216,7 @@
                         "Every valley is a basin, every peak is a ridge."
                     </p>
                     <div class="footer-links">
-                        <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
-                        <span class="divider">|</span>
-                        <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
+                        <a href="https://github.com/daniel-oyoo/algorithims-visualizer" target="_blank" rel="noopener noreferrer">GitHub</a>
                         <span class="divider">|</span>
                         <a href="../../index.html">&larr; Back to Home</a>
                     </div>
@@ -231,76 +228,7 @@
     <!-- ====== JAVASCRIPT ====== -->
     <script type="text/javascript" src="../../script.js"></script>
     <!--<script type="text/javascript" src="script.js"></script>-->
-    <script type="text/javascript" src="test/core.js"></script>
-</body>
-
-</html>
-</section>
-
-<!-- ====== FOOTER ====== -->
-<footer class="app-footer">
-    <div class="footer-content">
-        <p>&copy; 2026 Algorithm Visualizer | Basin Module</p>
-        <p class="footer-acknowledgment">
-            "Every valley is a basin, every peak is a ridge."
-        </p>
-        <div class="footer-links">
-            <a href="https://github.com/daniel-oyoo" target="_blank">GitHub</a>
-            <span class="divider">|</span>
-            <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
-            <span class="divider">|</span>
-            <a href="../../index.html">&larr; Back to Home</a>
-        </div>
-    </div>
-</footer>
-</main>
-</div>
-
-<!-- ====== JAVASCRIPT ====== -->
-<script type="text/javascript" src="../../script.js"></script>
-<!--<script type="text/javascript" src="script.js"></script>-->
-<script type="text/javascript" src="test/core.js"></script>
-</body>
-
-</html> <span class="divider">|</span>
-<a href="../../index.html">&larr; Back to Home</a>
-</div>
-</div>
-</footer>
-</main>
-</div>
-
-<!-- ====== JAVASCRIPT ====== -->
-<script type="text/javascript" src="../../script.js"></script>
-<!--<script type="text/javascript" src="script.js"></script>-->
-<script type="text/javascript" src="test/core.js"></script>
-</body>
-
-</html> <a href="../../index.html">&larr; Back to Home</a>
-</div>
-</div>
-</footer>
-</main>
-</div>
-
-<!-- ====== JAVASCRIPT ====== -->
-<script type="text/javascript" src="../../script.js"></script>
-<!--<script type="text/javascript" src="script.js"></script>-->
-<script type="text/javascript" src="test/core.js"></script>
-</body>
-
-</html> <span class="divider">|</span>
-<a href="../../index.html">&larr; Back to Home</a>
-</div>
-</div>
-</footer>
-</main>
-</div>
-
-<!-- ====== JAVASCRIPT ====== -->
-<script type="text/javascript" src="../../script.js"></script>
-<!--<script type="text/javascript" src="script.js"></script>-->
-<script type="text/javascript" src="test/core.js"></script>
+    <script type="text/javascript" src="visualizer.js"></script>
 </body>
 
 </html>
