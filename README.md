@@ -10,7 +10,9 @@ An educational static website for exploring algorithms through interactive, step
 - `docs/string/` and most nested `test/` pages are experiments and are not linked from the main dashboard. The basin page's active implementation is `docs/matrix/basin/visualizer.js`.
 - `back-end/text.txt` contains an unintegrated Java backend draft. It is not part of the running site and its dependencies are not included.
 
-There is no configured live-demo URL at this time.
+## Live demo
+
+Visit the [Algorithm Visualizer on GitHub Pages](https://daniel-oyoo.github.io/algorithims-visualizer/).
 
 ## Available visualizations
 
