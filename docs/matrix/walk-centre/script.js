@@ -421,12 +421,6 @@ async function runAStar(startRow, startCol, directions) {
             break;
         }
 
-        if (currRow === 0 || currRow === WalkState.rows - 1 ||
-            currCol === 0 || currCol === WalkState.cols - 1) {
-            addLog('Reached edge at (' + currRow + ', ' + currCol + '). Stopping.', 'warning');
-            break;
-        }
-
         if (currentEl) {
             currentEl.className = 'visited';
         }
