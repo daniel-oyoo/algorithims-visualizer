@@ -1,0 +1,168 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    alink: blue;
+    vlink: red;
+    padding: 15px;
+}
+
+
+/*Main contntet zone*/
+
+.main-content-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
+}
+
+.matrix-wrapper,
+.progress-wrapper {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.matrix-wrapper {
+    max-height: fit-content;
+}
+
+.progress-wrapper {
+    max-height: 433.67px;
+    /*overflow-y: auto;*/
+}
+
+.content-card {
+    overflow: none;
+    /*all the list table can fit on screen so yeah
+    we can leave it none for better viewership ofr
+    auto for phones and all*/
+    max-height: 434px;
+}
+
+
+/*traversal and animations related quicks
+matrix cells
+*/
+
+.cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: 2px solid grey;
+    border-radius: 5px;
+}
+
+.fixed {
+    background-color: lightgray;
+}
+
+.scan {
+    box-shadow: blue 3px 3px 6px 2px, blue -3px -3px 6px 2px;
+}
+
+.empty-cell {
+    background-color: yellow;
+}
+
+.solved {
+    background-color: red;
+}
+
+
+/*
+progress table
+1.label---appended below their respective rows
+
+
+2.cols2
+
+3.rows
+
+4.table as awhole
+
+5.table container
+*/
+
+.num-label {
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 15px;
+}
+
+.number-label.used {
+    opacity: 0.3;
+    text-decoration: line-through;
+}
+
+.number-label.current {
+    background: var(--color-primary);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+#statusTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+
+/*Results and logs
+1. alignment
+*/
+
+
+/* ====== RESULTS PANEL ====== */
+
+.results-panel {
+    padding: var(--spacing-lg) 0;
+}
+
+.results-grid {
+    display: grid;
+    /*grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: start;
+}
+
+.result-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.result-card h4 {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 400;
+}
+
+.result-card div {
+    color: var(--color-text-light);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#logsDisplay {
+    font-size: 0.8rem !important;
+    font-weight: 400 !important;
+    max-height: 60px;
+    overflow-y: auto;
+    text-align: center;
+    font-family: var(--font-mono);
+    color: var(--color-text-muted) !important;
+}

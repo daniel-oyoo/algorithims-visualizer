@@ -1,0 +1,52 @@
+/* ====== CSS RESET & BASE ====== */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* ====== COLOR PALETTE ====== */
+    --color-primary: rgb(78, 69, 69);
+    /* ====== TYPOGRAPHY ====== */
+    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: 'Courier New', monospace;
+    /* ====== SPACING ====== */
+    --spacing-sm: 0.5rem;
+    /* ====== BORDER RADIUS ====== */
+    --radius-sm: 4px;
+    /* ====== SHADOWS ====== */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    /* ====== TRANSITIONS ====== */
+    --transition-fast: 0.15s ease;
+    --transition-med: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+
+/* ====== HTML & BODY ====== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+
+/* ====== APP CONTAINER ====== */
+
+.app-container {
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}

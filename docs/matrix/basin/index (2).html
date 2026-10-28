@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- ============================================================
+     BASIN MODULE - index.html
+     Location: /docs/matrix/basin/index.html
+     Purpose: Interactive basin detection (local minima) visualizer
+     ============================================================ -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basin Finder | Algorithm Visualizer</title>
+
+    <!-- ====== STYLESHEETS ====== -->
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- ============================================================
+         MAIN APPLICATION
+         ============================================================ -->
+    <div class="app-container">
+
+        <!-- ====== HEADER ====== -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand">
+                    <h1>Basin Finder</h1>
+                    <span class="tagline">Local Minima Detection in Grids</span>
+                </div>
+                <nav class="main-nav" id="mainNav" aria-label="Primary navigation"></nav>
+                <div class="header-links">
+                    <a href="https://github.com/daniel-oyoo/algorithims-visualizer" target="_blank" rel="noopener noreferrer" class="github-link">GitHub</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================================
+             MAIN CONTENT
+             ============================================================ -->
+        <main class="main-content">
+
+            <!-- ============================================================
+                 SECTION: ALGORITHM OVERVIEW
+                 ============================================================ -->
+            <section class="algo-intro">
+                <div class="intro-grid">
+                    <!-- Left: Definition -->
+                    <div class="intro-definition">
+                        <h2>What is a Basin?</h2>
+                        <p>
+                            A <strong>basin</strong> (or local minimum) is a cell in a grid whose value is strictly smaller than all its valid orthogonal neighbors (up, down, left, right).
+                        </p>
+                        <p class="complexity-badge">
+                            <span class="badge">Time: O(n × m)</span>
+                            <span class="badge">Output space: O(b) for b detected basins</span>
+                        </p>
+                    </div>
+
+                    <h2>How Basin Detection Works</h2>
+                    <div>
+                        <p>
+                            For every cell scan its four neighbours to find local minimum
+                        </p>
+                    </div>
+                    <br></br>
+                    <div class="description-grid">
+                        <div class="desc-card">
+                            <h3>What is a Basin?</h3>
+                            <p>A basin (local minimum) is a cell whose value is strictly smaller than all its valid orthogonal neighbors (up, down, left, right).</p>
+                            <span class="complexity">Local Minimum Detection</span>
+                        </div>
+                        <div class="desc-card highlight">
+                            <h3>Algorithm Approach</h3>
+                            <p>Full grid scan comparing each cell against its neighbors. Linear time complexity O(n×m) making it highly efficient.</p>
+                            <span class="complexity">O(n × m) Runtime</span>
+                        </div>
+                        <div class="desc-card">
+                            <h3>Real-World Applications</h3>
+                            <p>Used in topography, watershed analysis, terrain modeling, and geographic information systems (GIS).</p>
+                            <span class="complexity">Terrain Analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== CONTROLS & OPTIONS ====== -->
+            <section class="controls-section">
+                <div class="control-row">
+                    <!-- Options Card -->
+                    <div class="options-card">
+                        <h4>Options</h4>
+                        <div class="option-group">
+                            <label>Strategy: 
+                                <input type="text" value="FULL SCAN" disabled class="disabled-input">
+                            </label>
+                            <label>Grid Size:
+                                <select id="sizeSelect">
+                                    <option value="5">5 × 5</option>
+                                    <option value="7">7 × 7</option>
+                                    <option value="9" selected>9 × 9</option>
+                                    <option value="12">12 × 12</option>
+                                    <option value="15">15 × 15</option>
+                                </select>
+                            </label>
+                            <label>Value Range:
+                                <select id="valueRange">
+                                    <option value="5">0-4</option>
+                                    <option value="9" selected>0-8</option>
+                                    <option value="19">0-18</option>
+                                    <option value="49">0-48</option>
+                                </select>
+                            </label>
+                            <label>Speed:
+                                <input type="range" id="speedSlider" min="10" max="500" value="100">
+                                <span id="speedDisplay">100ms</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Controls Card -->
+                    <div class="controls-card">
+                        <h4>Controls</h4>
+                        <div class="button-group">
+                            <button onclick="generateGrid()" class="btn btn-primary">Generate</button>
+                            <button onclick="findBasins()" class="btn btn-success">Find Basins</button>
+                            <button onclick="togglePause()" class="btn btn-warning">Pause/Resume</button>
+                            <button onclick="resetAll()" class="btn btn-danger">Reset</button>
+                            <button onclick="analyzeTerrain()" class="btn btn-info">Analyze</button>
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="legend">
+                            <span class="legend-box scanning"></span> <label>Scanning</label>
+                            <span class="legend-box basin"></span> <label>Basin (Local Minimum)</label>
+                            <span class="legend-box normal"></span> <label>Normal Cell</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== MAIN CONTENT: Grid + Comparison View ====== -->
+            <section class="main-content-area">
+                <!-- Grid Container -->
+                <div class="grid-wrapper">
+                    <h3>Terrain Grid</h3>
+                    <div class="content-card" id="matrixContainer">
+                        <!-- Grid rendered by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Comparison/Progress View -->
+                <div class="comparison-wrapper">
+                    <h3>Comparison Zone</h3>
+                    <div class="content-card" id="comparisonContainer">
+                        <div id="comparisonSpace">
+                            Generate a grid or click "Find Basins" to begin...
+                        </div>
+                    </div>
+
+                    <!-- Basin Statistics -->
+                    <div class="stats-panel" id="statsPanel">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Basins Found:</span>
+                            <span class="stat-value" id="basinCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Cells Scanned:</span>
+                            <span class="stat-value" id="cellsScanned">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Progress:</span>
+                            <span class="stat-value" id="scanProgress">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== RESULTS PANEL ====== -->
+            <section class="results-panel">
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h4>Logs</h4>
+                        <div id="logsDisplay" role="log" aria-live="polite" aria-relevant="additions">Ready to analyze terrain...</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Avg Cell Value</h4>
+                        <div id="avgValue">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Min Value</h4>
+                        <div id="minValue">-</div>
+                    </div>
+                    <div class="result-card">
+                        <h4>Max Value</h4>
+                        <div id="maxValue">-</div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results -->
+                <div class="analysis-section" id="analysisSection" style="display:none;">
+                    <h3>Terrain Analysis</h3>
+                    <div class="analysis-grid" id="analysisGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== FOOTER ====== -->
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <p>&copy; 2026 Algorithm Visualizer | Basin Module</p>
+                    <p class="footer-acknowledgment">
+                        "Every valley is a basin, every peak is a ridge."
+                    </p>
+                    <div class="footer-links">
+                        <a href="https://github.com/daniel-oyoo/algorithims-visualizer" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <span class="divider">|</span>
+                        <a href="../../index.html">&larr; Back to Home</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script type="text/javascript" src="../../script.js"></script>
+    <!--<script type="text/javascript" src="script.js"></script>-->
+    <script type="text/javascript" src="visualizer.js"></script>
+</body>
+
+</html>
