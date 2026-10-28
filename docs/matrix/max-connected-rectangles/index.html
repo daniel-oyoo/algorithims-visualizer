@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+    ============================================================
+    GROWING RECTANGLES OF ONES MODULE
+    Location: /docs/matrix/max-connected-rectangles/index.html
+    Purpose: Find and animate all-1 rectangles in a binary matrix
+    ============================================================
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growing Rectangles of Ones | Algorithm Visualizer</title>
+
+    <!-- Shared application and matrix styles, followed by module styles -->
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand">
+                    <h1>Growing Rectangles of Ones</h1>
+                    <span class="tagline">Binary Matrix Rectangle Detection</span>
+                </div>
+                <nav class="main-nav" id="mainNav"></nav>
+                <div class="header-links">
+                    <a href="https://github.com/daniel-oyoo" target="_blank" rel="noopener noreferrer" class="github-link">GitHub</a>
+                    <a href="https://yourportfolio.com" target="_blank" rel="noopener noreferrer" class="portfolio-link">Portfolio</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="rectangle-intro">
+                <div>
+                    <h2>Find Every Rectangle Made of 1s</h2>
+                    <p>
+                        The visualizer checks each top-left and bottom-right corner pair.
+                        A rectangle is valid only when every cell inside its bounds is 1.
+                        Matching rectangles are highlighted in the grid.
+                    </p>
+                </div>
+                <div class="rectangle-complexity">
+                    <span class="badge">Binary matrix</span>
+                    <span class="badge">All valid rectangles</span>
+                    <span class="badge">Growing bounds scan</span>
+                </div>
+            </section>
+
+            <section class="controls-section">
+                <div class="control-row">
+                    <div class="options-card">
+                        <h4>Options</h4>
+                        <div class="option-group">
+                            <label for="sizeSelect">Grid Size:
+                                <select id="sizeSelect">
+                                    <option value="5">5 × 5</option>
+                                    <option value="7">7 × 7</option>
+                                    <option value="9" selected>9 × 9</option>
+                                    <option value="10">10 × 10</option>
+                                    <option value="12">12 × 12</option>
+                                </select>
+                            </label>
+                            <label for="speedSlider">Animation Speed:
+                                <input type="range" id="speedSlider" min="10" max="300" value="60">
+                                <span id="speedDisplay">60ms</span>
+                            </label>
+                        </div>
+                        <p class="option-hint">The grid is generated with random 0s and 1s.</p>
+                    </div>
+
+                    <div class="controls-card">
+                        <h4>Controls</h4>
+                        <div class="button-group">
+                            <button id="generateButton" class="btn btn-primary" type="button">Generate New Grid</button>
+                            <button id="startButton" class="btn btn-success" type="button">Start Visualization</button>
+                            <button id="pauseButton" class="btn btn-warning" type="button" disabled>Pause</button>
+                            <button id="resetButton" class="btn btn-danger" type="button">Reset</button>
+                        </div>
+                        <div class="legend">
+                            <span class="legend-box rectangle-highlight"></span>
+                            <label>Valid rectangle of 1s</label>
+                            <span class="legend-box normal"></span>
+                            <label>Other cells</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="rectangle-workspace">
+                <div class="grid-wrapper">
+                    <h3>Binary Grid</h3>
+                    <div class="content-card" id="gridContainer" aria-label="Binary matrix"></div>
+                </div>
+                <div class="comparison-wrapper">
+                    <h3>Visualization Status</h3>
+                    <div class="content-card rectangle-status" id="statusDisplay" aria-live="polite">
+                        Generate a grid or start the visualization.
+                    </div>
+                    <div class="stats-panel">
+                        <div class="stat-item">
+                            <span class="stat-label">Rectangles Found:</span>
+                            <span class="stat-value" id="rectangleCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Candidates Checked:</span>
+                            <span class="stat-value" id="candidateCount">0</span>
+                        </div>
+                    </div>
+                    <div class="result-card rectangle-log-card">
+                        <h4>Logs</h4>
+                        <div id="logsDisplay" aria-live="polite">Ready to scan the binary grid.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2026 Algorithm Visualizer | Growing Rectangles of Ones</p>
+                <div class="footer-links">
+                    <a href="https://github.com/daniel-oyoo" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <span class="divider">|</span>
+                    <a href="../../index.html">&larr; Back to Home</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -82,7 +82,8 @@ const ChildModules = {
     sodoku: false,
     basin: false,
     'walk-centre': false,
-    'max-connected-elements': false
+    'max-connected-elements': false,
+    'max-connected-rectangles': false
 };
 
 /**

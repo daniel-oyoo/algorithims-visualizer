@@ -21,7 +21,7 @@ const ALGORITHM_MODULES = [{
         id: 'matrix',
         name: 'Matrix Operations',
         //icon: '📊',
-        description: 'Visualize matrix transformations, multiplication, and operations in real-time. Includes sub-modules for Sudoku, Basin Detection, Walk Centre, and Max Connected Elements.',
+        description: 'Visualize matrix transformations, multiplication, and operations in real-time. Includes sub-modules for Sudoku, Basin Detection, Walk Centre, Max Connected Elements, and Growing Rectangles of Ones.',
         path: 'matrix/index.html',
         tags: ['Linear Algebra', 'Math'],
         runtime: 'O(n³)',

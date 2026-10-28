@@ -1,0 +1,125 @@
+/* Growing rectangles module styles */
+
+.rectangle-intro {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.rectangle-intro h2 {
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+.rectangle-intro p,
+.option-hint {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+}
+
+.rectangle-complexity {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+}
+
+.rectangle-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+    gap: var(--spacing-lg);
+    align-items: start;
+    margin: var(--spacing-xl) 0;
+}
+
+.rectangle-workspace .grid-wrapper,
+.rectangle-workspace .comparison-wrapper {
+    min-width: 0;
+}
+
+#gridContainer {
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+    min-height: 220px;
+}
+
+.rectangle-grid {
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+.rectangle-cell {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text-light);
+    text-align: center;
+    font-weight: 700;
+    transition: background-color 0.08s ease, color 0.08s ease;
+}
+
+.rectangle-cell.rectangle-highlight {
+    background: #4f46e5;
+    border-color: #4f46e5;
+    color: #fff;
+}
+
+.legend-box.rectangle-highlight {
+    background: #4f46e5;
+}
+
+.rectangle-status {
+    min-height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    padding: var(--spacing-md);
+}
+
+.rectangle-log-card {
+    margin-top: var(--spacing-lg);
+}
+
+#logsDisplay {
+    max-height: 180px;
+    overflow-y: auto;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.rectangle-log-entry {
+    padding: 2px 0;
+}
+
+@media (max-width: 768px) {
+    .rectangle-intro,
+    .rectangle-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .rectangle-complexity {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .rectangle-cell {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+}
